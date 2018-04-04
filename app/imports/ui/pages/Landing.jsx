@@ -1,19 +1,29 @@
 import React from 'react';
-import { Grid, Input, Container, List, Icon, Divider, Button } from 'semantic-ui-react';
+import { Grid, Input, Container, List, Divider, Button } from 'semantic-ui-react';
+
+const bgStyle = {
+  backgroundImage: "url('https://images.pexels.com/photos/461077/pexels-photo-461077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260')",
+  height: '50rem',
+  backgroundSize: 'cover',
+};
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
   render() {
     return (
-        <Container>
+      <div>
+        <div style={bgStyle}>
           <Grid centered verticalAlign='middle' textAlign='center'>
-            <Grid.Column verticalAlign={'middle'}>
-              <Input fluid size={'massive'} placeholder="Enter job keyword/description to search for a small kine job" action>
+            <Grid.Column width={8} verticalAlign={'middle'}>
+              <Input fluid size={'massive'}
+                     placeholder="Enter job keyword/description to search for a small kine job" action>
                 <input/>
                 <Button color={'black'} size={'massive'} type={'submit'}>Search</Button>
               </Input>
             </Grid.Column>
           </Grid>
+        </div>
+        <Container>
           <Divider horizontal/>
           <Grid centered verticalAlign='middle' textAlign='center'>
             <Grid.Row>
@@ -50,8 +60,11 @@ class Landing extends React.Component {
                     <h2>Small kine search for small kine jobs</h2>
                   </List.Item>
                   <List.Item>
-                    <h3>Once you have your profile created you can either choose from the recommended jobs or search for more jobs
-                    in the search bar</h3>
+                    <h3>
+                      Once you have your profile created you can either
+                      choose from the recommended jobs or search for more jobs
+                      in the search bar
+                    </h3>
                   </List.Item>
                 </List>
               </Grid.Column>
@@ -82,7 +95,7 @@ class Landing extends React.Component {
 
           </Grid>
         </Container>
-
+      </div>
     );
   }
 }
