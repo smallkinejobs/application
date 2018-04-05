@@ -1,26 +1,56 @@
 import React from 'react';
 import { Grid, Input, Container, List, Divider, Button } from 'semantic-ui-react';
 
-const bgStyle = {
-  backgroundImage: "url('https://images.pexels.com/photos/461077/pexels-photo-461077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260')",
-  height: '50rem',
-  backgroundSize: 'cover',
-};
+const videoDivStyle = {
+  width: '100%',
+  position: 'relative',
+}
+
+const videoBlock = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+const contentBlock = {
+  position: 'absolute',
+  top: '25%',
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
+const topColumnStyle = {
+  paddingTop: '0',
+}
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
   render() {
     return (
       <div>
-        <div style={bgStyle}>
+        <div>
           <Grid centered verticalAlign='middle' textAlign='center'>
-            <Grid.Column width={8} verticalAlign={'middle'}>
-              <Input fluid size={'massive'}
-                     placeholder="Enter job keyword/description to search for a small kine job" action>
-                <input/>
-                <Button color={'black'} size={'massive'} type={'submit'}>Search</Button>
-              </Input>
-            </Grid.Column>
+            <Grid.Row centered style={topColumnStyle}>
+              <Grid.Column centered>
+                  <div style={videoDivStyle}>
+                    <div style={videoBlock}>
+                      <video style={{ filter: 'grayscale(100%)' }} autoPlay loop width='100%'>
+                        <source src="/videos/student_teacher.mp4" type='video/mp4'></source>
+                        <source src="/videos/student_teacher.webm" type='video/mp4'></source>
+                      </video>
+                    </div>
+                    <div style={contentBlock}>
+                      <Input styl={{ width: '800px' }} size={'massive'}
+                           placeholder="Search job title" action>
+                      <input/>
+                      <Button color={'black'} size={'massive'} type={'submit'}>Search</Button>
+                      </Input>
+                    </div>
+                  </div>
+              </Grid.Column>
+            </Grid.Row>
           </Grid>
         </div>
         <Container>
