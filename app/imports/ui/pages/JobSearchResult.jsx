@@ -2,7 +2,7 @@ import React from 'react';
 import { distanceInWordsToNow, subDays } from 'date-fns';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
-import { Grid, Header, Card, Modal, Image, Button, Label } from 'semantic-ui-react';
+import { Grid, Header, Card, Modal, Image, Button, Label, Input } from 'semantic-ui-react';
 import JobCard from '../components/JobCard';
 
 /** Renders the Page for job search results. */
@@ -37,7 +37,7 @@ class JobSearchResult extends React.Component {
     },
     {
       _id: 3,
-      title: 'Job 3',
+      title: 'Job 123',
       description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
       location: 'Library',
       pay: 10.11,
@@ -49,7 +49,7 @@ class JobSearchResult extends React.Component {
     },
     {
       _id: 4,
-      title: 'Job 4',
+      title: 'Job 12',
       description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
       location: 'Landscaping',
       pay: 12.22,
@@ -61,7 +61,7 @@ class JobSearchResult extends React.Component {
     },
     {
       _id: 5,
-      title: 'Job 5',
+      title: 'Job 135',
       description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
       location: 'Athletic Center',
       pay: 10.77,
@@ -76,6 +76,7 @@ class JobSearchResult extends React.Component {
     super(props);
     this.formRef = null;
     this.state = {
+      jobSearchText: '',
       jobs: this.jobs,
       modalOpen: false,
       selectedJob: {
@@ -93,7 +94,9 @@ class JobSearchResult extends React.Component {
     const jobs = this.jobs.filter((job) => job.title.includes(queryParams.title));
     this.setState({
       jobs,
+      jobSearchText: queryParams.title,
     });
+    this.filterJobResults = this.filterJobResults.bind(this);
   }
 
   openModal(id) {
@@ -117,11 +120,24 @@ class JobSearchResult extends React.Component {
     });
   }
 
+  filterJobResults(e, data) {
+    const jobs = this.jobs.filter((job) => job.title.includes(data.value));
+    this.setState({
+      jobSearchText: data.value,
+      jobs,
+    });
+  }
+
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
-    const { jobs, modalOpen, selectedJob } = this.state;
+    const { jobs, modalOpen, selectedJob, jobSearchText } = this.state;
     return (
       <div>
+        <Grid>
+          <Grid.Row centered>
+            <Input label='Job Search' value={jobSearchText} onChange={(e, data) => this.filterJobResults(e, data)} />
+          </Grid.Row>
+        </Grid>
         <Grid container>
           <Grid.Column>
           <Modal
