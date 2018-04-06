@@ -1,8 +1,8 @@
 import React from 'react';
-import { subDays } from 'date-fns';
+import { distanceInWordsToNow, subDays } from 'date-fns';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
-import { Grid, Header, Card } from 'semantic-ui-react';
+import { Grid, Header, Card, Modal, Image, Button, Label } from 'semantic-ui-react';
 import JobCard from '../components/JobCard';
 
 /** Renders the Page for job search results. */
@@ -24,7 +24,7 @@ class JobSearchResult extends React.Component {
     },
     {
       _id: 2,
-      title: 'Job 1',
+      title: 'Job 11',
       description: 'Bring to the table win-win survival strategies to ensure proactive domination.',
       location: 'Food Court',
       pay: 11.22,
@@ -77,7 +77,14 @@ class JobSearchResult extends React.Component {
     this.formRef = null;
     this.state = {
       jobs: this.jobs,
+      modalOpen: false,
+      selectedJob: {
+        skills: [],
+      },
     };
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.clearSelectedJob = this.clearSelectedJob.bind(this);
   }
 
   componentDidMount() {
@@ -89,18 +96,70 @@ class JobSearchResult extends React.Component {
     });
   }
 
+  openModal(id) {
+    this.setState({
+      modalOpen: true,
+      selectedJob: this.jobs.find((job) => job._id === id),
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modalOpen: false,
+    });
+  }
+
+  clearSelectedJob() {
+    this.setState({
+      selectedJob: {
+        skills: [],
+      },
+    });
+  }
+
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
-    const { jobs } = this.state;
+    const { jobs, modalOpen, selectedJob } = this.state;
     return (
-      <Grid container>
-        <Grid.Column>
-          <Header as="h2">{jobs.length} jobs found</Header>
-          <Card.Group itemsPerRow={4}>
-            {jobs.map((job) => <JobCard key={job._id} job={job} />)}
-          </Card.Group>
-        </Grid.Column>
-      </Grid>
+      <div>
+        <Grid container>
+          <Grid.Column>
+          <Modal
+            open={modalOpen}
+            onClose={this.clearSelectedJob}>
+            <Modal.Header>
+              Apply to this job : <i>Posted {distanceInWordsToNow(selectedJob.postDate)} ago</i>
+            </Modal.Header>
+            <Modal.Content image>
+              <Image wrapped size='medium' src='/images/uh_logo.png' />
+              <Modal.Description>
+                <Header>{ selectedJob.title }</Header>
+                <p>{ selectedJob.description }</p>
+                <p>Contact For More Info At { 'some contact info here' }</p>
+                <strong>Locaton:</strong> { selectedJob.location } <br/>
+                <strong>Pay:</strong> ${ selectedJob.pay } <br/>
+                <strong>Skills:</strong> {
+                  selectedJob.skills.map((skill, index) =>
+                    <Label size='tiny' key={index} color='green'>{skill.name}</Label>)
+                }
+              </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary>
+                Apply
+              </Button>
+              <Button color='red' onClick={this.closeModal}>
+                Close
+              </Button>
+            </Modal.Actions>
+          </Modal>
+            <Header as="h2">{jobs.length} jobs found</Header>
+            <Card.Group itemsPerRow={4}>
+              {jobs.map((job) => <JobCard key={job._id} job={job} openModal={this.openModal}/>)}
+            </Card.Group>
+          </Grid.Column>
+        </Grid>
+      </div>
     );
   }
 }

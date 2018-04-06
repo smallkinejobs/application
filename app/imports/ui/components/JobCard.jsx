@@ -1,40 +1,37 @@
 import React from 'react';
-import { Card, Icon, Label } from 'semantic-ui-react';
+import { Card, Icon, Label, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class JobCard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleJobClick = this.handleJobClick.bind(this);
-  }
-  handleJobClick() {
-    console.log('hello');
-  }
   render() {
+    const { job, openModal } = this.props;
     return (
-      <Card onClick={this.handleJobClick}>
+      <Card onClick={() => openModal(job._id) }>
         <Card.Content>
+          <Image src='/images/uh_logo.png' size='mini' floated='right'/>
           <Card.Header>
-            {this.props.job.title}
+            {job.title}
           </Card.Header>
           <Card.Meta>
-            {this.props.job.location}
+            <Icon name='map pin' />
+            {job.location}
           </Card.Meta>
           <Card.Meta>
-            Pay: ${this.props.job.pay}
+            <Icon name='money' />
+            Pay: ${job.pay}
           </Card.Meta>
           <Card.Meta>
             <Icon name='calendar' />
-            Posted: {distanceInWordsToNow(this.props.job.postDate)} ago
+            Posted: {distanceInWordsToNow(job.postDate)} ago
           </Card.Meta>
         </Card.Content>
         <Card.Content
-          description={this.props.job.description}
+          description={job.description}
         />
         <Card.Content extra>
           Skills: {
-            this.props.job.skills.map((skill, index) =>
+            job.skills.map((skill, index) =>
               <Label size='tiny' key={index} color='green'>{skill.name}</Label>)
         }
         </Card.Content>
@@ -45,6 +42,7 @@ class JobCard extends React.Component {
 
 JobCard.propTypes = {
   job: PropTypes.object.isRequired,
+  openModal: PropTypes.func,
 };
 
 export default JobCard;
