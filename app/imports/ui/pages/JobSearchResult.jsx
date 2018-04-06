@@ -2,7 +2,7 @@ import React from 'react';
 import { distanceInWordsToNow, subDays } from 'date-fns';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
-import { Grid, Header, Card, Modal, Image, Button, Label, Input } from 'semantic-ui-react';
+import { Grid, Header, Card, Modal, Image, Button, Label, Input, Loader } from 'semantic-ui-react';
 import JobCard from '../components/JobCard';
 
 /** Renders the Page for job search results. */
@@ -76,6 +76,7 @@ class JobSearchResult extends React.Component {
     super(props);
     this.formRef = null;
     this.state = {
+      loading: false,
       jobSearchText: '',
       jobs: this.jobs,
       modalOpen: false,
@@ -121,16 +122,22 @@ class JobSearchResult extends React.Component {
   }
 
   filterJobResults(e, data) {
-    const jobs = this.jobs.filter((job) => job.title.includes(data.value));
     this.setState({
-      jobSearchText: data.value,
-      jobs,
+      loading: true,
     });
+    const jobs = this.jobs.filter((job) => job.title.includes(data.value));
+    setTimeout(() => {
+      this.setState({
+        jobSearchText: data.value,
+        jobs,
+        loading: false,
+      });
+    }, 100);
   }
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
-    const { jobs, modalOpen, selectedJob, jobSearchText } = this.state;
+    const { jobs, modalOpen, selectedJob, jobSearchText, loading } = this.state;
     return (
       <div>
         <Grid>
@@ -170,6 +177,7 @@ class JobSearchResult extends React.Component {
             </Modal.Actions>
           </Modal>
             <Header as="h2">{jobs.length} jobs found</Header>
+            <Loader active={loading} content='Retrieving Jobs...' />
             <Card.Group itemsPerRow={4}>
               {jobs.map((job) => <JobCard key={job._id} job={job} openModal={this.openModal}/>)}
             </Card.Group>
