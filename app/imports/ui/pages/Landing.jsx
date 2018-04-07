@@ -60,8 +60,10 @@ class Landing extends React.Component {
               </Grid.Row>
               <Divider/>
               <Grid.Row>
-                <Grid.Column width={8}>
-                  <img src='/images/landingPage/profiles.png' floated='right' />
+                <Grid.Column width ={4}>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  <img src='/images/landingPage/profiles.png' floated='right'/>
                 </Grid.Column>
                 <Grid.Column width={8}>
                   <List>
@@ -103,29 +105,30 @@ class Landing extends React.Component {
                   </List>
                 </Grid.Column>
                 <Grid.Column width={8}>
-                  <img src='/images/landingPage/choose.png' />
+                  <img src='/images/landingPage/choose.png'/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
                 <br/>
-              </Grid.Row> <Grid.Row>
-              <Grid.Column width={8}>
-                <img width='60%' src='/images/landingPage/shaka.jpg' />
-              </Grid.Column>
-              <Grid.Column width={8}>
-                <List>
-                  <List.Item>
-                    <h1>Step 3</h1>
-                  </List.Item>
-                  <List.Item>
-                    <h2>Apply and cruise 'um</h2>
-                  </List.Item>
-                  <List.Item>
-                    <h3>Once you have posted a job and/or applied for a job sit back and relax.</h3>
-                  </List.Item>
-                </List>
-              </Grid.Column>
-            </Grid.Row>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={8}>
+                  <img width='60%' src='/images/landingPage/shaka.jpg'/>
+                </Grid.Column>
+                <Grid.Column width={8}>
+                  <List>
+                    <List.Item>
+                      <h1>Step 3</h1>
+                    </List.Item>
+                    <List.Item>
+                      <h2>Apply and cruise 'um</h2>
+                    </List.Item>
+                    <List.Item>
+                      <h3>Once you have posted a job and/or applied for a job sit back and relax.</h3>
+                    </List.Item>
+                  </List>
+                </Grid.Column>
+              </Grid.Row>
             </Grid>
             <Divider/>
             <Grid centered verticalAlign='middle' textAlign='center'>
@@ -146,16 +149,16 @@ class Landing extends React.Component {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/babysitting.jpg' />
+                  <img fluid width='60%' src='/images/landingPage/babysitting.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/scanner.jpg' />
+                  <img fluid width='60%' src='/images/landingPage/scanner.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/tutoring.jpg' />
+                  <img fluid width='60%' src='/images/landingPage/tutoring.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/yardwork.jpg' />
+                  <img fluid width='60%' src='/images/landingPage/yardwork.jpg'/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
