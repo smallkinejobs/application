@@ -112,7 +112,9 @@ class Landing extends React.Component {
                 <br/>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column width={8}>
+                <Grid.Column width ={4}>
+                </Grid.Column>
+                <Grid.Column width={4}>
                   <img width='60%' src='/images/landingPage/shaka.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={8}>
