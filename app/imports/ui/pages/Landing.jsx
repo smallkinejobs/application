@@ -1,16 +1,20 @@
 import React from 'react';
 import { Grid, Input, Container, List, Divider, Button } from 'semantic-ui-react';
+import JobSearchResult from './JobSearchResult';
+import PropTypes from 'prop-types';
 
 const videoDivStyle = {
   width: '100%',
   position: 'relative',
-}
+
+};
 
 const videoBlock = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-}
+};
+
 
 const contentBlock = {
   position: 'absolute',
@@ -175,5 +179,8 @@ class Landing extends React.Component {
     );
   }
 }
+Landing.propTypes = {
+  history: PropTypes.any,
+};
 
 export default Landing;
