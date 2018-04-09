@@ -32,8 +32,8 @@ class Landing extends React.Component {
         <div>
           <div>
             <Grid centered verticalAlign='middle' textAlign='center'>
-              <Grid.Row centered style={topColumnStyle}>
-                <Grid.Column centered>
+              <Grid.Row style={topColumnStyle}>
+                <Grid.Column>
                   <div style={videoDivStyle}>
                     <div style={videoBlock}>
                       <video style={{ filter: 'grayscale(100%)' }} autoPlay loop width='100%'>
@@ -151,16 +151,16 @@ class Landing extends React.Component {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/babysitting.jpg'/>
+                  <img width='60%' src='/images/landingPage/babysitting.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/scanner.jpg'/>
+                  <img  width='60%' src='/images/landingPage/scanner.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/tutoring.jpg'/>
+                  <img  width='60%' src='/images/landingPage/tutoring.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img fluid width='60%' src='/images/landingPage/yardwork.jpg'/>
+                  <img  width='60%' src='/images/landingPage/yardwork.jpg'/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
