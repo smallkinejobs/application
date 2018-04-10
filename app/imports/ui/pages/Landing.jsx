@@ -50,7 +50,6 @@ class Landing extends React.Component {
     this.setState({
       searchText: data.value,
     });
-    console.log(this.state.searchText);
   }
 
   videoSrcs = [
