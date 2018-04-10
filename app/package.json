@@ -5,6 +5,7 @@
     "@babel/runtime": "^7.0.0-beta.39",
     "classnames": "^2.2.5",
     "date-fns": "^1.29.0",
+    "lodash": "^4.17.5",
     "meteor-node-stubs": "^0.3.3",
     "prop-types": "^15.6.1",
     "query-string": "^6.0.0",
