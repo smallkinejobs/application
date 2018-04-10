@@ -1,9 +1,8 @@
 import React from 'react';
-import { Grid, Header, Image, Card, Container } from 'semantic-ui-react';
+import { Grid, Header, Image, Card, Container, Modal, Button, Label } from 'semantic-ui-react';
 import Skills from '/imports/ui/components/Skills';
 import JobCard from '/imports/ui/components/JobCard';
-import { subDays } from 'date-fns';
-import intersection from 'lodash/intersection';
+import { subDays, distanceInWordsToNow } from 'date-fns';
 
 /** Renders the Profile Page of the Current User. Includes skills and recommended jobs for
  * prospective employees */
@@ -74,7 +73,7 @@ class DisplayProfile extends React.Component {
       skills: [
         { _id: 1, name: 'AWS' },
         { _id: 2, name: 'Unix' },
-        { _id: 3, name: 'C/C++'},
+        { _id: 3, name: 'C/C++' },
       ],
     },
     {
@@ -101,13 +100,21 @@ class DisplayProfile extends React.Component {
       ],
     },
   ];
+
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       jobs: [],
+      modalOpen: false,
+      selectedJob: {
+        skills: [],
+      },
     };
     this.matchJobs = this.matchJobs.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.clearSelectedJob = this.clearSelectedJob.bind(this);
   }
 
   componentDidMount() {
@@ -117,12 +124,32 @@ class DisplayProfile extends React.Component {
     });
   }
 
+  openModal(id) {
+    this.setState({
+      modalOpen: true,
+      selectedJob: this.jobs.find((job) => job._id === id),
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modalOpen: false,
+    });
+  }
+
+  clearSelectedJob() {
+    this.setState({
+      selectedJob: {
+        skills: [],
+      },
+    });
+  }
+
   matchJobs() {
-    const user = this.user;
-    const skillTitles = user.skills.map((skill) => skill.name);
+    const userSkillTitles = this.user.skills.map((skill) => skill.name);
     const filteredJobs = this.jobs.filter(function (job) {
       const jobSkillTitles = job.skills.map((skill) => skill.name);
-      return _.intersection(jobSkillTitles, skillTitles).length > 0; //eslint-disable-line
+      return _.intersection(jobSkillTitles, userSkillTitles).length > 0; //eslint-disable-line
     });
     return filteredJobs;
   }
@@ -134,52 +161,84 @@ class DisplayProfile extends React.Component {
 
   /** Render the page once subscriptions have been received. */
   renderPage() {
+    const { loading, jobs, modalOpen, selectedJob } = this.state;
     return (
-       <Grid container divided='vertically' rows={2}>
-         <Grid.Row columns={2}>
-           <Grid.Column floated='left'>
-             <Image ui size='medium' src={this.user.image}/>
-           </Grid.Column>
-           <Grid.Column floated='right'>
-               {(this.user.role === 'employee') &&
-               <Header as='h1'>
-               {'Name: '} {this.user.firstName} {this.user.lastName}
-               </Header>
-               }
-               {(this.user.role === 'employer') &&
-                 <Header as='h1'>
-               {'Company Name: '} {this.user.businessName}
-                 </Header>
-               }
-             <Header as='h2'>
-               Address: {this.user.address}
-             </Header>
-             <Header as='h2'>
-               Phone: {this.user.phone}
-             </Header>
-             <Header as='h2'>
-               Email: {this.user.email}
-             </Header>
-           </Grid.Column>
-         </Grid.Row>
-         {
-           (this.user.role === 'employee') &&
-           <Grid.Row>
-             <Skills skills={this.user.skills}/>
-           </Grid.Row>
-         }
-         {
-           (this.user.role === 'employee') &&
-               <Grid.Row>
-                 <Header as='h1'>Recommended Jobs</Header>
-                 <Container>
-                 <Card.Group itemsPerRow={3}>
-                   { this.state.jobs.map((job) => <JobCard key={job._id} job={job}/>) }
-                 </Card.Group>
-                 </Container>
-               </Grid.Row>
-         }
-       </Grid>
+        <Container>
+          <Modal
+              open={modalOpen}
+              onClose={this.clearSelectedJob}>
+            <Modal.Header>
+              Apply to this job : <i>Posted {distanceInWordsToNow(selectedJob.postDate)} ago</i>
+            </Modal.Header>
+            <Modal.Content image>
+              <Image wrapped size='medium' src='/images/uh_logo.png'/>
+              <Modal.Description>
+                <Header>{selectedJob.title}</Header>
+                <p>{selectedJob.description}</p>
+                <p>Contact For More Info At {'some contact info here'}</p>
+                <strong>Locaton:</strong> {selectedJob.location} <br/>
+                <strong>Pay:</strong> ${selectedJob.pay} <br/>
+                <strong>Skills:</strong> {
+                selectedJob.skills.map((skill, index) =>
+                    <Label size='tiny' key={index} color='green'>{skill.name}</Label>)
+              }
+              </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary>
+                Apply
+              </Button>
+              <Button color='red' onClick={this.closeModal}>
+                Close
+              </Button>
+            </Modal.Actions>
+          </Modal>
+          <Grid container divided='vertically' rows={3}>
+            <Grid.Row columns={2}>
+              <Grid.Column floated='left'>
+                <Image ui size='medium' src={this.user.image}/>
+              </Grid.Column>
+              <Grid.Column floated='right'>
+                {(this.user.role === 'employee') &&
+                <Header as='h1'>
+                  {'Name: '} {this.user.firstName} {this.user.lastName}
+                </Header>
+                }
+                {(this.user.role === 'employer') &&
+                <Header as='h1'>
+                  {'Company Name: '} {this.user.businessName}
+                </Header>
+                }
+                <Header as='h2'>
+                  Address: {this.user.address}
+                </Header>
+                <Header as='h2'>
+                  Phone: {this.user.phone}
+                </Header>
+                <Header as='h2'>
+                  Email: {this.user.email}
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+            {
+              (this.user.role === 'employee') &&
+              <Grid.Row>
+                <Skills skills={this.user.skills}/>
+              </Grid.Row>
+            }
+            {
+              (this.user.role === 'employee') &&
+              <Grid.Row>
+                <Header as='h1'>Recommended Jobs</Header>
+                <Container>
+                  <Card.Group itemsPerRow={3}>
+                    {this.state.jobs.map((job) => <JobCard key={job._id} openModal={this.openModal} job={job}/>)}
+                  </Card.Group>
+                </Container>
+              </Grid.Row>
+            }
+          </Grid>
+        </Container>
     );
   }
 }
