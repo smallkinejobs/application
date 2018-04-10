@@ -3,6 +3,7 @@ import { Grid, Header, Image, Card, Container } from 'semantic-ui-react';
 import Skills from '/imports/ui/components/Skills';
 import JobCard from '/imports/ui/components/JobCard';
 import { subDays } from 'date-fns';
+import intersection from 'lodash/intersection';
 
 /** Renders the Profile Page of the Current User. Includes skills and recommended jobs for
  * prospective employees */
@@ -121,8 +122,7 @@ class DisplayProfile extends React.Component {
     const skillTitles = user.skills.map((skill) => skill.name);
     const filteredJobs = this.jobs.filter(function (job) {
       const jobSkillTitles = job.skills.map((skill) => skill.name);
-      const matchedSkills = jobSkillTitles.filter((name) => skillTitles.indexOf(name) !== -1);
-      return matchedSkills.length > 0;
+      return _.intersection(jobSkillTitles, skillTitles).length > 0; //eslint-disable-line
     });
     return filteredJobs;
   }
