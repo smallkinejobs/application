@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Container, Header } from 'semantic-ui-react';
+import { List, Container, Header, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 
@@ -8,10 +8,12 @@ class Skills extends React.Component {
   render() {
     return (
         <Container>
-          <Header as='h2'>Skills</Header>
+          <Header as='h1'>Skills</Header>
           <List>
             {this.props.skills.map((skill) =>
-                <List.Item key={skill._id}>{skill.title}</List.Item>)}
+                <List.Item key={skill._id}>
+                  <Label size='tiny' key={skill._id} color='green'>{skill.name}</Label>
+                </List.Item>)}
           </List>
         </Container>
     );
