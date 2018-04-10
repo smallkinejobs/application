@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Input, Container, List, Divider, Button } from 'semantic-ui-react';
-import JobSearchResult from './JobSearchResult';
 import PropTypes from 'prop-types';
+
 
 const videoDivStyle = {
   width: '100%',
@@ -23,17 +23,33 @@ const contentBlock = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-}
+};
 
 const topColumnStyle = {
   paddingTop: '0',
-}
+};
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      searchText: '',
+    };
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleSearchText = this.handleSearchText.bind(this);
     this.handleNextVideo = this.handleNextVideo.bind(this);
+  }
+
+  handleSearch() {
+    const { history } = this.props;
+    history.push(`job-search-results?title=${this.state.searchText}`);
+  }
+
+  handleSearchText(e, data) {
+    this.setState({
+      searchText: data.value,
+    });
   }
 
   videoSrcs = [
@@ -70,11 +86,14 @@ class Landing extends React.Component {
                       </video>
                     </div>
                     <div style={contentBlock}>
-                      <Input styl={{ width: '800px' }} size={'massive'}
-                             placeholder="Search job title" action>
+                      <Input style={{ width: '800px' }} size={'massive'}
+                             placeholder="Search job title" action
+                             onChange={(e, data) => this.handleSearchText(e, data)}>
                         <input/>
-                        <Button color={'blue'} size={'massive'} type={'submit'}>Search</Button>
-                      </Input>
+                        <Button color={'blue'} size={'massive'} type={'submit'} onClick={this.handleSearch}>
+                          Search
+                        </Button>
+                    </Input>
                     </div>
                   </div>
                 </Grid.Column>
@@ -182,13 +201,13 @@ class Landing extends React.Component {
                   <img width='60%' src='/images/landingPage/babysitting.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img  width='60%' src='/images/landingPage/scanner.jpg'/>
+                  <img width='60%' src='/images/landingPage/scanner.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img  width='60%' src='/images/landingPage/tutoring.jpg'/>
+                  <img width='60%' src='/images/landingPage/tutoring.jpg'/>
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <img  width='60%' src='/images/landingPage/yardwork.jpg'/>
+                  <img width='60%' src='/images/landingPage/yardwork.jpg'/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
