@@ -31,6 +31,28 @@ const topColumnStyle = {
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleNextVideo = this.handleNextVideo.bind(this);
+  }
+
+  videoSrcs = [
+    'videos/hawaii.webm',
+    'videos/student_teacher.webm',
+    'videos/computer_view.webm',
+  ];
+
+  currentVideo = 0;
+
+  handleNextVideo(e) {
+    const videoEl = e.target;
+    this.currentVideo++;
+    if (this.currentVideo === this.videoSrcs.length) {
+      this.currentVideo = 0;
+    }
+    videoEl.src = this.videoSrcs[this.currentVideo];
+  }
+
   render() {
     return (
         <div>
@@ -40,16 +62,18 @@ class Landing extends React.Component {
                 <Grid.Column>
                   <div style={videoDivStyle}>
                     <div style={videoBlock}>
-                      <video style={{ filter: 'grayscale(100%)' }} autoPlay loop width='100%'>
-                        <source src="/videos/student_teacher.mp4" type='video/mp4'></source>
-                        <source src="/videos/student_teacher.webm" type='video/mp4'></source>
+                      <video style={{ filter: 'grayscale(100%)' }}
+                             autoPlay
+                             width='100%'
+                             onEnded={(e) => this.handleNextVideo(e)}
+                              src='/videos/hawaii.webm'>
                       </video>
                     </div>
                     <div style={contentBlock}>
                       <Input styl={{ width: '800px' }} size={'massive'}
                              placeholder="Search job title" action>
                         <input/>
-                        <Button color={'black'} size={'massive'} type={'submit'}>Search</Button>
+                        <Button color={'blue'} size={'massive'} type={'submit'}>Search</Button>
                       </Input>
                     </div>
                   </div>
