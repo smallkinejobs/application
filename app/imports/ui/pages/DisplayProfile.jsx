@@ -161,7 +161,7 @@ class DisplayProfile extends React.Component {
 
   /** Render the page once subscriptions have been received. */
   renderPage() {
-    const { loading, jobs, modalOpen, selectedJob } = this.state;
+    const { loading, jobs, modalOpen, selectedJob } = this.state; //eslint-disable-line
     return (
         <Container>
           <Modal
