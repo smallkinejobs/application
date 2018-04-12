@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Input, Image, Container, List, Divider, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
+
 const videoDivStyle = {
   width: '100%',
   position: 'relative',
@@ -22,11 +23,11 @@ const contentBlock = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-}
+};
 
 const topColumnStyle = {
   paddingTop: '0',
-}
+};
 
 const rowStyle = {
   backgroundColor: '#F9FAFB',
@@ -45,7 +46,23 @@ const instructionStyle = {
 class Landing extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      searchText: '',
+    };
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleSearchText = this.handleSearchText.bind(this);
     this.handleNextVideo = this.handleNextVideo.bind(this);
+  }
+
+  handleSearch() {
+    const { history } = this.props;
+    history.push(`job-search-results?title=${this.state.searchText}`);
+  }
+
+  handleSearchText(e, data) {
+    this.setState({
+      searchText: data.value,
+    });
   }
 
   videoSrcs = [
@@ -82,11 +99,14 @@ class Landing extends React.Component {
                       </video>
                     </div>
                     <div style={contentBlock}>
-                      <Input styl={{ width: '800px' }} size={'massive'}
-                             placeholder="Search job title" action>
+                      <Input style={{ width: '800px' }} size={'massive'}
+                             placeholder="Search job title" action
+                             onChange={(e, data) => this.handleSearchText(e, data)}>
                         <input/>
-                        <Button color={'blue'} size={'massive'} type={'submit'}>Search</Button>
-                      </Input>
+                        <Button color={'blue'} size={'massive'} type={'submit'} onClick={this.handleSearch}>
+                          Search
+                        </Button>
+                    </Input>
                     </div>
                   </div>
                 </Grid.Column>
