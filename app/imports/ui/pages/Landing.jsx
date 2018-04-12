@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Input, Image, Container, List, Divider, Button } from 'semantic-ui-react';
-import JobSearchResult from './JobSearchResult';
 import PropTypes from 'prop-types';
 
 const videoDivStyle = {
@@ -50,8 +49,8 @@ class Landing extends React.Component {
   }
 
   videoSrcs = [
-    'videos/hawaii.webm',
     'videos/student_teacher.webm',
+    'videos/hawaii.webm',
     'videos/computer_view.webm',
   ];
 
@@ -79,7 +78,7 @@ class Landing extends React.Component {
                              autoPlay
                              width='100%'
                              onEnded={(e) => this.handleNextVideo(e)}
-                              src='/videos/hawaii.webm'>
+                              src='/videos/student_teacher.webm'>
                       </video>
                     </div>
                     <div style={contentBlock}>
@@ -164,7 +163,7 @@ class Landing extends React.Component {
                   <Grid.Column width ={4}>
                   </Grid.Column>
                   <Grid.Column width={4}>
-                    <img width='60%' src='/images/landingPage/shaka.jpg'/>
+                    <img width='60%' src='/images/landingPage/shaka.png'/>
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <List>
