@@ -3,6 +3,7 @@ import { Grid, Header, Image, Card, Container, Modal, Button, Label } from 'sema
 import Skills from '/imports/ui/components/Skills';
 import JobCard from '/imports/ui/components/JobCard';
 import { subDays, distanceInWordsToNow } from 'date-fns';
+import PropTypes from 'prop-types';
 
 /** Renders the Profile Page of the Current User. Includes skills and recommended jobs for
  * prospective employees */
@@ -122,6 +123,7 @@ class DisplayProfile extends React.Component {
       loading: true,
       jobs: this.matchJobs(),
     });
+    this.handleEditResume = this.handleEditResume.bind(this);
   }
 
   openModal(id) {
@@ -152,6 +154,11 @@ class DisplayProfile extends React.Component {
       return _.intersection(jobSkillTitles, userSkillTitles).length > 0; //eslint-disable-line
     });
     return filteredJobs;
+  }
+
+  handleEditResume() {
+    const { history } = this.props;
+    history.push('/edit-resume/1');
   }
 
   /** Render the page */
@@ -197,6 +204,8 @@ class DisplayProfile extends React.Component {
             <Grid.Row columns={2}>
               <Grid.Column floated='left'>
                 <Image ui size='medium' src={this.user.image}/>
+                <br/>
+                <Button onClick={this.handleEditResume}>Edit Resume</Button>
               </Grid.Column>
               <Grid.Column floated='right'>
                 {(this.user.role === 'employee') &&
@@ -242,6 +251,10 @@ class DisplayProfile extends React.Component {
     );
   }
 }
+
+DisplayProfile.propTypes = {
+  history: PropTypes.any,
+};
 
 export default DisplayProfile;
 
