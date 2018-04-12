@@ -14,6 +14,7 @@ import Signup from '../pages/Signup';
 import Signout from '../pages/Signout';
 import JobSearchResult from '../pages/JobSearchResult';
 import DisplayProfile from '../pages/DisplayProfile';
+import EditResume from '../pages/EditResume';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -27,8 +28,9 @@ class App extends React.Component {
               <Route path="/signin" component={Signin}/>
               <Route path="/signup" component={Signup}/>
               <Route path="/job-search-results" component={JobSearchResult} />
+              <Route path="/edit-resume:_id" component={EditResume} />
               <ProtectedRoute path="/profile" component={DisplayProfile}/>
-              <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
+              <ProtectedRoute path="/edit-resume/:_id" component={EditResume}/>
               <ProtectedRoute path="/signout" component={Signout}/>
               <Route component={NotFound}/>
             </Switch>
