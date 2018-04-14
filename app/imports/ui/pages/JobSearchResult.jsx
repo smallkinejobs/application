@@ -29,6 +29,16 @@ class JobSearchResult extends React.Component {
     this.clearSelectedJob = this.clearSelectedJob.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
+      const jobs = nextProps.jobs;
+      const filteredJobs = jobs.filter((job) => job.title.includes(this.state.jobSearchText));
+      this.setState({
+        jobs: filteredJobs,
+      });
+    }
+  }
+
   componentDidMount() {
     const { location } = this.props;
     const queryParams = qs.parse(location.search);
@@ -36,14 +46,6 @@ class JobSearchResult extends React.Component {
       jobSearchText: queryParams.title,
     });
     this.filterJobResults = this.filterJobResults.bind(this);
-  }
-
-  getJobs() {
-    const jobs = this.props.jobs;
-    const filteredJobs = jobs.filter((job) => job.title.includes(this.state.jobSearchText));
-    this.setState({
-      jobs: filteredJobs,
-    });
   }
 
   openModal(id) {
@@ -71,7 +73,7 @@ class JobSearchResult extends React.Component {
     this.setState({
       loading: true,
     });
-    const jobs = Jobs.find({}).fetch().filter((job) => job.title.includes(data.value));
+    const jobs = this.props.jobs.filter((job) => job.title.includes(data.value));
     setTimeout(() => {
       this.setState({
         jobSearchText: data.value,
@@ -86,9 +88,6 @@ class JobSearchResult extends React.Component {
   }
   /** Render the job search results */
   renderPage() {
-    if (this.state.jobs.length === 0) {
-      this.getJobs();
-    }
     const { jobs, modalOpen, selectedJob, jobSearchText, loading } = this.state;
     return (
       <div>
