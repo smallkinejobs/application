@@ -123,7 +123,6 @@ class DisplayProfile extends React.Component {
       loading: true,
       jobs: this.matchJobs(),
     });
-    this.handleEditResume = this.handleEditResume.bind(this);
   }
 
   openModal(id) {
@@ -154,11 +153,6 @@ class DisplayProfile extends React.Component {
       return _.intersection(jobSkillTitles, userSkillTitles).length > 0; //eslint-disable-line
     });
     return filteredJobs;
-  }
-
-  handleEditResume() {
-    const { history } = this.props;
-    history.push('/edit-resume/1');
   }
 
   /** Render the page */
@@ -204,8 +198,6 @@ class DisplayProfile extends React.Component {
             <Grid.Row columns={2}>
               <Grid.Column floated='left'>
                 <Image ui size='medium' src={this.user.image}/>
-                <br/>
-                <Button onClick={this.handleEditResume}>Edit Resume</Button>
               </Grid.Column>
               <Grid.Column floated='right'>
                 {(this.user.role === 'employee') &&

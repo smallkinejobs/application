@@ -44,76 +44,9 @@ const instructionStyle = {
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchText: '',
-    };
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleSearchText = this.handleSearchText.bind(this);
-    this.handleNextVideo = this.handleNextVideo.bind(this);
-  }
-
-  handleSearch() {
-    const { history } = this.props;
-    history.push(`job-search-results?title=${this.state.searchText}`);
-  }
-
-  handleSearchText(e, data) {
-    this.setState({
-      searchText: data.value,
-    });
-  }
-
-  videoSrcs = [
-    'videos/student_teacher.webm',
-    'videos/hawaii.webm',
-    'videos/computer_view.webm',
-  ];
-
-  currentVideo = 0;
-
-  handleNextVideo(e) {
-    const videoEl = e.target;
-    this.currentVideo++;
-    if (this.currentVideo === this.videoSrcs.length) {
-      this.currentVideo = 0;
-    }
-    videoEl.src = this.videoSrcs[this.currentVideo];
-  }
-
   render() {
     return (
         <div>
-          <div>
-            <Grid centered verticalAlign='middle' textAlign='center'>
-              <Grid.Row style={topColumnStyle}>
-                <Grid.Column>
-                  <div style={videoDivStyle}>
-                    <div style={videoBlock}>
-                      <video style={{ filter: 'grayscale(100%)' }}
-                             autoPlay
-                             width='100%'
-                             onEnded={(e) => this.handleNextVideo(e)}
-                              src='/videos/student_teacher.webm'>
-                      </video>
-                    </div>
-                    <div style={contentBlock}>
-                      <Input style={{ width: '800px' }} size={'massive'}
-                             placeholder="Search job title" action
-                             onChange={(e, data) => this.handleSearchText(e, data)}>
-                        <input/>
-                        <Button color={'blue'} size={'massive'} type={'submit'} onClick={this.handleSearch}>
-                          Search
-                        </Button>
-                    </Input>
-                    </div>
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </div>
-
           <div style={rowStyle}>
             <Container style={instructionStyle}>
               <Grid centered verticalAlign='middle' textAlign='center'>

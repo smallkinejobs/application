@@ -7,14 +7,12 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
-import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import SigninSKJ from '../pages/SigninSKJ';
 import Signup from '../pages/Signup';
 import Signout from '../pages/Signout';
 import JobSearchResult from '../pages/JobSearchResult';
 import DisplayProfile from '../pages/DisplayProfile';
-import EditResume from '../pages/EditResume';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -28,9 +26,7 @@ class App extends React.Component {
               <Route path="/signin" component={SigninSKJ}/>
               <Route path="/signup" component={Signup}/>
               <Route path="/job-search-results" component={JobSearchResult} />
-              <Route path="/edit-resume:_id" component={EditResume} />
               <ProtectedRoute path="/profile" component={DisplayProfile}/>
-              <ProtectedRoute path="/edit-resume/:_id" component={EditResume}/>
               <ProtectedRoute path="/signout" component={Signout}/>
               <Route component={NotFound}/>
             </Switch>
