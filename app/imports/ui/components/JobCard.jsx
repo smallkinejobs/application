@@ -6,9 +6,19 @@ import { distanceInWordsToNow } from 'date-fns';
 class JobCard extends React.Component {
   render() {
     const { job, openModal } = this.props;
+
+    let status = <p style={{ color: 'red' }}>CLOSED</p>;
+    let cardColor = 'red';
+    if (job.open) {
+      status = <p style={{ color: 'green' }}>OPEN</p>;
+      cardColor = 'green';
+    }
+
     return (
-      <Card onClick={() => openModal(job._id) }>
+      <Card onClick={() => openModal(job._id)} color={cardColor}>
         <Card.Content>
+          {status}
+          <br/>
           <Image src='/images/uh_logo.png' size='mini' floated='right'/>
           <Card.Header>
             {job.title}
@@ -32,7 +42,7 @@ class JobCard extends React.Component {
         <Card.Content extra>
           Skills: {
             job.skills.map((skill, index) =>
-              <Label size='tiny' key={index} color='green'>{skill.name}</Label>)
+              <Label tag size='tiny' key={index} color='blue'>{skill.name}</Label>)
         }
         </Card.Content>
       </Card>
