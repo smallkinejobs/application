@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card } from 'semantic-ui-react';
+import { Container, Grid, Divider, Card } from 'semantic-ui-react';
 import { subDays } from 'date-fns';
 import JobCard from './JobCard';
 import EmployeeCard from './EmployeeCard';
@@ -97,19 +97,12 @@ const pastHelpers = [
   },
 ]
 
-export default class EmployerLanding extends React.Component {
+export default class EmployeeLanding extends React.Component {
   render() {
     return (
-      <div style={{ backgroundColor: '#71b1e0' }}>
+      <div style={{ backgroundColor: '#009688' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
-          <Grid columns={2}>
-            <Grid.Column>
-              <h1>Your Jobs</h1>
-            </Grid.Column>
-            <Grid.Column textAlign='right'>
-              <Button primary >Create New Job</Button>
-            </Grid.Column>
-          </Grid>
+          <h1>Jobs Applied For</h1>
           <Divider/>
           <Grid>
             <Grid.Row>
@@ -121,13 +114,13 @@ export default class EmployerLanding extends React.Component {
             </Grid.Row>
           </Grid>
 
-          <h1>Your Past Helpers</h1>
+          <h1>Other Recommended Jobs</h1>
           <Divider/>
           <Grid>
             <Grid.Row>
               <Card.Group>
                 {
-                  pastHelpers.map((helper, index) => <EmployeeCard key={index} employee={helper}/>)
+                  jobs.map((job) => <JobCard key={job._id} job={job}/>)
                 }
               </Card.Group>
             </Grid.Row>
