@@ -1,7 +1,73 @@
 {
   "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "admin" },
-    { "email": "john@foo.com", "password": "changeme" }
+    {
+      "email": "sarah@foo.com",
+      "password": "changeme",
+      "profile": {
+        "firstName": "Sarah",
+        "lastName": "Foo",
+        "phone": "555-1234",
+        "address": "1234 Sandy Palms Beach, AnyState USA",
+        "imageURL": "/images/sarah.png",
+        "skills": []
+      },
+      "roles": ["employer"]
+    },
+    {
+      "email": "john@foo.com",
+      "password": "changeme",
+      "profile": {
+        "firstName": "John",
+        "lastName": "Bar",
+        "phone": "555-5555",
+        "address": "999 Sunnyville Lane, Anywhere USA",
+        "imageURL": "/images/john.png",
+        "skills": [{
+          "name": "C/C++",
+          "_id": 1
+        },
+        {
+          "name": "IT",
+          "_id": 2
+        },
+        {
+          "name": "Data Analytics",
+          "_id": 3
+        },
+        {
+          "name": "Web Development",
+          "_id": 4
+        }
+        ]
+      },
+      "roles": ["employee"]
+    },
+    {
+      "email": "jim@foo.com",
+      "password": "changeme",
+      "profile": {
+        "firstName": "Jim",
+        "lastName": "Meteor",
+        "phone": "999-9999",
+        "address": "500 Meteorpark Drive, Meteorville USA",
+        "imageURL": "/images/jim.png",
+        "skills": [
+          {
+            "name": "Landscaping",
+            "_id": 1
+          },
+          {
+            "name": "Carpentry",
+            "_id": 2
+          },
+          {
+            "name": "Clerical Assistance",
+            "_id": 3
+          }
+        ]
+      },
+      "roles": ["employee"]
+    }
   ],
 
   "defaultData": [
