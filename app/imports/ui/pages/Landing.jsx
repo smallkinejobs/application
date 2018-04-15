@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Input, Image, Container, List, Divider, Button } from 'semantic-ui-react';
+import { Grid, Segment, Image, Container, Icon, Divider, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 
@@ -29,8 +29,12 @@ const topColumnStyle = {
   paddingTop: '0',
 };
 
-const rowStyle = {
+const firstRowStyle = {
   backgroundColor: '#F9FAFB',
+}
+
+const secondRowStyle = {
+  backgroundColor: '#2185d0',
 }
 
 const headingStyle = {
@@ -47,7 +51,7 @@ class Landing extends React.Component {
   render() {
     return (
         <div>
-          <div style={rowStyle}>
+          <div style={firstRowStyle}>
             <Container style={instructionStyle}>
               <Grid centered verticalAlign='middle' textAlign='center'>
                 <Grid.Row>
@@ -59,112 +63,79 @@ class Landing extends React.Component {
                     <span>ones</span>
                   </h1>
                 </Grid.Row>
-                <Divider/>
-                <Grid.Row>
-                  <Grid.Column width ={4}>
+
+                <Grid.Row columns={2}>
+                  <Grid.Column style={{ paddingRight: '3rem' }} textAlign='center'>
+                    <Segment color='orange'>
+                      <h1 style={{ color: '#F2711C' }}>Find Help</h1>
+                      <Grid columns={2}>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <Icon name='users' circular color='orange' size='huge'/>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left' >
+                            <h3>Sign up as a Employer to find help</h3>
+                            <Button color='orange'>Employer Sign Up</Button>
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <h3>Post your task that you need completed</h3>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left'>
+                            <Icon name='announcement' circular color='orange' size='huge'/>
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <Icon name='write' circular color='orange' size='huge'/>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left'>
+                            <h3>Compensate and rate your helper</h3>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Segment>
                   </Grid.Column>
-                  <Grid.Column width={4}>
-                    <img src='/images/landingPage/profiles.png' floated='right'/>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <List>
-                      <List.Item>
-                        <h1>Step 1</h1>
-                      </List.Item>
-                      <List.Item>
-                        <h2>Create your profile</h2>
-                      </List.Item>
-                      <List.Item>
-                        <h3>
-                          Create your profile. If you're looking for employees just add your basic info. If you're
-                          looking for a small kine job, list your skills so that way we can help you find the perfect job
-                          for you.
-                        </h3>
-                      </List.Item>
-                    </List>
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                  <br/>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Column textAlign={'right'} width={8}>
-                    <List>
-                      <List.Item>
-                        <h1>Step 2</h1>
-                      </List.Item>
-                      <List.Item>
-                        <h2>Small kine search or small kine post</h2>
-                      </List.Item>
-                      <List.Item>
-                        <h3>
-                          Once you have your profile created employers can post up jobs that they need help where
-                          employees can apply for that job. Employees will have 'recommended jobs' depending on the skills
-                          listed on your profile, you can also search for other jobs if you want to see more.
-                        </h3>
-                      </List.Item>
-                    </List>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <img src='/images/landingPage/choose.png'/>
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                  <br/>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Column width ={4}>
-                  </Grid.Column>
-                  <Grid.Column width={4}>
-                    <img width='60%' src='/images/landingPage/shaka.png'/>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <List>
-                      <List.Item>
-                        <h1>Step 3</h1>
-                      </List.Item>
-                      <List.Item>
-                        <h2>Apply and cruise 'um</h2>
-                      </List.Item>
-                      <List.Item>
-                        <h3>Once you have posted a job and/or applied for a job sit back and relax.</h3>
-                      </List.Item>
-                    </List>
+                  <Divider vertical>OR</Divider>
+                  <Grid.Column style={{ paddingLeft: '3rem' }} textAlign='center'>
+                    <Segment color='blue'>
+                      <h1 style={{ color: '#2185D0' }}>Lend a Hand</h1>
+                      <Grid columns={2}>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <Icon name='users' circular color='blue' size='huge'/>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left' >
+                            <h3>Sign up as a helper</h3>
+                            <Button color='blue'>Helper Sign Up</Button>
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <h3>List your skills for match up with the perfect task</h3>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left'>
+                            <Icon name='checkmark box' circular color='blue' size='huge'/>
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column textAlign='right'>
+                            <Icon name='money' circular color='blue' size='huge'/>
+                          </Grid.Column>
+                          <Grid.Column textAlign='left'>
+                            <h3>Complete a task requested and get paid</h3>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Segment>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
             </Container>
           </div>
 
-
-          <Container style={{ paddingTop: '7rem', paddingBottom: '7rem' }}>
-            <Grid centered verticalAlign='middle' textAlign='center'>
-              <Grid.Row>
-                <h1 style={headingStyle}>What is 'Small Kine Jobs'?</h1>
-              </Grid.Row>
-              <Divider/>
-              <Grid.Row>
-                <Container text>
-                  <h2>
-                    Small Kine Jobs is an app that allows students and faculty of UH Manoa to find or post a job that
-                    doesn't require a long time commitment.
-                  </h2>
-                  <h2>
-                    These small tasks can range from office work, to yard
-                    maintenence, or other small tasks where you could use an exta hand. This also offers a platform for
-                    those who are seeking assistance with these tasks, to find help as quickly as possible.
-                  </h2>
-                  <h2>
-                    We hope that Small Kine Jobs can fulfill the Hawaiian value of "Laulima" or cooperation. Where we can have
-                    employees who are willing to help employers and employers offer the opportunity for employees to
-                    showcase their skills.
-                  </h2>
-                </Container>
-              </Grid.Row>
-            </Grid>
-          </Container>
-
-          <div style={rowStyle}>
+          <div style={secondRowStyle}>
             <Container style={{ paddingTop: '7rem', paddingBottom: '7rem' }}>
               <Grid textAlign='center'>
                 <Grid.Row>

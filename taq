@@ -1,0 +1,169 @@
+[33mcommit b45e2f22ee915b8f4643daf6408f268f96262ca5[m[33m ([m[1;36mHEAD -> [m[1;32medit-landing[m[33m)[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Fri Apr 13 21:26:09 2018 -1000
+
+    remove resume and clean up landing
+
+[33mcommit 98b070e9954333b704cac3b4af8d3b13e58f3d48[m[33m ([m[1;31mupstream/master[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: htobin <35468353+htobin@users.noreply.github.com>
+Date:   Wed Apr 11 23:05:36 2018 -1000
+
+    search page started (#34)
+
+[33mcommit 9fbb72eb9da1175e59602d8a677932d1e38b7765[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Wed Apr 11 22:53:29 2018 -1000
+
+    Landing tweaks (#36)
+    
+    * add resume page
+    
+    * style landing page and add testimonial
+    
+    * add transparent shaka image
+
+[33mcommit 4a3f26e3de26cbf0ac34e0e7dc3ee2aafd115d77[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Wed Apr 11 20:15:12 2018 -1000
+
+    add resume page (#35)
+
+[33mcommit 346f255c155382bb4dfe2be8ee458f14a523a13e[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Mon Apr 9 22:41:20 2018 -1000
+
+    Fixed Landing Page Search Functionality (#33)
+    
+    * Fixed Landing Page Search Functionality
+    
+    * remove console log
+
+[33mcommit da351e16e052fed88abe94110fd4a67bed4ac5e7[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Mon Apr 9 20:44:59 2018 -1000
+
+    fix the missing code (#30)
+
+[33mcommit 6e1c04c0cbe95be117c74b655768c77e83d2dea1[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Mon Apr 9 19:19:39 2018 -1000
+
+    add multiple video shows and turn button blue (#29)
+
+[33mcommit 3d8e99f70bff57bc63ed61632158a15cf342dca7[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Mon Apr 9 19:02:22 2018 -1000
+
+    Fleshed Out Profile Page With Recommended Jobs (#27)
+    
+    * Linked in the lodash library
+    
+    * Changed skill rendering to use label
+    
+    * Implemented recommended jobs feature
+    
+    * Changed matchJobs function to use lodash intersection
+    
+    * Added open modal functionality
+    
+    * Fixed eslint errors
+
+[33mcommit 0645627b29ff8cadcf52ac4a1c89b0806669778c[m
+Author: htobin <35468353+htobin@users.noreply.github.com>
+Date:   Mon Apr 9 13:53:44 2018 -1000
+
+    Hoku landing page (#25)
+    
+    * got the main layout of the landing page missing the description and images
+    
+    * add background image
+    
+    * add video bg
+    
+    * got the pictures and worked on the description, still need to do the testimony component also need to float the pictures in the steps section, while also changing the sizes on the lower pictures
+    
+    * almost done, added some personality to the page, need to float the pictures in the steps, as well as resize those after the description, also need to add a 'testimonies' component
+    
+    * added and extra column, app didn't load
+    
+    * need to get rid of the border for the shaka, landing page is 80% done
+    
+    * fixed landing page console errors
+
+[33mcommit e3bc5e2684cb84a9c2ade0c8b5adf4639b541c4b[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Sat Apr 7 15:29:30 2018 -1000
+
+    Cleaned out template code and fixed NavBar; Changed NavBar color (#22)
+    
+    * Removed AddStuff and ListStuff
+    
+    * Changed NavBar header to 'Small Kine Jobs'
+    
+    * Removed ListStuff and StuffItem
+    
+    * Removed ListStuffAdmin and StuffItemAdmin
+    
+    * Removed AddStuff page
+    
+    * Changed navbar menu color to blue
+
+[33mcommit 41659086c59ab7d03e32c095c4a26ea9b72387fc[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Sat Apr 7 15:29:00 2018 -1000
+
+    connect landing page search to results page (#23)
+
+[33mcommit 145a81c564575e2a89ca55bfeca56a389df4a3c9[m
+Author: htobin <35468353+htobin@users.noreply.github.com>
+Date:   Sat Apr 7 13:40:11 2018 -1000
+
+    Landing Page (#11)
+    
+    resolves #1
+    
+    * got the main layout of the landing page missing the description and images
+    
+    * add background image
+    
+    * add video bg
+    
+    * got the pictures and worked on the description, still need to do the testimony component also need to float the pictures in the steps section, while also changing the sizes on the lower pictures
+    
+    * almost done, added some personality to the page, need to float the pictures in the steps, as well as resize those after the description, also need to add a 'testimonies' component
+    
+    * added and extra column, app didn't load
+    
+    * need to get rid of the border for the shaka, landing page is 80% done
+
+[33mcommit 48ed171d6539f7313add37b17b03fd89b974b200[m
+Author: Victor Garcia Jr <victorlg@hawaii.edu>
+Date:   Fri Apr 6 11:55:55 2018 -1000
+
+    Add Search result (#10)
+    
+    * add job search page
+    
+    * add job card and modal views
+    
+    * add job filter funciton
+    
+    * add mock loader for loading jobs on change
+
+[33mcommit 9fcfc16f69306ea2a5833bf848e44e1f2be21caf[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Thu Apr 5 21:56:48 2018 -1000
+
+    Finished mockup of profile page (#7)
+
+[33mcommit fb22b8e2110ffbadb5c01f7bc0dda1c4e45389d2[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Tue Apr 3 09:32:55 2018 -1000
+
+    Installed meteor template
+
+[33mcommit cc9fa7d46426f47d9e310a58cf6ec25a1195493d[m
+Author: Billy Troy Wooton <gcowootont@gmail.com>
+Date:   Tue Apr 3 09:11:29 2018 -1000
+
+    Initial commit
