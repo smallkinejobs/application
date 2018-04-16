@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Container, Form, Grid, Header, Message, Segment, Button, Icon } from 'semantic-ui-react';
 
 /**
  * Signin page overrides the form’s submit event and call Meteor’s loginWithPassword().
@@ -55,12 +55,12 @@ export default class Signin extends React.Component {
               <Form onSubmit={this.handleSubmit}>
                 <Segment stacked>
                   <Form.Input
-                      label="Email"
+                      label="Username"
                       icon="user"
                       iconPosition="left"
                       name="email"
                       type="email"
-                      placeholder="E-mail address"
+                      placeholder="Enter username here"
                       onChange={this.handleChange}
                   />
                   <Form.Input
@@ -72,12 +72,21 @@ export default class Signin extends React.Component {
                       type="password"
                       onChange={this.handleChange}
                   />
-                  <Form.Button content="Submit"/>
+                  <Form>
+                    <Button color='blue'>Submit</Button>
+                  </Form>
                 </Segment>
+                <Segment>
+                  <Grid centered columns={3}>
+                    <Grid.Column width={6}></Grid.Column>
+                    <Grid.Column width={4}><Button color='green'>UH LOGIN</Button></Grid.Column>
+                    <Grid.Column width={6}></Grid.Column>
+                  </Grid>
+                </Segment>
+                <Message>
+                  <Link to="/signup">Click here to Register</Link>
+                </Message>
               </Form>
-              <Message>
-                <Link to="/signup">Click here to Register</Link>
-              </Message>
               {this.state.error === '' ? (
                   ''
               ) : (
