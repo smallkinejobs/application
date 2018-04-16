@@ -103,7 +103,6 @@ class DisplayProfile extends React.Component {
     this.setState({
       loading: true,
     });
-    this.handleEditResume = this.handleEditResume.bind(this);
   }
 
   openModal(id) {
@@ -134,11 +133,6 @@ class DisplayProfile extends React.Component {
       return _.intersection(jobSkillTitles, userSkillTitles).length > 0; //eslint-disable-line
     });
     return filteredJobs;
-  }
-
-  handleEditResume() {
-    const { history } = this.props;
-    history.push('/edit-resume/1');
   }
 
   /** Render the page */
