@@ -31,8 +31,9 @@ class NavBar extends React.Component {
   }
 
   handleSearchText(e, data) {
+    const searchText = data.value;
     this.setState({
-      searchText: data.value,
+      searchText,
     });
   }
 
@@ -48,7 +49,7 @@ class NavBar extends React.Component {
         <Menu.Item position="right">
           {
             this.props.currentUser !== '' &&
-            <NavJobSearch/>
+            <NavJobSearch handleSearch={this.handleSearch} handleSearchText={this.handleSearchText}/>
           }
         </Menu.Item>
         <Menu.Item>
@@ -74,17 +75,23 @@ class NavBar extends React.Component {
 
 class NavJobSearch extends React.Component {
   render() {
+    const { handleSearchText, handleSearch } = this.props;
     return (
       <Input style={{ width: '400px' }}
              placeholder="Search job title" action
-             onChange={(e, data) => this.handleSearchText(e, data)}>
+             onChange={(e, data) => handleSearchText(e, data)}>
         <input/>
-        <Button type={'submit'} onClick={this.handleSearch}>
+        <Button type={'submit'} onClick={handleSearch}>
           Search
         </Button>
       </Input>
     );
   }
+}
+
+NavJobSearch.propTypes = {
+  handleSearchText: PropTypes.func,
+  handleSearch: PropTypes.func,
 }
 
 /** Declare the types of all properties. */
