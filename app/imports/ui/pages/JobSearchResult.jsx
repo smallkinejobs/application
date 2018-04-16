@@ -1,13 +1,15 @@
 import React from 'react';
-import { distanceInWordsToNow, subDays } from 'date-fns';
+import { distanceInWordsToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
 import { Grid, Header, Card, Modal, Image, Button, Label, Input, Loader } from 'semantic-ui-react';
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
 import JobCard from '../components/JobCard';
+import { Jobs } from '../../api/jobs/jobs.js';
 
 /** Renders the Page for job search results. */
 class JobSearchResult extends React.Component {
-
 
   /** Bind 'this' so that a ref to the Form can be saved in formRef and communicated between render() and submit(). */
   constructor(props) {
@@ -16,7 +18,7 @@ class JobSearchResult extends React.Component {
     this.state = {
       loading: false,
       jobSearchText: '',
-      jobs: this.jobs,
+      jobs: [],
       modalOpen: false,
       selectedJob: {
         skills: [],
@@ -27,12 +29,20 @@ class JobSearchResult extends React.Component {
     this.clearSelectedJob = this.clearSelectedJob.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
+      const jobs = nextProps.jobs;
+      const filteredJobs = jobs.filter((job) => job.title.includes(this.state.jobSearchText));
+      this.setState({
+        jobs: filteredJobs,
+      });
+    }
+  }
+
   componentDidMount() {
     const { location } = this.props;
     const queryParams = qs.parse(location.search);
-    const jobs = this.jobs.filter((job) => job.title.includes(queryParams.title));
     this.setState({
-      jobs,
       jobSearchText: queryParams.title,
     });
     this.filterJobResults = this.filterJobResults.bind(this);
@@ -41,7 +51,7 @@ class JobSearchResult extends React.Component {
   openModal(id) {
     this.setState({
       modalOpen: true,
-      selectedJob: this.jobs.find((job) => job._id === id),
+      selectedJob: this.state.jobs.find((job) => job._id === id),
     });
   }
 
@@ -63,7 +73,7 @@ class JobSearchResult extends React.Component {
     this.setState({
       loading: true,
     });
-    const jobs = this.jobs.filter((job) => job.title.includes(data.value));
+    const jobs = this.props.jobs.filter((job) => job.title.includes(data.value));
     setTimeout(() => {
       this.setState({
         jobSearchText: data.value,
@@ -73,8 +83,11 @@ class JobSearchResult extends React.Component {
     }, 100);
   }
 
-  /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
+    return (this.props.ready) ? this.renderPage() : <Loader>Retrieving Jobs</Loader>;
+  }
+  /** Render the job search results */
+  renderPage() {
     const { jobs, modalOpen, selectedJob, jobSearchText, loading } = this.state;
     return (
       <div>
@@ -128,6 +141,14 @@ class JobSearchResult extends React.Component {
 
 JobSearchResult.propTypes = {
   location: PropTypes.any,
+  jobs: PropTypes.array.isRequired,
+  ready: PropTypes.bool.isRequired,
 };
 
-export default JobSearchResult;
+export default withTracker(() => {
+  const subscription = Meteor.subscribe('Jobs');
+  return {
+    ready: subscription.ready(),
+    jobs: Jobs.find({}).fetch(),
+  };
+})(JobSearchResult);

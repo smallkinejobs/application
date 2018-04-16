@@ -1,41 +1,14 @@
 import React from 'react';
-import { Grid, Header, Image, Card, Container, Modal, Button, Label } from 'semantic-ui-react';
+import { Grid, Header, Image, Card, Container, Modal, Button, Label, Loader } from 'semantic-ui-react';
 import Skills from '/imports/ui/components/Skills';
 import JobCard from '/imports/ui/components/JobCard';
 import { subDays, distanceInWordsToNow } from 'date-fns';
 import PropTypes from 'prop-types';
-
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
 /** Renders the Profile Page of the Current User. Includes skills and recommended jobs for
  * prospective employees */
 class DisplayProfile extends React.Component {
-
-  user = {
-    firstName: 'John',
-    lastName: 'Foo',
-    businessName: 'FooProductions Ltd.',
-    address: '1234 Sunnyville Ln. Anywhere USA',
-    phone: '555-5555',
-    email: 'john@foo.com',
-    image: '/images/john.png',
-    role: 'employee',
-    skills: [{
-      name: 'C/C++',
-      _id: 1,
-    },
-      {
-        name: 'IT',
-        _id: 2,
-      },
-      {
-        name: 'Data Analytics',
-        _id: 3,
-      },
-      {
-        name: 'Web Development',
-        _id: 4,
-      },
-    ],
-  };
 
   jobs = [
     {
@@ -118,10 +91,17 @@ class DisplayProfile extends React.Component {
     this.clearSelectedJob = this.clearSelectedJob.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.user !== undefined && this.props.user === undefined) {
+      this.setState({
+        jobs: this.matchJobs(newProps.user),
+      });
+    }
+  }
+
   componentDidMount() {
     this.setState({
       loading: true,
-      jobs: this.matchJobs(),
     });
   }
 
@@ -146,8 +126,8 @@ class DisplayProfile extends React.Component {
     });
   }
 
-  matchJobs() {
-    const userSkillTitles = this.user.skills.map((skill) => skill.name);
+  matchJobs(user) {
+    const userSkillTitles = user.profile.skills.map((skill) => skill.name);
     const filteredJobs = this.jobs.filter(function (job) {
       const jobSkillTitles = job.skills.map((skill) => skill.name);
       return _.intersection(jobSkillTitles, userSkillTitles).length > 0; //eslint-disable-line
@@ -157,12 +137,13 @@ class DisplayProfile extends React.Component {
 
   /** Render the page */
   render() {
-    return this.renderPage();
+    return (this.props.user !== undefined) ? this.renderPage() : <Loader>Loading user profile</Loader>;
   }
 
   /** Render the page once subscriptions have been received. */
   renderPage() {
     const { loading, jobs, modalOpen, selectedJob } = this.state; //eslint-disable-line
+    const profile = this.props.user.profile;
     return (
         <Container>
           <Modal
@@ -197,38 +178,33 @@ class DisplayProfile extends React.Component {
           <Grid container divided='vertically' rows={3}>
             <Grid.Row columns={2}>
               <Grid.Column floated='left'>
-                <Image ui size='medium' src={this.user.image}/>
+                <Image ui size='medium' src={profile.imageURL}/>
+                <br/>
+                <Button onClick={this.handleEditResume}>Edit Resume</Button>
               </Grid.Column>
               <Grid.Column floated='right'>
-                {(this.user.role === 'employee') &&
                 <Header as='h1'>
-                  {'Name: '} {this.user.firstName} {this.user.lastName}
-                </Header>
-                }
-                {(this.user.role === 'employer') &&
-                <Header as='h1'>
-                  {'Company Name: '} {this.user.businessName}
-                </Header>
-                }
-                <Header as='h2'>
-                  Address: {this.user.address}
+                  {'Name: '} {profile.firstName} {profile.lastName}
                 </Header>
                 <Header as='h2'>
-                  Phone: {this.user.phone}
+                  Address: {profile.address}
                 </Header>
                 <Header as='h2'>
-                  Email: {this.user.email}
+                  Phone: {profile.phone}
+                </Header>
+                <Header as='h2'>
+                  Email: {this.props.user.emails[0].address}
                 </Header>
               </Grid.Column>
             </Grid.Row>
             {
-              (this.user.role === 'employee') &&
+              (profile.skills.length !== 0) &&
               <Grid.Row>
-                <Skills skills={this.user.skills}/>
+                <Skills skills={profile.skills}/>
               </Grid.Row>
             }
             {
-              (this.user.role === 'employee') &&
+              (profile.skills.length !== 0) &&
               <Grid.Row>
                 <Header as='h1'>Recommended Jobs</Header>
                 <Container>
@@ -246,7 +222,13 @@ class DisplayProfile extends React.Component {
 
 DisplayProfile.propTypes = {
   history: PropTypes.any,
+  user: PropTypes.object,
 };
 
-export default DisplayProfile;
+export default withTracker(() => {
+  const user = Meteor.users.findOne({ _id: Meteor.userId() });
+  return {
+    user: user,
+  };
+})(DisplayProfile);
 
