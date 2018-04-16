@@ -89,7 +89,7 @@ class JobSearchResult extends React.Component {
   renderPage() {
     const { jobs, modalOpen, selectedJob, jobSearchText, loading } = this.state;
     return (
-      <div>
+      <div style={{ paddingTop: '3rem' }}>
         <Grid>
           <Grid.Row centered>
             <Input label='Job Search' value={jobSearchText} onChange={(e, data) => this.filterJobResults(e, data)} />

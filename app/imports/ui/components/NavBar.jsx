@@ -38,6 +38,10 @@ class NavBar extends React.Component {
   }
 
   render() {
+    let showSearchBar = true;
+    if (this.props.location.pathname === '/job-search-results') {
+      showSearchBar = false;
+    }
     return (
       <Menu attached="top" borderless inverted color='blue'>
         <Menu.Item as={NavLink} activeClassName="" exact to="/">
@@ -48,7 +52,7 @@ class NavBar extends React.Component {
         ) : ''}
         <Menu.Item position="right">
           {
-            this.props.currentUser !== '' &&
+            this.props.currentUser !== '' && showSearchBar &&
             <NavJobSearch handleSearch={this.handleSearch} handleSearchText={this.handleSearchText}/>
           }
         </Menu.Item>
@@ -98,6 +102,7 @@ NavJobSearch.propTypes = {
 NavBar.propTypes = {
   currentUser: PropTypes.string,
   history: PropTypes.any,
+  location: PropTypes.any,
 };
 
 /** withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker */
