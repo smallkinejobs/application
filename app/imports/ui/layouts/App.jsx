@@ -8,7 +8,7 @@ import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import NotFound from '../pages/NotFound';
-import SigninSKJ from '../pages/SigninSKJ';
+import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
 import Signout from '../pages/Signout';
 import JobSearchResult from '../pages/JobSearchResult';
@@ -23,7 +23,7 @@ class App extends React.Component {
             <NavBar/>
             <Switch>
               <Route exact path="/" component={Landing}/>
-              <Route path="/signin" component={SigninSKJ}/>
+              <Route path="/signin" component={Signin}/>
               <Route path="/signup" component={Signup}/>
               <Route path="/job-search-results" component={JobSearchResult} />
               <ProtectedRoute path="/profile" component={DisplayProfile}/>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Container, Form, Grid, Header, Message, Segment, Button } from 'semantic-ui-react';
 
 /**
  * Signin page overrides the form’s submit event and call Meteor’s loginWithPassword().
@@ -46,50 +46,66 @@ export default class Signin extends React.Component {
     }
     // Otherwise return the Login form.
     return (
-        <Container>
-          <Grid textAlign="center" verticalAlign="middle" centered columns={2}>
-            <Grid.Column>
-              <Header as="h2" textAlign="center">
-                Login to your account
-              </Header>
-              <Form onSubmit={this.handleSubmit}>
-                <Segment stacked>
-                  <Form.Input
-                      label="Email"
-                      icon="user"
-                      iconPosition="left"
-                      name="email"
-                      type="email"
-                      placeholder="E-mail address"
-                      onChange={this.handleChange}
-                  />
-                  <Form.Input
-                      label="Password"
-                      icon="lock"
-                      iconPosition="left"
-                      name="password"
-                      placeholder="Password"
-                      type="password"
-                      onChange={this.handleChange}
-                  />
-                  <Form.Button content="Submit"/>
-                </Segment>
-              </Form>
-              <Message>
-                <Link to="/signup">Click here to Register</Link>
-              </Message>
-              {this.state.error === '' ? (
-                  ''
-              ) : (
-                  <Message
-                      error
-                      header="Login was not successful"
-                      content={this.state.error}
-                  />
-              )}
-            </Grid.Column>
-          </Grid>
-        </Container>
+        <div style={ { backgroundImage: 'url(/images/login/blueBack.jpeg)', } }>
+          <Container>
+            <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered columns={2}>
+              <Grid.Column>
+                <Header as="h2" textAlign="center" inverted>
+                  Welcome Back
+                </Header>
+                <Form onSubmit={this.handleSubmit}>
+                  <Segment basic style={{ backgroundColor: 'none' }}>
+                    <Form.Input
+                        icon="user"
+                        iconPosition="left"
+                        name="email"
+                        type="email"
+                        placeholder="Enter username here"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        icon="lock"
+                        iconPosition="left"
+                        name="password"
+                        placeholder="Password"
+                        type="password"
+                        onChange={this.handleChange}
+                    />
+                    <Grid centered columns={3}>
+                      <Grid.Column width={8}>
+                        <Form.Button color='blue'>Submit</Form.Button>
+                      </Grid.Column>
+                      <Grid.Column width={3}></Grid.Column>
+                      <Grid.Column width={5}>
+                        <Form.Checkbox label='Remember me'></Form.Checkbox>
+                      </Grid.Column>
+                    </Grid>
+                  </Segment>
+                  <Segment>
+                    <Grid centered columns={2}>
+                      <Grid.Column><h3>Don't have an account yet?</h3>
+                        <Link to="/signup">Go back to the home page to get started</Link>
+                      </Grid.Column>
+                      <Grid.Column>
+                        <h3>Log in using your University of Hawaii information</h3>
+                        <Button color='green'>UH LOGIN</Button>
+                      </Grid.Column>
+                    </Grid>
+                  </Segment>
+                </Form>
+                {this.state.error === '' ? (
+                    ''
+                ) : (
+                    <Message
+                        error
+                        header="Login was not successful"
+                        content={this.state.error}
+                    />
+                )}
+              </Grid.Column>
+            </Grid>
+          </Container>
+        </div>
     );
   }
 }
