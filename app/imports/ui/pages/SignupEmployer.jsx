@@ -41,13 +41,13 @@ export default class Signup extends React.Component {
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
             <Grid.Column>
               <Header as="h2" textAlign="center">
-                Create your Employee profile
+                Create your Employer profile
               </Header>
               <Form onSubmit={this.handleSubmit}>
                 <Segment stacked>
                   <Form.Group>
                     <Form.Input
-                        width={8}
+                        width={6}
                         required
                         label="First Name"
                         placeholder="First Name"
@@ -55,11 +55,16 @@ export default class Signup extends React.Component {
                         type="firstName"
                     />
                     <Form.Input
-                        width={8}
+                        width={6}
                         required
                         label="Last Name"
                         placeholder="Last Name"
                         name="lastName"
+                    />
+                    <Form.Input
+                        width={4}
+                        label="Job Title"
+                        placeholder="Title"
                     />
                   </Form.Group>
                   <Form.Group>
@@ -92,14 +97,6 @@ export default class Signup extends React.Component {
                       label="Profile Picture"
                       action={{ color: 'blue', labelPosition: 'right', icon: 'photo', content: 'Upload' }}
                   />
-                  <Form.Input
-                      width={8}
-                      label="Skills"
-                      placeholder="Enter a skill then press the enter button"
-                      name="skills"
-                  />
-                  <hr/>
-                  <h2>Skills component</h2>
                   <Form.Button content="Submit"/>
                 </Segment>
               </Form>

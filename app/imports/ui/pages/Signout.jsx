@@ -8,7 +8,7 @@ export default class Signout extends React.Component {
     Meteor.logout();
     return (
       <Header as="h2" textAlign="center">
-        <p>You are signed out.</p>
+        <p>You are signed out. A hui hou</p>
       </Header>
     );
   }
