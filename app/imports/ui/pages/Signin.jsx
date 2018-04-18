@@ -46,7 +46,10 @@ export default class Signin extends React.Component {
     }
     // Otherwise return the Login form.
     return (
-        <div style={ { backgroundImage: 'url(/images/login/blueBack.jpeg)', } }>
+        <div style={ {
+          backgroundImage: 'url(/images/login/blueBack.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'bottom' } }>
           <Container>
             <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered columns={2}>
               <Grid.Column>
