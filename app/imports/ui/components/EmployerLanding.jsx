@@ -1,82 +1,12 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card } from 'semantic-ui-react';
-import { subDays } from 'date-fns';
+import { Container, Grid, Divider, Button, Card, Loader } from 'semantic-ui-react';
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import JobCard from './JobCard';
 import EmployeeCard from './EmployeeCard';
+import { Jobs } from '../../api/jobs/jobs';
 
-const jobs = [
-  {
-    _id: 1,
-    title: 'Job 1',
-    description: 'Leverage agile frameworks to provide a robust synopsis for high level overviews.',
-    location: 'Campus Center',
-    employerName: 'Jessy',
-    pay: 12.44,
-    open: true,
-    postDate: subDays(new Date(), 3),
-    skills: [
-      { _id: 1, name: 'technology' },
-      { _id: 2, name: 'IT' },
-      { _id: 3, name: 'programming' },
-    ],
-  },
-  {
-    _id: 2,
-    title: 'Job 11',
-    description: 'Bring to the table win-win survival strategies to ensure proactive domination.',
-    location: 'Food Court',
-    pay: 11.22,
-    employerName: 'Bill',
-    open: true,
-    postDate: subDays(new Date(), 1),
-    skills: [
-      { _id: 1, name: 'MS Word' },
-      { _id: 2, name: 'IT' },
-      { _id: 3, name: 'Typing' },
-    ],
-  },
-  {
-    _id: 3,
-    title: 'Job 123',
-    description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
-    location: 'Library',
-    employerName: 'Bill',
-    open: true,
-    pay: 10.11,
-    postDate: subDays(new Date(), 10),
-    skills: [
-      { _id: 1, name: 'AWS' },
-      { _id: 2, name: 'Unix' },
-    ],
-  },
-  {
-    _id: 4,
-    title: 'Job 12',
-    description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
-    location: 'Landscaping',
-    employerName: 'Bill',
-    open: true,
-    pay: 12.22,
-    postDate: subDays(new Date(), 3),
-    skills: [
-      { _id: 2, name: 'React' },
-      { _id: 3, name: 'UI Design' },
-    ],
-  },
-  {
-    _id: 5,
-    title: 'Job 135',
-    description: 'Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.',
-    location: 'Athletic Center',
-    employerName: 'Bill',
-    open: false,
-    pay: 10.77,
-    postDate: subDays(new Date(), 22),
-    skills: [
-      { _id: 3, name: 'Project Management' },
-    ],
-  },
-];
 
 const pastHelpers = [
   {
@@ -97,8 +27,31 @@ const pastHelpers = [
   },
 ]
 
-export default class EmployerLanding extends React.Component {
-  render() {
+class EmployerLanding extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      jobs: [],
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
+      const jobs = nextProps.jobs;
+      this.setState({
+        jobs,
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      jobs: this.props.jobs,
+    });
+  }
+
+  renderPage() {
+    const { jobs } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -136,4 +89,21 @@ export default class EmployerLanding extends React.Component {
       </div>
     );
   }
+
+  render() {
+    return (this.props.ready) ? this.renderPage() : <Loader>Retrieving Jobs</Loader>;
+  }
 }
+
+EmployerLanding.propTypes = {
+  jobs: PropTypes.array.isRequired,
+  ready: PropTypes.bool.isRequired,
+}
+
+export default withTracker(() => {
+  const subscription = Meteor.subscribe('UserJobs');
+  return {
+    ready: subscription.ready(),
+    jobs: Jobs.find({}).fetch(),
+  };
+})(EmployerLanding);

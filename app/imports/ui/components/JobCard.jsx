@@ -9,22 +9,26 @@ class JobCard extends React.Component {
 
     let status = <p style={{ color: 'red' }}>CLOSED</p>;
     let cardColor = 'red';
-    if (job.open) {
+    if (job.open === 1) {
       status = <p style={{ color: 'green' }}>OPEN</p>;
       cardColor = 'green';
+    }
+    if (job.open === 0) {
+      status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
+      cardColor = 'orange';
     }
 
     return (
       <Card onClick={() => openModal(job._id)} color={cardColor}>
         <Card.Content>
-          {status}
-          <br/>
+          <Label content={status} ribbon />
           <Image src='/images/uh_logo.png' size='mini' floated='right'/>
+          <br/>
+          <br/>
           <Card.Header>
             {job.title}
           </Card.Header>
           <Card.Meta>
-            <Icon name='map pin' />
             {job.location}
           </Card.Meta>
           <Card.Meta>

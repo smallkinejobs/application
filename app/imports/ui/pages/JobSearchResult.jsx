@@ -145,7 +145,7 @@ JobSearchResult.propTypes = {
 };
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('Jobs');
+  const subscription = Meteor.subscribe('SearchedJobs');
   return {
     ready: subscription.ready(),
     jobs: Jobs.find({}).fetch(),
