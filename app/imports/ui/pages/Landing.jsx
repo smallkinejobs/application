@@ -1,7 +1,8 @@
 import React from 'react';
 import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import StarRating from '../components/StarRating';
@@ -84,12 +85,15 @@ class Landing extends React.Component {
               <BaseLanding/>
             }
             {
-              testUser.roles.includes('employer') && (!employeeToggle) && Meteor.user() &&
-              <EmployerLanding/>
-            }
-            {
-              testUser.roles.includes('employee') && (employeeToggle) && Meteor.user() &&
-              <EmployeeLanding/>
+              (Meteor.user() != null) &&
+              <div>
+                <div style={(employeeToggle === true) ? { display: 'none' } : {}}>
+                  <EmployerLanding/>
+                </div>
+                < div style={(employeeToggle === false) ? { display: 'none' } : {}}>
+                <EmployeeLanding />
+                </div>
+              </div>
             }
           </Sidebar.Pusher>
         </Sidebar.Pushable>
@@ -102,8 +106,10 @@ Landing.propTypes = {
   currentUserName: PropTypes.string,
 };
 
-const LandingContainer = withTracker(() => ({
-  currentUserName: Meteor.user() ? Meteor.user().username : '',
-}))(Landing);
-
-export default withRouter(LandingContainer);
+export default withTracker(() => {
+  const roles = Roles.getRolesForUser(Meteor.user());
+  console.log(roles);
+  return {
+    currentUserName: Meteor.user() ? Meteor.user().username : '',
+  };
+})(Landing);

@@ -13,14 +13,17 @@ const skillsSchema = new SimpleSchema({
 
 /** Create a schema to constrain the structure of documents associated with this collection. */
 const JobSchema = new SimpleSchema({
-  title: String,
-  description: String,
-  employerName: String,
-  open: Boolean,
-  location: String,
-  pay: Number,
-  postDate: Date,
-  skills: Array,
+    title: String,
+    description: String,
+    open: { type: Number, allowedValues: [1, 0, -1] },
+    location: String,
+    pay: Number,
+    postDate: Date,
+    skills: Array,
+    employerId: Number,
+    employeeId: { type: Number, optional: true },
+    categoryId: Number,
+    ratingId: { type: Number, optional: true },
   'skills.$': skillsSchema,
 }, { tracker: Tracker });
 

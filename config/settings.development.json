@@ -66,7 +66,7 @@
           }
         ]
       },
-      "roles": ["employee"]
+      "roles": ["employee","employer"]
     }
   ],
 
@@ -80,11 +80,14 @@
     {
       "title": "Job 1",
       "description": "Leverage agile frameworks to provide a robust synopsis for high level overviews.",
-      "employerName": "Employer 1",
-      "open": true,
+      "open": 1,
       "location": "Campus Center",
       "pay": 12.44,
       "postDate": "2018-04-10",
+      "employerId": 1,
+      "employeeId": null,
+      "categoryId": 1,
+      "ratingId": null,
       "skills": [
         { "_id": 1, "name": "technology" },
         { "_id": 2, "name": "IT" },
@@ -94,11 +97,14 @@
     {
       "title": "Job 11",
       "description": "Bring to the table win-win survival strategies to ensure proactive domination.",
-      "employerName": "Employer 2",
-      "open": true,
+      "open": 1,
       "location": "Food Court",
       "pay": 11.22,
       "postDate": "2018-04-12",
+      "employerId": "2",
+      "employeeId": null,
+      "categoryId": 1,
+      "ratingId": null,
       "skills": [
         { "_id": 1, "name": "MS Word" },
         { "_id": 2, "name": "IT" },
@@ -108,11 +114,14 @@
     {
       "title": "Job 123",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
-      "employerName": "Employer 3",
-      "open": true,
+      "open": 1,
       "location": "Library",
       "pay": 10.11,
       "postDate": "2018-04-03",
+      "employerId": "3",
+      "employeeId": null,
+      "categoryId": 1,
+      "ratingId": null,
       "skills": [
         { "_id": 1, "name": "AWS" },
         { "_id": 2, "name": "Unix" }
@@ -121,11 +130,14 @@
     {
       "title": "Job 12",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
-      "employerName": "Employer 4",
-      "open": true,
+      "open": 0,
       "location": "Landscaping",
       "pay": 12.22,
       "postDate": "2018-04-10",
+      "employerId": "4",
+      "employeeId": null,
+      "categoryId": 1,
+      "ratingId": null,
       "skills": [
         { "_id": 2, "name": "React" },
         { "_id": 3, "name": "UI Design" }
@@ -134,11 +146,14 @@
     {
       "title": "Job 135",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
-      "employerName": "Employer 5",
-      "open": true,
+      "open": -1,
       "location": "Athletic Center",
       "pay": 10.77,
       "postDate": "2018-03-22",
+      "employerId": "5",
+      "employeeId": null,
+      "categoryId": 1,
+      "ratingId": null,
       "skills": [
         { "_id": 3, "name": "Project Management" }
       ]

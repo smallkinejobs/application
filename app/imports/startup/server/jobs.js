@@ -17,6 +17,11 @@ if (Jobs.find().count() === 0) {
 }
 
 /** This subscription publishes all jobs that are currently open */
-Meteor.publish('Jobs', function publish() {
-  return Jobs.find({ open: true });
+Meteor.publish('SearchedJobs', function publish() {
+  return Jobs.find({ open: 1 });
 });
+
+Meteor.publish('UserJobs', function publish() {
+  // NEED TO CHANGE THIS TO FILTER BY USERID
+  return Jobs.find();
+})

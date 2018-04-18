@@ -14,7 +14,6 @@ class JobSearchResult extends React.Component {
   /** Bind 'this' so that a ref to the Form can be saved in formRef and communicated between render() and submit(). */
   constructor(props) {
     super(props);
-    this.formRef = null;
     this.state = {
       loading: false,
       jobSearchText: '',
@@ -90,7 +89,7 @@ class JobSearchResult extends React.Component {
   renderPage() {
     const { jobs, modalOpen, selectedJob, jobSearchText, loading } = this.state;
     return (
-      <div>
+      <div style={{ paddingTop: '3rem' }}>
         <Grid>
           <Grid.Row centered>
             <Input label='Job Search' value={jobSearchText} onChange={(e, data) => this.filterJobResults(e, data)} />
@@ -146,7 +145,7 @@ JobSearchResult.propTypes = {
 };
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('Jobs');
+  const subscription = Meteor.subscribe('SearchedJobs');
   return {
     ready: subscription.ready(),
     jobs: Jobs.find({}).fetch(),
