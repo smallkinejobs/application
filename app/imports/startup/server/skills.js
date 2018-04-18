@@ -1,21 +1,21 @@
 import { Meteor } from 'meteor/meteor';
-import { Categories, CategoriesString } from '../../api/categories/categories.js';
+import { Skills, SkillsString } from '../../api/skills/skills.js';
 
-/** Initialize the database with default categories. */
-function addCategory(category) {
-  console.log(`  Adding: ${category.title}`);
-  Categories.insert(category);
+/** Initialize the database with default skills. */
+function addSkill(skill) {
+  console.log(`  Adding: ${skill.name}`);
+  Skills.insert(skill);
 }
 
 /** Initialize the collection if empty. */
-if (Categories.find().count() === 0) {
-  if (Meteor.settings.defaultCategories) {
+if (Skills.find().count() === 0) {
+  if (Meteor.settings.defaultSkills) {
     console.log('Creating default categories.');
-    Meteor.settings.defaultCategories.map(category => addCategory(category));
+    Meteor.settings.defaultSkills.map(skill => addSkill(skill));
   }
 }
 
-/** This subscription publishes all jobs that are currently open */
-Meteor.publish(CategoriesString, function publish() {
-  return Categories.find({});
+/** This subscription publishes all skills in the collection */
+Meteor.publish(SkillsString, function publish() {
+  return Skills.find({});
 });
