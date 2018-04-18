@@ -143,5 +143,28 @@
         { "_id": 3, "name": "Project Management" }
       ]
     }
+  ],
+  "defaultCategories": [
+    {
+      "title": "Landscaping"
+    },
+    {
+      "title": "Clerical/Office Work"
+    },
+    {
+      "title": "Maintenance"
+    },
+    {
+      "title": "Food Service"
+    },
+    {
+      "title": "Cleaning"
+    },
+    {
+      "title": "Lifting/Moving"
+    },
+    {
+      "title": "Programming/Software Development"
+    }
   ]
 }
