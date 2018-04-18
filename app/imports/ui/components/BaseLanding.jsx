@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter, NavLink } from 'react-router-dom';
 import { Grid, Segment, Image, Container, Icon, Divider, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
@@ -18,6 +19,7 @@ const headingStyle = {
 const instructionStyle = {
   padding: '7rem',
 }
+
 
 export default class BaseLanding extends React.Component {
   render() {
@@ -47,7 +49,7 @@ export default class BaseLanding extends React.Component {
                         </Grid.Column>
                         <Grid.Column textAlign='left' >
                           <h3>Sign up as a Employer to find help</h3>
-                          <Button color='orange'>Employer Sign Up</Button>
+                          <Button color='orange' as={NavLink} exact to="/signupemployer">Employer Sign Up</Button>
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
@@ -80,7 +82,7 @@ export default class BaseLanding extends React.Component {
                         </Grid.Column>
                         <Grid.Column textAlign='left' >
                           <h3>Sign up as a helper</h3>
-                          <Button color='blue'>Helper Sign Up</Button>
+                          <Button color='blue' as={NavLink} exact to="/signupemployee">Helper Sign Up</Button>
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row>
