@@ -9,7 +9,8 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
-import Signup from '../pages/Signup';
+import SignupEmployer from '../pages/SignupEmployer'
+import SignupEmployee from '../pages/SignupEmployee'
 import Signout from '../pages/Signout';
 import JobSearchResult from '../pages/JobSearchResult';
 import DisplayProfile from '../pages/DisplayProfile';
@@ -24,7 +25,8 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/" component={Landing}/>
               <Route path="/signin" component={Signin}/>
-              <Route path="/signup" component={Signup}/>
+              <Route path="/signupemployer" component={SignupEmployer}/>
+              <Route path="/signupemployee" component={SignupEmployee}/>
               <Route path="/job-search-results" component={JobSearchResult} />
               <ProtectedRoute path="/profile" component={DisplayProfile}/>
               <ProtectedRoute path="/signout" component={Signout}/>
