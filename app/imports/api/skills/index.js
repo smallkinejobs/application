@@ -1,1 +1,1 @@
-import './categories.js';
+import './skills.js';
