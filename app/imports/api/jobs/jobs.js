@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import { Tracker } from 'meteor/tracker';
+import 'uniforms';
 
 /** Create the Jobs Meteor collection. */
 const Jobs = new Mongo.Collection('Jobs');
@@ -21,9 +22,9 @@ const JobSchema = new SimpleSchema({
     postDate: Date,
     skills: Array,
     employerId: Number,
-    employeeId: { type: Number, optional: true },
+    employeeId: { type: Number, optional: true, uniforms: { type: 'hidden' } },
     categoryId: Number,
-    ratingId: { type: Number, optional: true },
+    ratingId: { type: Number, optional: true, uniforms: { type: 'hidden' } },
   'skills.$': skillsSchema,
 }, { tracker: Tracker });
 

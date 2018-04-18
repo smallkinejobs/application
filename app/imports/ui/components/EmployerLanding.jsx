@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card, Loader } from 'semantic-ui-react';
+import { Container, Grid, Divider, Button, Card, Loader, Modal, Form, Label, Input } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
@@ -7,6 +7,19 @@ import JobCard from './JobCard';
 import EmployeeCard from './EmployeeCard';
 import { Jobs } from '../../api/jobs/jobs';
 
+const testSkills = [
+    { text: 'Java', value: '1' },
+    { text: 'Handyman', value: '2' },
+    { text: 'Landscaping', value: '3' },
+    { text: 'Painter', value: '4' },
+    ];
+
+const testCategories = [
+  { text: 'Painting', value: '1' },
+  { text: 'Student help', value: '2' },
+  { text: 'Programmer', value: '3' },
+  { text: 'Tutor', value: '4' },
+];
 
 const pastHelpers = [
   {
@@ -32,7 +45,25 @@ class EmployerLanding extends React.Component {
     super(props);
     this.state = {
       jobs: [],
+      jobModalOpen: false,
+      skillSearchQuery: '',
+      categorySearchQuery: '',
+      newJob: {
+        title: '',
+        description: '',
+        location: '',
+        pay: '',
+        categoryId: null,
+        skills: [],
+      },
     };
+    this.openJobModal = this.openJobModal.bind(this);
+    this.closeJobModal = this.closeJobModal.bind(this);
+    this.handleSkillSearchChange = this.handleSkillSearchChange.bind(this);
+    this.handleSkillChange = this.handleSkillChange.bind(this);
+    this.handleCategorySearchChange = this.handleCategorySearchChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.handleFormChanges = this.handleFormChanges.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,8 +81,56 @@ class EmployerLanding extends React.Component {
     });
   }
 
+  openJobModal() {
+    this.setState({
+      jobModalOpen: true,
+    });
+  }
+
+  closeJobModal() {
+    this.setState({
+      jobModalOpen: false,
+    });
+  }
+
+  handleSkillChange = (e, { value }) => {
+    const newJob = this.state.newJob;
+    newJob.skills = value;
+    this.setState({
+      skillSearchQuery: '',
+      newJob,
+    });
+  }
+
+  handleSkillSearchChange = (e, { searchQuery }) =>
+    this.setState({
+      skillSearchQuery: searchQuery,
+    });
+
+  handleCategoryChange = (e, { value }) => {
+    const newJob = this.state.newJob;
+    newJob.categoryId = value;
+    this.setState({
+      categorySearchQuery: '',
+      newJob,
+    });
+  }
+
+  handleCategorySearchChange = (e, { searchQuery }) =>
+    this.setState({
+      categorySearchQuery: searchQuery,
+    });
+
+  handleFormChanges = (e, { name, value }) => {
+    const newJob = this.state.newJob;
+    newJob[name] = value;
+    this.setState({
+      newJob,
+    });
+  }
+
   renderPage() {
-    const { jobs } = this.state;
+    const { jobs, jobModalOpen, newJob, skillSearchQuery, categorySearchQuery } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -60,7 +139,7 @@ class EmployerLanding extends React.Component {
               <h1>Your Jobs</h1>
             </Grid.Column>
             <Grid.Column textAlign='right'>
-              <Button primary >Create New Job</Button>
+              <Button primary onClick={this.openJobModal}>Create New Job</Button>
             </Grid.Column>
           </Grid>
           <Divider/>
@@ -86,6 +165,59 @@ class EmployerLanding extends React.Component {
             </Grid.Row>
           </Grid>
         </Container>
+        <Modal
+            open={jobModalOpen}
+            onClose={this.clearSelectedJob}>
+          <Modal.Header>
+            Post a New Job
+          </Modal.Header>
+          <Modal.Content>
+            <Form>
+              <Form.Input name='title' label='Job Title' value={newJob.title} onChange={this.handleFormChanges}/>
+              <Form.TextArea name='description' label='Describe Your Job'
+                             value={newJob.description} onChange={this.handleFormChanges}/>
+              <Form.Input name='location' label='Location of Work' value={newJob.location}
+                          onChange={this.handleFormChanges}/>
+              <Form.Input labelPosition='left' type='text'
+                          placeholder='Amount' label='Pay Offered'
+                          name='pay' value={newJob.pay} onChange={this.handleFormChanges}>
+                <Label basic>$</Label>
+                <input />
+              </Form.Input>
+              <Form.Dropdown
+                  label='Category'
+                  name='categoryId'
+                  onChange={this.handleCategoryChange}
+                  onSearchChange={this.handleCategorySearchChange}
+                  options={testCategories}
+                  placeholder='Category'
+                  search
+                  searchQuery={categorySearchQuery}
+                  selection
+                  value={newJob.categoryId} />
+              <Form.Dropdown
+                  label='Skills Needed'
+                  name='skills'
+                  multiple
+                  onChange={this.handleSkillChange}
+                  onSearchChange={this.handleSkillSearchChange}
+                  options={testSkills}
+                  placeholder='Skills'
+                  search
+                  searchQuery={skillSearchQuery}
+                  selection
+                  value={newJob.skills} />
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button primary>
+              Post
+            </Button>
+            <Button color='red' onClick={this.closeJobModal}>
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </div>
     );
   }
