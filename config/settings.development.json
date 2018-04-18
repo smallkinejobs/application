@@ -181,5 +181,61 @@
     {
       "title": "Programming/Software Development"
     }
+  ],
+  "defaultSkills": [
+    {
+      "name": "Project Management"
+    },
+    {
+      "name": "IT"
+    },
+    {
+      "name": "Landscaping"
+    },
+    {
+      "name": "Clerical"
+    },
+    {
+      "name": "Unix"
+    },
+    {
+      "name": "Maintenance"
+    },
+    {
+      "name": "Technology"
+    },
+    {
+      "name": "Programming"
+    },
+    {
+      "name": "Customer Service"
+    },
+    {
+      "name": "Typing"
+    },
+    {
+      "name": "Word Processing"
+    },
+    {
+      "name": "Cashiering"
+    },
+    {
+      "name": "Heavy Lifting"
+    },
+    {
+      "name": "AWS"
+    },
+    {
+      "name": "MS Word"
+    },
+    {
+      "name": "React"
+    },
+    {
+      "name": "UI Design"
+    },
+    {
+      "name": "Tutoring"
+    }
   ]
 }
