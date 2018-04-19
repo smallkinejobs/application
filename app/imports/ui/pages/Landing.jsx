@@ -82,7 +82,7 @@ class Landing extends React.Component {
             }
             {
               (Meteor.user() == null) &&
-              <BaseLanding/>
+              <BaseLanding {...this.props}/>
             }
             {
               (Meteor.user() != null) &&
