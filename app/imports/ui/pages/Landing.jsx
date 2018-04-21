@@ -107,8 +107,6 @@ Landing.propTypes = {
 };
 
 export default withTracker(() => {
-  const roles = Roles.getRolesForUser(Meteor.user());
-  console.log(roles);
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
   };

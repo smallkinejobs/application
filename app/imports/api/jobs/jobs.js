@@ -8,8 +8,7 @@ const Jobs = new Mongo.Collection('Jobs');
 
 /** sub-schema for the skills */
 const skillsSchema = new SimpleSchema({
-  _id: Number,
-  name: String,
+  _id: String,
 });
 
 /** Create a schema to constrain the structure of documents associated with this collection. */
@@ -21,10 +20,10 @@ const JobSchema = new SimpleSchema({
     pay: Number,
     postDate: Date,
     skills: Array,
-    employerId: Number,
-    employeeId: { type: Number, optional: true, uniforms: { type: 'hidden' } },
-    categoryId: Number,
-    ratingId: { type: Number, optional: true, uniforms: { type: 'hidden' } },
+    employerId: String,
+    employeeId: { type: String, optional: true, uniforms: { type: 'hidden' } },
+    categoryId: String,
+    ratingId: { type: String, optional: true, uniforms: { type: 'hidden' } },
   'skills.$': skillsSchema,
 }, { tracker: Tracker });
 

@@ -1,25 +1,16 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card, Loader, Modal, Form, Label, Input } from 'semantic-ui-react';
+import { Container, Grid, Divider, Button, Message, Card, Loader, Modal, Form, Label, Input } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
+import { Bert } from 'meteor/themeteorchef:bert';
+import { _ } from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import JobCard from './JobCard';
 import EmployeeCard from './EmployeeCard';
 import { Jobs } from '../../api/jobs/jobs';
+import { Skills } from '../../api/skills/skills';
+import { Categories } from '../../api/categories/categories';
 
-const testSkills = [
-    { text: 'Java', value: '1' },
-    { text: 'Handyman', value: '2' },
-    { text: 'Landscaping', value: '3' },
-    { text: 'Painter', value: '4' },
-    ];
-
-const testCategories = [
-  { text: 'Painting', value: '1' },
-  { text: 'Student help', value: '2' },
-  { text: 'Programmer', value: '3' },
-  { text: 'Tutor', value: '4' },
-];
 
 const pastHelpers = [
   {
@@ -38,7 +29,7 @@ const pastHelpers = [
     skills: ['Transporting'],
     profileImg: '/images/landingPage/student3.jpeg',
   },
-]
+];
 
 class EmployerLanding extends React.Component {
   constructor(props) {
@@ -48,6 +39,8 @@ class EmployerLanding extends React.Component {
       jobModalOpen: false,
       skillSearchQuery: '',
       categorySearchQuery: '',
+      formError: false,
+      formSuccess: false,
       newJob: {
         title: '',
         description: '',
@@ -64,10 +57,18 @@ class EmployerLanding extends React.Component {
     this.handleCategorySearchChange = this.handleCategorySearchChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleFormChanges = this.handleFormChanges.bind(this);
+    this.validateJob = this.validateJob.bind(this);
+    this.submitJob = this.submitJob.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
+    if (nextProps.jobs.length !== 0 &&
+        this.props.jobs.length === 0 &&
+        nextProps.skills.length !== 0 &&
+        this.props.skills.length === 0 &&
+        nextProps.categories.length !== 0 &&
+        this.props.categories.length === 0
+    ) {
       const jobs = nextProps.jobs;
       this.setState({
         jobs,
@@ -75,7 +76,7 @@ class EmployerLanding extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
       jobs: this.props.jobs,
     });
@@ -122,15 +123,55 @@ class EmployerLanding extends React.Component {
     });
 
   handleFormChanges = (e, { name, value }) => {
+    this.setState({ formError: false });
     const newJob = this.state.newJob;
-    newJob[name] = value;
+    if (name === 'pay') {
+      newJob[name] = parseFloat(value);
+    } else {
+      newJob[name] = value;
+    }
     this.setState({
       newJob,
     });
   }
 
+  submitJob() {
+    this.validateJob();
+    if (!this.state.formError) {
+      Jobs.insert(this.state.newJob);
+      this.setState({
+        formSuccess: true,
+        newJob: {
+          title: '',
+          description: '',
+          location: '',
+          pay: '',
+          categoryId: null,
+          skills: [],
+        },
+        jobModalOpen: false,
+      });
+      Bert.alert('Successfully Posted Job', 'success', 'growl-top-right');
+    }
+  }
+
+  validateJob() {
+    const { newJob } = this.state;
+    newJob.employerId = Meteor.userId();
+    newJob.open = 1;
+    newJob.postDate = new Date();
+    _.forOwn(newJob, (value, key) => {
+      if (value === null || value === '' || value === []) {
+        this.setState({
+          formError: true,
+        });
+      }
+    });
+  }
+
   renderPage() {
-    const { jobs, jobModalOpen, newJob, skillSearchQuery, categorySearchQuery } = this.state;
+    const { skills, categories } = this.props;
+    const { jobs, jobModalOpen, newJob, skillSearchQuery, formError, categorySearchQuery } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -169,6 +210,9 @@ class EmployerLanding extends React.Component {
             open={jobModalOpen}
             onClose={this.clearSelectedJob}>
           <Modal.Header>
+            <Message style={{ fontSize: '1rem' }} hidden={!formError} error={formError}>
+              <p>Please correct errors for job post.</p>
+            </Message>
             Post a New Job
           </Modal.Header>
           <Modal.Content>
@@ -178,7 +222,7 @@ class EmployerLanding extends React.Component {
                              value={newJob.description} onChange={this.handleFormChanges}/>
               <Form.Input name='location' label='Location of Work' value={newJob.location}
                           onChange={this.handleFormChanges}/>
-              <Form.Input labelPosition='left' type='text'
+              <Form.Input labelPosition='left' type='number'
                           placeholder='Amount' label='Pay Offered'
                           name='pay' value={newJob.pay} onChange={this.handleFormChanges}>
                 <Label basic>$</Label>
@@ -189,7 +233,7 @@ class EmployerLanding extends React.Component {
                   name='categoryId'
                   onChange={this.handleCategoryChange}
                   onSearchChange={this.handleCategorySearchChange}
-                  options={testCategories}
+                  options={categories}
                   placeholder='Category'
                   search
                   searchQuery={categorySearchQuery}
@@ -201,7 +245,7 @@ class EmployerLanding extends React.Component {
                   multiple
                   onChange={this.handleSkillChange}
                   onSearchChange={this.handleSkillSearchChange}
-                  options={testSkills}
+                  options={skills}
                   placeholder='Skills'
                   search
                   searchQuery={skillSearchQuery}
@@ -210,7 +254,7 @@ class EmployerLanding extends React.Component {
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button primary>
+            <Button primary onClick={this.submitJob}>
               Post
             </Button>
             <Button color='red' onClick={this.closeJobModal}>
@@ -229,13 +273,27 @@ class EmployerLanding extends React.Component {
 
 EmployerLanding.propTypes = {
   jobs: PropTypes.array.isRequired,
+  skills: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
-}
+};
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('UserJobs');
+  const jobSubscription = Meteor.subscribe('UserJobs');
+  const skillSubscription = Meteor.subscribe('SkillsString');
+  const categorySubscription = Meteor.subscribe('CategoriesString');
   return {
-    ready: subscription.ready(),
+    ready: jobSubscription.ready() && skillSubscription.ready() && categorySubscription.ready(),
     jobs: Jobs.find({}).fetch(),
+    skills: Skills.find({}).map((skill) => ({
+      key: skill._id,
+      text: skill.name,
+      value: { _id: skill._id },
+    })),
+    categories: Categories.find({}).map((cat) => ({
+      key: cat._id,
+      text: cat.title,
+      value: cat._id,
+    })),
   };
 })(EmployerLanding);
