@@ -35,3 +35,4 @@ alanning:roles                   # https://github.com/alanning/meteor-roles
 
 # Prototyping only
 insecure                         # Enable client-side manipulation of Mongo collections.
+meteorhacks:aggregate

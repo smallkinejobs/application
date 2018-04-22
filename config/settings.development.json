@@ -88,11 +88,7 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [
-        { "_id": 1, "name": "technology" },
-        { "_id": 2, "name": "IT" },
-        { "_id": 3, "name": "programming" }
-      ]
+      "skills": [1,2,3]
     },
     {
       "title": "Job 11",
@@ -105,11 +101,7 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [
-        { "_id": 1, "name": "MS Word" },
-        { "_id": 2, "name": "IT" },
-        { "_id": 3, "name": "Typing" }
-      ]
+      "skills": [1,2,3]
     },
     {
       "title": "Job 123",
@@ -122,10 +114,7 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [
-        { "_id": 1, "name": "AWS" },
-        { "_id": 2, "name": "Unix" }
-      ]
+      "skills": [1,2]
     },
     {
       "title": "Job 12",
@@ -138,10 +127,7 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [
-        { "_id": 2, "name": "React" },
-        { "_id": 3, "name": "UI Design" }
-      ]
+      "skills": [2,3]
     },
     {
       "title": "Job 135",
@@ -154,9 +140,7 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [
-        { "_id": 3, "name": "Project Management" }
-      ]
+      "skills": [3]
     }
   ],
   "defaultCategories": [

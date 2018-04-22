@@ -63,13 +63,20 @@ class EmployerLanding extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.jobs.length !== 0 &&
-        this.props.jobs.length === 0 &&
         nextProps.skills.length !== 0 &&
-        this.props.skills.length === 0 &&
-        nextProps.categories.length !== 0 &&
-        this.props.categories.length === 0
+        nextProps.categories.length !== 0
     ) {
       const jobs = nextProps.jobs;
+      const skillIds = nextProps.skills.map((skill) => skill.value);
+      jobs.forEach((job) => {
+        const jobSkills = _.intersection(job.skills, skillIds);
+        const mappedSkills = []
+        jobSkills.forEach((skill) => {
+          const foundSkill = _.result(_.find(nextProps.skills, { value: skill }), 'text');
+          mappedSkills.push({ name: foundSkill });
+        });
+        job.skills = mappedSkills;
+      });
       this.setState({
         jobs,
       });
@@ -101,7 +108,7 @@ class EmployerLanding extends React.Component {
       skillSearchQuery: '',
       newJob,
     });
-  }
+  };
 
   handleSkillSearchChange = (e, { searchQuery }) =>
     this.setState({
@@ -152,6 +159,7 @@ class EmployerLanding extends React.Component {
         jobModalOpen: false,
       });
       Bert.alert('Successfully Posted Job', 'success', 'growl-top-right');
+      // console.log(this.state.newJob);
     }
   }
 
@@ -288,8 +296,9 @@ export default withTracker(() => {
     skills: Skills.find({}).map((skill) => ({
       key: skill._id,
       text: skill.name,
-      value: { _id: skill._id },
+      value: skill._id,
     })),
+    // db.getCollection('Jobs').aggregate([ { $unwind: "$skills" }, { $lookup: { from: "Skills", localField: "skills._id", foreignField: "_id", as: "jobSkills" } } ]).pretty()
     categories: Categories.find({}).map((cat) => ({
       key: cat._id,
       text: cat.title,
