@@ -41,7 +41,7 @@ export default class Signup extends React.Component {
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
             <Grid.Column>
               <Header as="h2" textAlign="center">
-                Create your Employee profile
+                Create your Helper profile
               </Header>
               <Form onSubmit={this.handleSubmit}>
                 <Segment stacked>
