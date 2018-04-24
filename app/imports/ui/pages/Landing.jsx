@@ -2,7 +2,6 @@ import React from 'react';
 import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import StarRating from '../components/StarRating';

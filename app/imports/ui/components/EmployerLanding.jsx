@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Message, Card, Loader, Modal, Form, Label, Input } from 'semantic-ui-react';
+import { Container, Grid, Divider, Button, Message, Card, Loader, Modal, Form, Label } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { _ } from 'lodash';
@@ -298,7 +298,6 @@ export default withTracker(() => {
       text: skill.name,
       value: skill._id,
     })),
-    // db.getCollection('Jobs').aggregate([ { $unwind: "$skills" }, { $lookup: { from: "Skills", localField: "skills._id", foreignField: "_id", as: "jobSkills" } } ]).pretty()
     categories: Categories.find({}).map((cat) => ({
       key: cat._id,
       text: cat.title,

@@ -26,7 +26,7 @@ class JobCard extends React.Component {
     }
     const feedBackButton = <Button disabled={ disabled } color='blue'>
       Submit Feedback <Icon name='announcement'/>
-    </Button>; //eslint-disable-line
+    </Button>;
 
     return (
       <Card onClick={() => openModal(job._id)} color={cardColor}>
