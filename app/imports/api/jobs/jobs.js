@@ -10,7 +10,7 @@ const Jobs = new Mongo.Collection('Jobs');
 const JobSchema = new SimpleSchema({
     title: String,
     description: String,
-    open: { type: Number, allowedValues: [1, 0, -1] },
+    open: { type: Number, allowedValues: [2, 1, 0, -1] },
     location: String,
     pay: Number,
     postDate: Date,
