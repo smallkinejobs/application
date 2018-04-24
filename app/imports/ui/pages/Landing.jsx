@@ -45,6 +45,8 @@ class Landing extends React.Component {
     const { visible, employeeToggle } = this.state;
     const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
     const userRating = ratingValues.reduce(function(acc, rating) { return acc + rating; }, 0) / ratingValues.length;
+    const userImage = this.props.currentUserImage === ''
+        ? '/images/landingPage/student1.jpg' : this.props.currentUserImage; // eslint-disable-line
     return (
       <div>
         <Sidebar.Pushable>
@@ -54,7 +56,7 @@ class Landing extends React.Component {
                      animation='slide out'
                      width='wide' visible={visible} icon='labeled' vertical='true' inverted='true'>
               <Container style={{ padding: '2rem' }}>
-                <Image centered size='small' circular src={this.props.currentUserImage} />
+                <Image centered size='small' circular src={userImage} />
                 <Link to='profile'>Edit Profile</Link>
                 <h2><Icon name='user circle outline' /> {this.props.currentUserName}</h2>
                 <Label color='blue'>Employer</Label>
@@ -118,7 +120,7 @@ export default withTracker(() => {
   const ratingsSubscription = Meteor.subscribe('UserRatings');
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
-    currentUserImage: Meteor.user() ? Meteor.user().profile.imageURL : '',
+    currentUserImage: (Meteor.user() && Meteor.user().profile.imageURL) ? Meteor.user().profile.imageURL : '',
     ready: ratingsSubscription.ready(),
     ratings: Ratings.find({}).fetch(),
   };
