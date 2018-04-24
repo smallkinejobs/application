@@ -10,12 +10,12 @@ function addSkill(skill) {
 /** Initialize the collection if empty. */
 if (Skills.find().count() === 0) {
   if (Meteor.settings.defaultSkills) {
-    console.log('Creating default categories.');
+    console.log('Creating default skills.');
     Meteor.settings.defaultSkills.map(skill => addSkill(skill));
   }
 }
 
 /** This subscription publishes all skills in the collection */
-Meteor.publish(SkillsString, function publish() {
+Meteor.publish('SkillsString', function publish() {
   return Skills.find({});
 });

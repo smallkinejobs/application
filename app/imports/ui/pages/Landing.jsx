@@ -68,7 +68,7 @@ class Landing extends React.Component {
           <Sidebar.Pusher>
             {
               Meteor.user() &&
-              <div style={{ padding: '1rem', backgroundColor: '#9e9e9e' }}>
+              <div style={{ padding: '1rem', backgroundColor: '#4caf50b8' }}>
                 <Button icon onClick={this.handleSideBarToggle}>
                   <Icon name='bars' />
                 </Button>
@@ -107,8 +107,6 @@ Landing.propTypes = {
 };
 
 export default withTracker(() => {
-  const roles = Roles.getRolesForUser(Meteor.user());
-  console.log(roles);
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
   };

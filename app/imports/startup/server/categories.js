@@ -15,7 +15,7 @@ if (Categories.find().count() === 0) {
   }
 }
 
-/** This subscription publishes all jobs that are currently open */
-Meteor.publish(CategoriesString, function publish() {
+/** This subscription publishes all categories */
+Meteor.publish('CategoriesString', function publish() {
   return Categories.find({});
 });
