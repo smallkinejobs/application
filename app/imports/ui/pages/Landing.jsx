@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio } from 'semantic-ui-react';
+import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
@@ -9,6 +9,7 @@ import StarRating from '../components/StarRating';
 import BaseLanding from '../components/BaseLanding';
 import EmployerLanding from '../components/EmployerLanding';
 import EmployeeLanding from '../components/EmployeeLanding';
+import { Ratings } from '../../api/ratings/ratings.js';
 
 const testUser = {
   roles: ['employer', 'employee'],
@@ -37,9 +38,13 @@ class Landing extends React.Component {
       employeeToggle: !this.state.employeeToggle,
     });
   }
-
   render() {
+    return this.props.ready ? this.renderPage() : <Loader>Waiting for user Ratings</Loader>;
+  }
+  renderPage() {
     const { visible, employeeToggle } = this.state;
+    const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
+    const userRating = ratingValues.reduce(function(acc, rating) { return acc + rating; }, 0) / ratingValues.length;
     return (
       <div>
         <Sidebar.Pushable>
@@ -49,13 +54,13 @@ class Landing extends React.Component {
                      animation='slide out'
                      width='wide' visible={visible} icon='labeled' vertical='true' inverted='true'>
               <Container style={{ padding: '2rem' }}>
-                <Image centered size='small' circular src='/images/landingPage/student1.jpg' />
+                <Image centered size='small' circular src={this.props.currentUserImage} />
                 <Link to='profile'>Edit Profile</Link>
                 <h2><Icon name='user circle outline' /> {this.props.currentUserName}</h2>
                 <Label color='blue'>Employer</Label>
                 <Label color='blue'>Helper</Label>
                 <Divider/>
-                <h2><Icon name='checkmark box' /> Average Rating: </h2> <StarRating rating={4}/>
+                <h2><Icon name='checkmark box' /> Average Rating: </h2> <StarRating rating={userRating}/>
                 <Divider/>
                 <h2>Total Amount Earned</h2>
                 <h3><Icon name='money'/> $30.00</h3>
@@ -104,10 +109,17 @@ class Landing extends React.Component {
 
 Landing.propTypes = {
   currentUserName: PropTypes.string,
+  currentUserImage: PropTypes.string,
+  ready: PropTypes.bool.isRequired,
+  ratings: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
+  const ratingsSubscription = Meteor.subscribe('UserRatings');
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
+    currentUserImage: Meteor.user() ? Meteor.user().profile.imageURL : '',
+    ready: ratingsSubscription.ready(),
+    ratings: Ratings.find({}).fetch(),
   };
 })(Landing);
