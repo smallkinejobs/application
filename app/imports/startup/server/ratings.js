@@ -1,21 +1,25 @@
 import { Meteor } from 'meteor/meteor';
-import { Categories, CategoriesString } from '../../api/categories/categories.js';
+import { Ratings } from '../../api/ratings/ratings.js';
 
 /** Initialize the database with default categories. */
-function addCategory(category) {
-  console.log(`  Adding: ${category.title}`);
-  Categories.insert(category);
+function addRating(rating) {
+  console.log(`  Adding rating for: ${rating.user}`);
+  Ratings.insert(rating);
 }
 
 /** Initialize the collection if empty. */
-if (Categories.find().count() === 0) {
-  if (Meteor.settings.defaultCategories) {
-    console.log('Creating default categories.');
-    Meteor.settings.defaultCategories.map(category => addCategory(category));
+if (Ratings.find().count() === 0) {
+  if (Meteor.settings.defaultRatings) {
+    console.log('Creating default ratings.');
+    Meteor.settings.defaultRatings.map(rating => addRating(rating));
   }
 }
 
-/** This subscription publishes all categories */
-Meteor.publish('CategoriesString', function publish() {
-  return Categories.find({});
+/** This subscription publishes all ratings tied to the current user */
+Meteor.publish('UserRatings', function publish() {
+  if (this.userId) {
+    const username = Meteor.users.findOne(this.userId).username;
+    return Ratings.find({ user: username });
+  }
+  return this.ready();
 });
