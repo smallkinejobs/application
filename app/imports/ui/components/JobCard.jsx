@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Icon, Label, Image } from 'semantic-ui-react';
+import { Card, Icon, Label, Image, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
@@ -9,14 +9,24 @@ class JobCard extends React.Component {
 
     let status = <p style={{ color: 'red' }}>CLOSED</p>;
     let cardColor = 'red';
+    let disabled = true;
+
     if (job.open === 1) {
-      status = <p style={{ color: 'green' }}>OPEN</p>;
+      status = <p style={{ color: 'blue' }}>OPEN</p>;
       cardColor = 'green';
     }
     if (job.open === 0) {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
       cardColor = 'orange';
     }
+    if (job.open === 2) {
+      status = <p style={{ color: 'green' }}>COMPLETED<Icon name='checkmark'/></p>;
+      cardColor = 'green';
+      disabled = false;
+    }
+    const feedBackButton = <Button disabled={ disabled } color='blue'>
+      Submit Feedback <Icon name='announcement'/>
+    </Button>; //eslint-disable-line
 
     return (
       <Card onClick={() => openModal(job._id)} color={cardColor}>
@@ -48,6 +58,9 @@ class JobCard extends React.Component {
             job.skills.map((skill, index) =>
               <Label tag size='tiny' key={index} color='blue'>{skill.name}</Label>)
         }
+        </Card.Content>
+        <Card.Content extra>
+          {feedBackButton}
         </Card.Content>
       </Card>
     );
