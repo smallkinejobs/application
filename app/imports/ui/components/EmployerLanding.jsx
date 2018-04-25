@@ -49,6 +49,10 @@ class EmployerLanding extends React.Component {
         categoryId: null,
         skills: [],
       },
+      feedbackModalOpen: false,
+      selectedJob: {},
+      userToRate: '',
+      ratingValue: -1,
     };
     this.openJobModal = this.openJobModal.bind(this);
     this.closeJobModal = this.closeJobModal.bind(this);
@@ -59,6 +63,9 @@ class EmployerLanding extends React.Component {
     this.handleFormChanges = this.handleFormChanges.bind(this);
     this.validateJob = this.validateJob.bind(this);
     this.submitJob = this.submitJob.bind(this);
+    this.openFeedbackModal = this.openFeedbackModal.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -177,9 +184,34 @@ class EmployerLanding extends React.Component {
     });
   }
 
+  openFeedbackModal(job) {
+    const uname = Meteor.user().username;
+    if (uname === job.employerId || uname === job.employeeId) {
+      this.setState({
+        feedbackModalOpen: true,
+        selectedJob: job,
+        userToRate: uname === job.employerId ? job.employeeId : job.employerId,
+      });
+    }
+  }
+
+  closeFeedbackModal() {
+    this.setState({
+      feedbackModalOpen: false,
+      selectedJob: {},
+      userToRate: '',
+    });
+  }
+
+  handleRatingChange(e, { value }) {
+    this.setState({ ratingValue: value });
+  }
+
   renderPage() {
     const { skills, categories } = this.props;
-    const { jobs, jobModalOpen, newJob, skillSearchQuery, formError, categorySearchQuery } = this.state;
+    const {
+      jobs, jobModalOpen, newJob, skillSearchQuery,
+      formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -216,7 +248,7 @@ class EmployerLanding extends React.Component {
         </Container>
         <Modal
             open={jobModalOpen}
-            onClose={this.clearSelectedJob}>
+            onClose={this.closeFeedbackModal}>
           <Modal.Header>
             <Message style={{ fontSize: '1rem' }} hidden={!formError} error={formError}>
               <p>Please correct errors for job post.</p>
@@ -270,6 +302,36 @@ class EmployerLanding extends React.Component {
             </Button>
           </Modal.Actions>
         </Modal>
+        <Modal
+            open={feedbackModalOpen}
+            onClose={this.clearSelectedJob}>
+          <Modal.Header>
+            <Message style={{ fontSize: '1rem' }} hidden={!formError} error={formError}>
+              <p>Please correct errors for job post.</p>
+            </Message>
+            Rating User: {userToRate.username}
+          </Modal.Header>
+          <Modal.Content>
+            <Form>
+              <Form.Group inline>
+                <Label>Rating</Label>
+                <Form.Radio label='0' value={0} checked={ratingValue === 0} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='1' value={1} checked={ratingValue === 1} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='3' value={3} checked={ratingValue === 3} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='4' value={4} checked={ratingValue === 4} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='5' value={5} checked={ratingValue === 5} onChange={this.handleRatingChange}></Form.Radio>
+              </Form.Group>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button primary onClick={this.submitJob}>
+              Submit Rating
+            </Button>
+            <Button color='red' onClick={this.closeFeedbackModal}>
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </div>
     );
   }
@@ -290,6 +352,7 @@ export default withTracker(() => {
   const jobSubscription = Meteor.subscribe('UserJobs');
   const skillSubscription = Meteor.subscribe('SkillsString');
   const categorySubscription = Meteor.subscribe('CategoriesString');
+  const ratingSubscription = Meteor.subscribe('UserRatings');
   return {
     ready: jobSubscription.ready() && skillSubscription.ready() && categorySubscription.ready(),
     jobs: Jobs.find({}).fetch(),
