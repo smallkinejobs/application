@@ -36,6 +36,7 @@ class EmployerLanding extends React.Component {
     super(props);
     this.state = {
       jobs: [],
+      skills: [],
       jobModalOpen: false,
       skillSearchQuery: '',
       categorySearchQuery: '',
@@ -67,18 +68,10 @@ class EmployerLanding extends React.Component {
         nextProps.categories.length !== 0
     ) {
       const jobs = nextProps.jobs;
-      const skillIds = nextProps.skills.map((skill) => skill.value);
-      jobs.forEach((job) => {
-        const jobSkills = _.intersection(job.skills, skillIds);
-        const mappedSkills = []
-        jobSkills.forEach((skill) => {
-          const foundSkill = _.result(_.find(nextProps.skills, { value: skill }), 'text');
-          mappedSkills.push({ name: foundSkill });
-        });
-        job.skills = mappedSkills;
-      });
+      const skills = nextProps.skills;
       this.setState({
         jobs,
+        skills,
       });
     }
   }
@@ -196,7 +189,7 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobCard key={job._id} job={job}/>)
+                  jobs.map((job) => <JobCard key={job._id} job={job} skills={skills}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -298,7 +291,6 @@ export default withTracker(() => {
       text: skill.name,
       value: skill._id,
     })),
-    // db.getCollection('Jobs').aggregate([ { $unwind: "$skills" }, { $lookup: { from: "Skills", localField: "skills._id", foreignField: "_id", as: "jobSkills" } } ]).pretty()
     categories: Categories.find({}).map((cat) => ({
       key: cat._id,
       text: cat.title,
