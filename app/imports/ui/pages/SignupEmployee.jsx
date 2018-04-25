@@ -8,7 +8,6 @@ import { Accounts } from 'meteor/accounts-base';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Skills } from '../../api/skills/skills';
 
-
 /**
  * Signup component is similar to signin component, but we attempt to create a new user instead.
  */
@@ -22,6 +21,10 @@ class SignupEmployee extends React.Component {
       email: '',
       password: '',
       phone: '',
+      streetAddress: '',
+      unit: '',
+      city: '',
+      zipcode: '',
       error: '',
       skills: [],
       skillSearchQuery: '',
@@ -40,14 +43,25 @@ class SignupEmployee extends React.Component {
 
   /** Handle Signup submission using Meteor's account mechanism. */
   handleSubmit() {
-    const { firstName, lastName, email, password, phone, skills } = this.state;
-    const profile = { skills: skills };
-    const userID = Accounts.createUser({
+    const {
       email,
-      username: email,
-      password, firstName,
+      password,
+      skills,
+      firstName,
       lastName,
       phone,
+      imageURL,
+      streetAddress,
+      unit,
+      zipcode,
+      city
+    } = this.state;
+    const address = `${streetAddress} + ${unit} + ${zipcode} + ${city}`;
+    const profile = { skills: skills, firstName, lastName, phone, address, imageURL };
+    Accounts.createUser({
+      email,
+      username: email,
+      password,
       profile,
     }, (err, id) => {
       if (err) {
@@ -56,7 +70,6 @@ class SignupEmployee extends React.Component {
         console.log(id);
       }
     });
-    //need to assign role to user
   }
 
   /** This handles the changing jobs**/
@@ -105,7 +118,7 @@ class SignupEmployee extends React.Component {
                   </Form.Group>
                   <Form.Group>
                     <Form.Input
-                        width={4}
+                        width={7}
                         required
                         label="Email"
                         name="email"
@@ -114,7 +127,7 @@ class SignupEmployee extends React.Component {
                         onChange={this.handleChange}
                     />
                     <Form.Input
-                        width={7}
+                        width={4}
                         required
                         label="Password"
                         name="password"
@@ -126,14 +139,48 @@ class SignupEmployee extends React.Component {
                         width={5}
                         label="Phone Number"
                         placeholder="(123) 456 7890"
-                        name="phone"
+                        name="phoneNumber"
+                        onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Input
+                        width={6}
+                        label="Address"
+                        name="streetAddress"
+                        placeholder="Street Number Street Name"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Unit Number"
+                        placeholder="####"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={4}
+                        label="City"
+                        placeholder="City"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Zipcode"
+                        placeholder="Zipcode"
+                        name="zip"
                         onChange={this.handleChange}
                     />
                   </Form.Group>
                   <Form.Input
                       width={5}
                       label="Profile Picture"
-                      action={{ color: 'blue', labelPosition: 'right', icon: 'photo', content: 'Upload' }}
+                      action={{
+                        color: 'blue',
+                        labelPosition: 'right',
+                        icon: 'photo',
+                        content: 'Upload',
+                        name: 'imageURL',
+                      }}
                   />
                   <Form.Dropdown
                       label='Skills Needed'
