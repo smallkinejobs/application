@@ -221,5 +221,19 @@
     {
       "name": "Tutoring"
     }
+  ],
+  "defaultJobApplicants": [
+    {
+      "jobId": "1",
+      "applicantIds": ["1","2","3"]
+    },
+    {
+      "jobId": "3",
+      "applicantIds": ["1","2"]
+    },
+    {
+      "jobId": "4",
+      "applicantIds": ["1"]
+    }
   ]
 }

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import EmployeeJobCard from './EmployerJobCard';
 import EmployeeCard from './EmployeeCard';
 import NewJobModal from './NewJobModal';
+import HireHelperModal from './HireHelperModal';
 import { Jobs } from '../../api/jobs/jobs';
 import { Skills } from '../../api/skills/skills';
 import { Categories } from '../../api/categories/categories';
@@ -38,6 +39,7 @@ class EmployerLanding extends React.Component {
     this.state = {
       jobs: [],
       jobModalOpen: false,
+      openedJob: null,
       hireModalOpen: false,
       skillSearchQuery: '',
       categorySearchQuery: '',
@@ -60,6 +62,7 @@ class EmployerLanding extends React.Component {
     this.handleFormChanges = this.handleFormChanges.bind(this);
     this.validateJob = this.validateJob.bind(this);
     this.submitJob = this.submitJob.bind(this);
+    this.handleSuccessEmployeeHire = this.handleSuccessEmployeeHire.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -102,8 +105,9 @@ class EmployerLanding extends React.Component {
     });
   }
 
-  openHireModal() {
+  openHireModal = (job) => {
     this.setState({
+      openedJob: job,
       hireModalOpen: true,
     });
   }
@@ -125,12 +129,11 @@ class EmployerLanding extends React.Component {
     this.setState({
       newJob,
     });
-  }
+  };
 
   submitJob() {
     const { newJob } = this.state;
     const valid = this.validateJob();
-    console.log(valid);
     if (valid) {
       newJob.postDate = new Date();
       newJob.open = 1;
@@ -156,11 +159,15 @@ class EmployerLanding extends React.Component {
     }
   }
 
+  handleSuccessEmployeeHire(employee, job) {
+    this.closeHireModal();
+    Bert.alert(`Successfully Hired ${employee.firstName} to job ${job.title}`, 'success', 'growl-top-right');
+  }
+
   validateJob() {
     const { newJob } = this.state;
     let valid = true;
-    _.forOwn(newJob, (value, key) => {
-      console.log(key, value);
+    _.forOwn(newJob, (value) => {
       if (value === null || value === '' || value === []) {
         valid = false;
       }
@@ -184,7 +191,7 @@ class EmployerLanding extends React.Component {
   renderPage() {
     const { skills, categories } = this.props;
     const { jobs, jobModalOpen, newJob, skillSearchQuery,
-      formError, categorySearchQuery, hireModalOpen } = this.state;
+      formError, categorySearchQuery, hireModalOpen, openedJob } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -201,7 +208,8 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job} openModal={this.openHireModal}/>)
+                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job}
+                                                     openModal={() => this.openHireModal(job)}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -213,7 +221,7 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  pastHelpers.map((helper, index) => <EmployeeCard key={index} employee={helper}/>)
+                  pastHelpers.map((helper, index) => <EmployeeCard key={index} employee={helper} cardType='feedback'/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -225,20 +233,9 @@ class EmployerLanding extends React.Component {
                               categories={categories} jobModalOpen={jobModalOpen}
                               closeJobModal={this.closeJobModal} submitJob={this.submitJob}
                               clearNewJob={this.clearNewJob} handleFormChanges={this.handleFormChanges}/>
-        <Modal
-            open={hireModalOpen}>
-          <Modal.Header>
-            Select the Best Candidate
-          </Modal.Header>
-          <Modal.Content>
-            List helpers
-          </Modal.Content>
-          <Modal.Actions>
-            <Button color='red' onClick={this.closeHireModal}>
-              Close
-            </Button>
-          </Modal.Actions>
-        </Modal>
+        <HireHelperModal closeHireModal={this.closeHireModal}
+                         job={openedJob} hireModalOpen={hireModalOpen}
+                          handleSuccessHire={this.handleSuccessEmployeeHire}/>
       </div>
     );
   }

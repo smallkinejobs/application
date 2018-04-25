@@ -4,7 +4,7 @@ import { Jobs } from '../../api/jobs/jobs.js';
 /** Initialize the database with a default job document. */
 function addJob(job) {
   job.postDate = Date.parse(job.postDate); // eslint-disable-line
-  // console.log(`  Adding: ${job.title} Skills: (${job.skills.map((skill) => skill.name)})`);
+  console.log(`  Adding: ${job.title} Skills: (${job.skills.map((skill) => skill.name)})`);
   Jobs.insert(job);
 }
 
