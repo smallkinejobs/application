@@ -38,6 +38,7 @@ class EmployerLanding extends React.Component {
     super(props);
     this.state = {
       jobs: [],
+      skills: [],
       jobModalOpen: false,
       openedJob: null,
       hireModalOpen: false,
@@ -71,18 +72,10 @@ class EmployerLanding extends React.Component {
         nextProps.categories.length !== 0
     ) {
       const jobs = nextProps.jobs;
-      const skillIds = nextProps.skills.map((skill) => skill.value);
-      jobs.forEach((job) => {
-        const jobSkills = _.intersection(job.skills, skillIds);
-        const mappedSkills = [];
-        jobSkills.forEach((skill) => {
-          const foundSkill = _.result(_.find(nextProps.skills, { value: skill }), 'text');
-          mappedSkills.push({ name: foundSkill });
-        });
-        job.skills = mappedSkills;
-      });
+      const skills = nextProps.skills;
       this.setState({
         jobs,
+        skills,
       });
     }
   }
