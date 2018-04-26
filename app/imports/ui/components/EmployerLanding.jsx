@@ -6,6 +6,7 @@ import { _ } from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import JobCard from './JobCard';
+import FeedbackModal from './FeedbackModal';
 import EmployeeCard from './EmployeeCard';
 import { Jobs } from '../../api/jobs/jobs';
 import { Skills } from '../../api/skills/skills';
@@ -66,8 +67,8 @@ class EmployerLanding extends React.Component {
     this.submitJob = this.submitJob.bind(this);
     this.openFeedbackModal = this.openFeedbackModal.bind(this);
     this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
-    this.handleRatingChange = this.handleRatingChange.bind(this);
     this.submitRating = this.submitRating.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -202,11 +203,14 @@ class EmployerLanding extends React.Component {
       feedbackModalOpen: false,
       selectedJob: {},
       userToRate: '',
+      ratingValue: -1,
     });
   }
 
   handleRatingChange(e, { value }) {
-    this.setState({ ratingValue: value });
+    this.setState({
+      ratingValue: value,
+    });
   }
 
   submitRating() {
@@ -214,15 +218,16 @@ class EmployerLanding extends React.Component {
     Ratings.insert({
       rating: ratingValue,
       user: userToRate,
-    }, (err, id) => {
-        if (id !== undefined) {
+    }, (err, result) => {
+        if (result !== null && err === null) {
           console.log('Success!');
           this.closeFeedbackModal();
           Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
         }
         else {
-          console.log('Failure!');
-          Bert.alert('Failed to submit review', 'error', 'growl-top-right');
+          console.log(err);
+          Bert.alert('Failed to submit review', 'danger', 'growl-top-right');
+          this.closeFeedbackModal();
         }
     } );
 
@@ -324,40 +329,9 @@ class EmployerLanding extends React.Component {
             </Button>
           </Modal.Actions>
         </Modal>
-        <Modal
-            open={feedbackModalOpen}
-            onClose={this.clearSelectedJob}>
-          <Modal.Header>
-            Rating User: {userToRate}
-          </Modal.Header>
-          <Modal.Content>
-            <Form>
-              <Form.Group inline>
-                <Label>Rating</Label>
-                <Form.Radio label='0' value={0} checked={ratingValue === 0} onChange={this.handleRatingChange}>
-                </Form.Radio>
-                <Form.Radio label='1' value={1} checked={ratingValue === 1} onChange={this.handleRatingChange}>
-                </Form.Radio>
-                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}>
-                </Form.Radio>
-                <Form.Radio label='3' value={3} checked={ratingValue === 3} onChange={this.handleRatingChange}>
-                </Form.Radio>
-                <Form.Radio label='4' value={4} checked={ratingValue === 4} onChange={this.handleRatingChange}>
-                </Form.Radio>
-                <Form.Radio label='5' value={5} checked={ratingValue === 5} onChange={this.handleRatingChange}>
-                </Form.Radio>
-              </Form.Group>
-            </Form>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button primary onClick={this.submitRating}>
-              Submit Rating
-            </Button>
-            <Button color='red' onClick={this.closeFeedbackModal}>
-              Close
-            </Button>
-          </Modal.Actions>
-        </Modal>
+        <FeedbackModal closeCallback={this.closeFeedbackModal} isOpen={feedbackModalOpen}
+                       ratedUser={userToRate} ratingChangeCallback={this.handleRatingChange}
+                       submitCallback={this.submitRating} ratingValue={ratingValue}/>
       </div>
     );
   }
