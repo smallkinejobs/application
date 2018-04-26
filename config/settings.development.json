@@ -84,8 +84,8 @@
       "location": "Campus Center",
       "pay": 12.44,
       "postDate": "2018-04-10",
-      "employerId": 1,
-      "employeeId": null,
+      "employerId": "sarah@foo.com",
+      "employeeId": "john@foo.com",
       "categoryId": 1,
       "ratingId": null,
       "skills": [1,2,3]
