@@ -10,6 +10,7 @@ import EmployeeCard from './EmployeeCard';
 import { Jobs } from '../../api/jobs/jobs';
 import { Skills } from '../../api/skills/skills';
 import { Categories } from '../../api/categories/categories';
+import { Ratings } from '../../api/ratings/ratings';
 
 
 const pastHelpers = [
@@ -306,22 +307,26 @@ class EmployerLanding extends React.Component {
             open={feedbackModalOpen}
             onClose={this.clearSelectedJob}>
           <Modal.Header>
-            <Message style={{ fontSize: '1rem' }} hidden={!formError} error={formError}>
-              <p>Please correct errors for job post.</p>
-            </Message>
             Rating User: {userToRate.username}
           </Modal.Header>
           <Modal.Content>
             <Form>
               <Form.Group inline>
                 <Label>Rating</Label>
-                <Form.Radio label='0' value={0} checked={ratingValue === 0} onChange={this.handleRatingChange}></Form.Radio>
-                <Form.Radio label='1' value={1} checked={ratingValue === 1} onChange={this.handleRatingChange}></Form.Radio>
-                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}></Form.Radio>
-                <Form.Radio label='3' value={3} checked={ratingValue === 3} onChange={this.handleRatingChange}></Form.Radio>
-                <Form.Radio label='4' value={4} checked={ratingValue === 4} onChange={this.handleRatingChange}></Form.Radio>
-                <Form.Radio label='5' value={5} checked={ratingValue === 5} onChange={this.handleRatingChange}></Form.Radio>
+                <Form.Radio label='0' value={0} checked={ratingValue === 0} onChange={this.handleRatingChange}>
+                </Form.Radio>
+                <Form.Radio label='1' value={1} checked={ratingValue === 1} onChange={this.handleRatingChange}>
+                </Form.Radio>
+                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}
+                ></Form.Radio>
+                <Form.Radio label='3' value={3} checked={ratingValue === 3} onChange={this.handleRatingChange}>
+                </Form.Radio>
+                <Form.Radio label='4' value={4} checked={ratingValue === 4} onChange={this.handleRatingChange}>
+                </Form.Radio>
+                <Form.Radio label='5' value={5} checked={ratingValue === 5} onChange={this.handleRatingChange}>
+                </Form.Radio>
               </Form.Group>
+            </Form>
           </Modal.Content>
           <Modal.Actions>
             <Button primary onClick={this.submitJob}>
@@ -352,7 +357,6 @@ export default withTracker(() => {
   const jobSubscription = Meteor.subscribe('UserJobs');
   const skillSubscription = Meteor.subscribe('SkillsString');
   const categorySubscription = Meteor.subscribe('CategoriesString');
-  const ratingSubscription = Meteor.subscribe('UserRatings');
   return {
     ready: jobSubscription.ready() && skillSubscription.ready() && categorySubscription.ready(),
     jobs: Jobs.find({}).fetch(),
