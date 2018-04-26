@@ -1,20 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import PropTypes from 'prop-types'
+import { Roles } from 'meteor/alanning:roles';
+import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Skills } from '../../api/skills/skills';
 
 /**
  * Signup component is similar to signin component, but we attempt to create a new user instead.
  */
-export default class Signup extends React.Component {
+class SignupEmployee extends React.Component {
   /** Initialize state fields. */
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '', error: '' };
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      phone: '',
+      streetAddress: '',
+      unit: '',
+      city: '',
+      zipcode: '',
+      error: '',
+      skills: [],
+      skillSearchQuery: '',
+      redirectToReferer: false,
+    };
     // Ensure that 'this' is bound to this component in these two functions.
-    // https://medium.freecodecamp.org/react-binding-patterns-5-approaches-for-handling-this-92c651b5af56
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSkillSearchChange = this.handleSkillSearchChange.bind(this);
+    this.handleSkillChange = this.handleSkillChange.bind(this);
   }
 
   /** Update the form controls each time the user interacts with them. */
@@ -24,18 +44,57 @@ export default class Signup extends React.Component {
 
   /** Handle Signup submission using Meteor's account mechanism. */
   handleSubmit() {
-    const { email, password } = this.state;
-    Accounts.createUser({ email, username: email, password }, (err) => {
+    const {
+      email,
+      password,
+      skills,
+      firstName,
+      lastName,
+      phone,
+      imageURL,
+      streetAddress,
+      unit,
+      zipcode,
+      city,
+    } = this.state;
+    const address = `${streetAddress} + ${unit} + ","+  ${city}+ "," + ${zipcode}`;
+    const profile = { skills: skills, firstName, lastName, phone, address, imageURL };
+    Accounts.createUser({
+      email,
+      username: email,
+      password,
+      profile,
+    }, (err) => {
       if (err) {
         this.setState({ error: err.reason });
       } else {
-        // browserHistory.push('/login');
+        Roles.addUsersToRoles(Meteor.userId(), 'employee');
+        this.setState({ error: '', redirectToReferer: true });
       }
     });
   }
 
+  /** This handles the changing jobs**/
+  handleSkillChange = (e, { value }) => {
+    this.setState({
+      skillSearchQuery: '',
+      skills: value,
+    });
+  };
+
+  /** This handles skills changing during the search **/
+  handleSkillSearchChange = (e, { searchQuery }) =>
+      this.setState({
+        skillSearchQuery: searchQuery,
+      });
+
   /** Display the signup form. */
   render() {
+    const { skills, skillSearchQuery } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    if (this.state.redirectToReferer) {
+      return <Redirect to={from}/>;
+    }
     return (
         <Container>
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
@@ -52,7 +111,7 @@ export default class Signup extends React.Component {
                         label="First Name"
                         placeholder="First Name"
                         name="firstName"
-                        type="firstName"
+                        onChange={this.handleChange}
                     />
                     <Form.Input
                         width={8}
@@ -60,11 +119,12 @@ export default class Signup extends React.Component {
                         label="Last Name"
                         placeholder="Last Name"
                         name="lastName"
+                        onChange={this.handleChange}
                     />
                   </Form.Group>
                   <Form.Group>
                     <Form.Input
-                        width={4}
+                        width={7}
                         required
                         label="Email"
                         name="email"
@@ -73,7 +133,7 @@ export default class Signup extends React.Component {
                         onChange={this.handleChange}
                     />
                     <Form.Input
-                        width={7}
+                        width={4}
                         required
                         label="Password"
                         name="password"
@@ -85,21 +145,51 @@ export default class Signup extends React.Component {
                         width={5}
                         label="Phone Number"
                         placeholder="(123) 456 7890"
+                        name="phoneNumber"
+                        onChange={this.handleChange}
                     />
                   </Form.Group>
-                  <Form.Input
-                      width={5}
-                      label="Profile Picture"
-                      action={{ color: 'blue', labelPosition: 'right', icon: 'photo', content: 'Upload' }}
+                  <Form.Group>
+                    <Form.Input
+                        width={6}
+                        label="Address"
+                        name="streetAddress"
+                        placeholder="Street Number Street Name"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Unit Number"
+                        placeholder="####"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={4}
+                        label="City"
+                        placeholder="City"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Zipcode"
+                        placeholder="Zipcode"
+                        name="zip"
+                        onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Dropdown
+                      label='Skills Needed'
+                      name='skills'
+                      multiple
+                      onChange={this.handleSkillChange}
+                      onSearchChange={this.handleSkillSearchChange}
+                      options={this.props.skills}
+                      placeholder='Skills'
+                      search
+                      searchQuery={skillSearchQuery}
+                      selection
+                      value={skills}
                   />
-                  <Form.Input
-                      width={8}
-                      label="Skills"
-                      placeholder="Enter a skill then press the enter button"
-                      name="skills"
-                  />
-                  <hr/>
-                  <h2>Skills component</h2>
                   <Form.Button content="Submit"/>
                 </Segment>
               </Form>
@@ -121,3 +211,20 @@ export default class Signup extends React.Component {
     );
   }
 }
+
+SignupEmployee.propTypes = {
+  skills: PropTypes.array.isRequired,
+  location: PropTypes.object,
+};
+
+export default withTracker(() => {
+  const skillSubscription = Meteor.subscribe('SkillsString');
+  return {
+    ready: skillSubscription.ready(),
+    skills: Skills.find({}).map((skill) => ({
+      key: skill._id,
+      text: skill.name,
+      value: skill._id,
+    })),
+  };
+})(SignupEmployee);

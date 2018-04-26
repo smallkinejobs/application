@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio } from 'semantic-ui-react';
+import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -8,6 +8,7 @@ import StarRating from '../components/StarRating';
 import BaseLanding from '../components/BaseLanding';
 import EmployerLanding from '../components/EmployerLanding';
 import EmployeeLanding from '../components/EmployeeLanding';
+import { Ratings } from '../../api/ratings/ratings.js';
 
 const testUser = {
   roles: ['employer', 'employee'],
@@ -25,6 +26,13 @@ class Landing extends React.Component {
     this.handleTwoRoleToggle = this.handleTwoRoleToggle.bind(this);
   }
 
+  componentWillMount() {
+    const employeeToggle = Roles.userIsInRole(Meteor.userId(), 'employee');
+    this.setState({
+      employeeToggle,
+    });
+  }
+
   handleSideBarToggle() {
     this.setState({
       visible: !this.state.visible,
@@ -36,9 +44,18 @@ class Landing extends React.Component {
       employeeToggle: !this.state.employeeToggle,
     });
   }
-
   render() {
+    return this.props.ready ? this.renderPage() : <Loader>Waiting for user Ratings</Loader>;
+  }
+  renderPage() {
+    const isEmployer = Roles.userIsInRole(Meteor.userId(), 'employer');
+    const isEmployee = Roles.userIsInRole(Meteor.userId(), 'employee');
+    console.log(isEmployer, isEmployee);
     const { visible, employeeToggle } = this.state;
+    const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
+    const userRating = ratingValues.reduce(function(acc, rating) { return acc + rating; }, 0) / ratingValues.length;
+    const userImage = this.props.currentUserImage === ''
+        ? '/images/landingPage/student1.jpg' : this.props.currentUserImage; // eslint-disable-line
     return (
       <div>
         <Sidebar.Pushable>
@@ -48,13 +65,13 @@ class Landing extends React.Component {
                      animation='slide out'
                      width='wide' visible={visible} icon='labeled' vertical='true' inverted='true'>
               <Container style={{ padding: '2rem' }}>
-                <Image centered size='small' circular src='/images/landingPage/student1.jpg' />
+                <Image centered size='small' circular src={userImage} />
                 <Link to='profile'>Edit Profile</Link>
                 <h2><Icon name='user circle outline' /> {this.props.currentUserName}</h2>
                 <Label color='blue'>Employer</Label>
                 <Label color='blue'>Helper</Label>
                 <Divider/>
-                <h2><Icon name='checkmark box' /> Average Rating: </h2> <StarRating rating={4}/>
+                <h2><Icon name='checkmark box' /> Average Rating: </h2> <StarRating rating={userRating}/>
                 <Divider/>
                 <h2>Total Amount Earned</h2>
                 <h3><Icon name='money'/> $30.00</h3>
@@ -73,7 +90,7 @@ class Landing extends React.Component {
                 </Button>
                 &nbsp;&nbsp;
                 {
-                  testUser.roles.includes('employer') && testUser.roles.includes('employee') &&
+                  isEmployee && isEmployer &&
                   <Radio label='Employer/Employee' toggle
                          onChange={this.handleTwoRoleToggle} checked={employeeToggle} />
                 }
@@ -86,11 +103,11 @@ class Landing extends React.Component {
             {
               (Meteor.user() != null) &&
               <div>
-                <div style={(employeeToggle === true) ? { display: 'none' } : {}}>
+                <div style={((employeeToggle === false) && (isEmployer)) ? {} : { display: 'none' }}>
                   <EmployerLanding/>
                 </div>
-                < div style={(employeeToggle === false) ? { display: 'none' } : {}}>
-                <EmployeeLanding />
+                <div style={((employeeToggle === true) && (isEmployee)) ? {} : { display: 'none' }}>
+                  <EmployeeLanding />
                 </div>
               </div>
             }
@@ -103,10 +120,17 @@ class Landing extends React.Component {
 
 Landing.propTypes = {
   currentUserName: PropTypes.string,
+  currentUserImage: PropTypes.string,
+  ready: PropTypes.bool.isRequired,
+  ratings: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
+  const ratingsSubscription = Meteor.subscribe('UserRatings');
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
+    currentUserImage: '/images/defaultprofilepic.jpg',
+    ready: ratingsSubscription.ready(),
+    ratings: Ratings.find({}).fetch(),
   };
 })(Landing);
