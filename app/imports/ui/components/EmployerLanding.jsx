@@ -67,6 +67,7 @@ class EmployerLanding extends React.Component {
     this.openFeedbackModal = this.openFeedbackModal.bind(this);
     this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
     this.handleRatingChange = this.handleRatingChange.bind(this);
+    this.submitRating = this.submitRating.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -208,6 +209,25 @@ class EmployerLanding extends React.Component {
     this.setState({ ratingValue: value });
   }
 
+  submitRating() {
+    const { userToRate, ratingValue } = this.state;
+    Ratings.insert({
+      rating: ratingValue,
+      user: userToRate,
+    }, (err, id) => {
+        if (id !== undefined) {
+          console.log('Success!');
+          this.closeFeedbackModal();
+          Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
+        }
+        else {
+          console.log('Failure!');
+          Bert.alert('Failed to submit review', 'error', 'growl-top-right');
+        }
+    } );
+
+  }
+
   renderPage() {
     const { skills, categories } = this.props;
     const {
@@ -229,7 +249,8 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobCard key={job._id} job={job}/>)
+                  jobs.map((job) => <JobCard key={job._id} job={job} openModal={(jobId) => jobId}
+                                             feedBackModal={this.openFeedbackModal}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -307,7 +328,7 @@ class EmployerLanding extends React.Component {
             open={feedbackModalOpen}
             onClose={this.clearSelectedJob}>
           <Modal.Header>
-            Rating User: {userToRate.username}
+            Rating User: {userToRate}
           </Modal.Header>
           <Modal.Content>
             <Form>
@@ -317,8 +338,8 @@ class EmployerLanding extends React.Component {
                 </Form.Radio>
                 <Form.Radio label='1' value={1} checked={ratingValue === 1} onChange={this.handleRatingChange}>
                 </Form.Radio>
-                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}
-                ></Form.Radio>
+                <Form.Radio label='2' value={2} checked={ratingValue === 2} onChange={this.handleRatingChange}>
+                </Form.Radio>
                 <Form.Radio label='3' value={3} checked={ratingValue === 3} onChange={this.handleRatingChange}>
                 </Form.Radio>
                 <Form.Radio label='4' value={4} checked={ratingValue === 4} onChange={this.handleRatingChange}>
@@ -329,7 +350,7 @@ class EmployerLanding extends React.Component {
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button primary onClick={this.submitJob}>
+            <Button primary onClick={this.submitRating}>
               Submit Rating
             </Button>
             <Button color='red' onClick={this.closeFeedbackModal}>
