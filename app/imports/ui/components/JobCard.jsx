@@ -1,9 +1,21 @@
 import React from 'react';
 import { Card, Icon, Label, Image, Button } from 'semantic-ui-react';
+import { _ } from 'lodash';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class JobCard extends React.Component {
+  componentWillMount() {
+    const { skills, job } = this.props;
+    job.skillNames = [];
+    job.skills.forEach((skill) => {
+      const foundSkill = _.find(skills, { key: skill });
+      if (foundSkill) {
+        job.skillNames.push(foundSkill.text);
+      }
+    });
+  }
+
   render() {
     const { job, openModal, openHireModal } = this.props;
 
@@ -62,8 +74,8 @@ class JobCard extends React.Component {
         />
         <Card.Content extra>
           Skills: {
-            job.skills.map((skill, index) =>
-              <Label tag size='tiny' key={index} color='blue'>{skill.name}</Label>)
+            job.skillNames.map((skill, index) =>
+              <Label color='blue' content={skill} key={index}/>)
         }
         </Card.Content>
         <Card.Content extra>
@@ -83,6 +95,7 @@ class JobCard extends React.Component {
 
 JobCard.propTypes = {
   job: PropTypes.object.isRequired,
+  skills: PropTypes.array,
   openModal: PropTypes.func,
   openHireModal: PropTypes.func,
 };
