@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { Accounts } from 'meteor/accounts-base';
+import PropTypes from 'prop-types';
+import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 
 /**
  * Signup component is similar to signin component, but we attempt to create a new user instead.
@@ -16,10 +19,10 @@ export default class SignupEmployer extends React.Component {
       email: '',
       password: '',
       phone: '',
-      streetAddress:'',
-      unit:'',
-      city:'',
-      zipcode:'',
+      streetAddress: '',
+      unit: '',
+      city: '',
+      zipcode: '',
       error: '',
     };
     // Ensure that 'this' is bound to this component in these two functions.
@@ -45,10 +48,10 @@ export default class SignupEmployer extends React.Component {
       streetAddress,
       unit,
       zipcode,
-      city
+      city,
     } = this.state;
     const address = `${streetAddress} + ${unit} + ${zipcode} + ${city}`;
-    const profile={firstName, lastName, phone, address, imageURL }
+    const profile = { firstName, lastName, phone, address, imageURL };
     Accounts.createUser({
       email,
       username: email,
@@ -58,12 +61,18 @@ export default class SignupEmployer extends React.Component {
       if (err) {
         this.setState({ error: err.reason });
       } else {
+        Roles.addUsersToRoles(Meteor.userId(), 'employer');
+        this.setState({ error: '', redirectToReferer: true });
       }
     });
   }
 
   /** Display the signup form. */
   render() {
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    if (this.state.redirectToReferer) {
+      return <Redirect to={from}/>;
+    }
     return (
         <Container>
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
@@ -148,17 +157,6 @@ export default class SignupEmployer extends React.Component {
                         onChange={this.handleChange}
                     />
                   </Form.Group>
-                  <Form.Input
-                      width={5}
-                      label="Profile Picture"
-                      action={{
-                        color: 'blue',
-                        labelPosition: 'right',
-                        icon: 'photo',
-                        content: 'Upload',
-                        name: 'imageURL',
-                      }}
-                  />
                   <Form.Button content="Submit"/>
                 </Segment>
               </Form>
@@ -180,3 +178,6 @@ export default class SignupEmployer extends React.Component {
     );
   }
 }
+SignupEmployer.propTypes = {
+  location: PropTypes.object,
+};

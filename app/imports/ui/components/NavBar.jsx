@@ -20,6 +20,7 @@ class NavBar extends React.Component {
     };
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchText = this.handleSearchText.bind(this);
+    this.handleLoginButton = this.handleLoginButton.bind(this);
   }
 
   handleSearch() {
@@ -35,6 +36,10 @@ class NavBar extends React.Component {
     this.setState({
       searchText,
     });
+  }
+  handleLoginButton() {
+    const { history } = this.props;
+    history.push('signin');
   }
 
   render() {
@@ -58,12 +63,9 @@ class NavBar extends React.Component {
         </Menu.Item>
         <Menu.Item>
           {this.props.currentUser === '' ? (
-              <Dropdown text="Login" pointing="top right" icon={'user'}>
-                <Dropdown.Menu>
-                  <Dropdown.Item icon="user" text="Sign In" as={NavLink} exact to="/signin"/>
-                  <Dropdown.Item icon="add user" text="Sign Up" as={NavLink} exact to="/signup"/>
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button color='blue' onClick={this.handleLoginButton}>
+                Sign In
+              </Button>
           ) : (
               <Dropdown text={this.props.currentUser} pointing="top right" icon={'user'}>
                 <Dropdown.Menu>
@@ -96,6 +98,7 @@ class NavJobSearch extends React.Component {
 NavJobSearch.propTypes = {
   handleSearchText: PropTypes.func,
   handleSearch: PropTypes.func,
+  history: PropTypes.any,
 }
 
 /** Declare the types of all properties. */

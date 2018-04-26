@@ -29,7 +29,7 @@ export default class Signup extends React.Component {
       if (err) {
         this.setState({ error: err.reason });
       } else {
-        // browserHistory.push('/login');
+        // go to employee page
       }
     });
   }

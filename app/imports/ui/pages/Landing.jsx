@@ -120,7 +120,7 @@ export default withTracker(() => {
   const ratingsSubscription = Meteor.subscribe('UserRatings');
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
-    currentUserImage: (Meteor.user() && Meteor.user().profile.imageURL) ? Meteor.user().profile.imageURL : '',
+    currentUserImage: '/images/defaultprofilepic.jpg',
     ready: ratingsSubscription.ready(),
     ratings: Ratings.find({}).fetch(),
   };

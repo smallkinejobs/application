@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types'
 import { Roles } from 'meteor/alanning:roles';
@@ -28,6 +28,7 @@ class SignupEmployee extends React.Component {
       error: '',
       skills: [],
       skillSearchQuery: '',
+      redirectToReferer: false,
     };
     // Ensure that 'this' is bound to this component in these two functions.
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,20 +55,21 @@ class SignupEmployee extends React.Component {
       streetAddress,
       unit,
       zipcode,
-      city
+      city,
     } = this.state;
-    const address = `${streetAddress} + ${unit} + ${zipcode} + ${city}`;
+    const address = `${streetAddress} + ${unit} + ","+  ${city}+ "," + ${zipcode}`;
     const profile = { skills: skills, firstName, lastName, phone, address, imageURL };
     Accounts.createUser({
       email,
       username: email,
       password,
       profile,
-    }, (err, id) => {
+    }, (err) => {
       if (err) {
         this.setState({ error: err.reason });
       } else {
-        console.log(id);
+        Roles.addUsersToRoles(Meteor.userId(), 'employee');
+        this.setState({ error: '', redirectToReferer: true });
       }
     });
   }
@@ -89,6 +91,10 @@ class SignupEmployee extends React.Component {
   /** Display the signup form. */
   render() {
     const { skills, skillSearchQuery } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    if (this.state.redirectToReferer) {
+      return <Redirect to={from}/>;
+    }
     return (
         <Container>
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
@@ -171,17 +177,6 @@ class SignupEmployee extends React.Component {
                         onChange={this.handleChange}
                     />
                   </Form.Group>
-                  <Form.Input
-                      width={5}
-                      label="Profile Picture"
-                      action={{
-                        color: 'blue',
-                        labelPosition: 'right',
-                        icon: 'photo',
-                        content: 'Upload',
-                        name: 'imageURL',
-                      }}
-                  />
                   <Form.Dropdown
                       label='Skills Needed'
                       name='skills'
@@ -219,6 +214,7 @@ class SignupEmployee extends React.Component {
 
 SignupEmployee.propTypes = {
   skills: PropTypes.array.isRequired,
+  location: PropTypes.object,
 };
 
 export default withTracker(() => {
