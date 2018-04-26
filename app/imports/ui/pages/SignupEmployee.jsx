@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types'
 import { Roles } from 'meteor/alanning:roles';
@@ -7,7 +7,6 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Skills } from '../../api/skills/skills';
-
 
 /**
  * Signup component is similar to signin component, but we attempt to create a new user instead.
@@ -22,9 +21,14 @@ class SignupEmployee extends React.Component {
       email: '',
       password: '',
       phone: '',
+      streetAddress: '',
+      unit: '',
+      city: '',
+      zipcode: '',
       error: '',
       skills: [],
       skillSearchQuery: '',
+      redirectToReferer: false,
     };
     // Ensure that 'this' is bound to this component in these two functions.
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,23 +44,34 @@ class SignupEmployee extends React.Component {
 
   /** Handle Signup submission using Meteor's account mechanism. */
   handleSubmit() {
-    const { firstName, lastName, email, password, phone, skills } = this.state;
-    const profile = { skills: skills };
-    const userID = Accounts.createUser({
+    const {
       email,
-      username: email,
-      password, firstName,
+      password,
+      skills,
+      firstName,
       lastName,
       phone,
+      imageURL,
+      streetAddress,
+      unit,
+      zipcode,
+      city,
+    } = this.state;
+    const address = `${streetAddress} + ${unit} + ","+  ${city}+ "," + ${zipcode}`;
+    const profile = { skills: skills, firstName, lastName, phone, address, imageURL };
+    Accounts.createUser({
+      email,
+      username: email,
+      password,
       profile,
-    }, (err, id) => {
+    }, (err) => {
       if (err) {
         this.setState({ error: err.reason });
       } else {
-        console.log(id);
+        Roles.addUsersToRoles(Meteor.userId(), 'employee');
+        this.setState({ error: '', redirectToReferer: true });
       }
     });
-    //need to assign role to user
   }
 
   /** This handles the changing jobs**/
@@ -76,6 +91,10 @@ class SignupEmployee extends React.Component {
   /** Display the signup form. */
   render() {
     const { skills, skillSearchQuery } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    if (this.state.redirectToReferer) {
+      return <Redirect to={from}/>;
+    }
     return (
         <Container>
           <Grid style={{ textAlign: 'center', verticalAlign: 'middle', margin: '0rem' }} centered>
@@ -105,7 +124,7 @@ class SignupEmployee extends React.Component {
                   </Form.Group>
                   <Form.Group>
                     <Form.Input
-                        width={4}
+                        width={7}
                         required
                         label="Email"
                         name="email"
@@ -114,7 +133,7 @@ class SignupEmployee extends React.Component {
                         onChange={this.handleChange}
                     />
                     <Form.Input
-                        width={7}
+                        width={4}
                         required
                         label="Password"
                         name="password"
@@ -126,15 +145,38 @@ class SignupEmployee extends React.Component {
                         width={5}
                         label="Phone Number"
                         placeholder="(123) 456 7890"
-                        name="phone"
+                        name="phoneNumber"
                         onChange={this.handleChange}
                     />
                   </Form.Group>
-                  <Form.Input
-                      width={5}
-                      label="Profile Picture"
-                      action={{ color: 'blue', labelPosition: 'right', icon: 'photo', content: 'Upload' }}
-                  />
+                  <Form.Group>
+                    <Form.Input
+                        width={6}
+                        label="Address"
+                        name="streetAddress"
+                        placeholder="Street Number Street Name"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Unit Number"
+                        placeholder="####"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={4}
+                        label="City"
+                        placeholder="City"
+                        onChange={this.handleChange}
+                    />
+                    <Form.Input
+                        width={3}
+                        label="Zipcode"
+                        placeholder="Zipcode"
+                        name="zip"
+                        onChange={this.handleChange}
+                    />
+                  </Form.Group>
                   <Form.Dropdown
                       label='Skills Needed'
                       name='skills'
@@ -172,6 +214,7 @@ class SignupEmployee extends React.Component {
 
 SignupEmployee.propTypes = {
   skills: PropTypes.array.isRequired,
+  location: PropTypes.object,
 };
 
 export default withTracker(() => {
