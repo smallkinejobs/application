@@ -5,7 +5,7 @@ import { distanceInWordsToNow } from 'date-fns';
 
 class JobCard extends React.Component {
   render() {
-    const { job, openModal } = this.props;
+    const { job, openModal, openHireModal } = this.props;
 
     let status = <p style={{ color: 'red' }}>CLOSED</p>;
     let cardColor = 'red';
@@ -25,8 +25,15 @@ class JobCard extends React.Component {
       disabled = false;
     }
     const feedBackButton = <Button disabled={ disabled } color='blue'>
-      Submit Feedback <Icon name='announcement'/>
-    </Button>; //eslint-disable-line
+      <Icon name='announcement'/> Submit Feedback
+    </Button>;
+
+    const hireButton = <div>
+      <div onClick={openHireModal} color='green'
+           className="ui button" data-tooltip="5 Applied" data-position="right center">
+        Hire Helper
+      </div>
+    </div>;
 
     return (
       <Card onClick={() => openModal(job._id)} color={cardColor}>
@@ -60,7 +67,14 @@ class JobCard extends React.Component {
         }
         </Card.Content>
         <Card.Content extra>
-          {feedBackButton}
+          {
+            job.open === -1 &&
+            feedBackButton
+          }
+          {
+            job.open === 1 &&
+            hireButton
+          }
         </Card.Content>
       </Card>
     );
@@ -70,6 +84,7 @@ class JobCard extends React.Component {
 JobCard.propTypes = {
   job: PropTypes.object.isRequired,
   openModal: PropTypes.func,
+  openHireModal: PropTypes.func,
 };
 
 export default JobCard;
