@@ -1,11 +1,11 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card, Loader, Modal, } from 'semantic-ui-react';
+import { Container, Grid, Divider, Button, Card, Loader, } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { _ } from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import EmployeeJobCard from './EmployerJobCard';
+import EmployerJobCard from './EmployerJobCard';
 import EmployeeCard from './EmployeeCard';
 import NewJobModal from './NewJobModal';
 import HireHelperModal from './HireHelperModal';
@@ -201,7 +201,7 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job}
+                  jobs.map((job) => <EmployerJobCard key={job._id} job={job} skills={skills}
                                                      openModal={() => this.openHireModal(job)}/>)
                 }
               </Card.Group>
