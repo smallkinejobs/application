@@ -5,7 +5,7 @@ import qs from 'query-string';
 import { Grid, Header, Card, Modal, Image, Button, Label, Input, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
-import JobCard from '../components/JobCard';
+import JobCard from '../components/JobSearchCard';
 import { Jobs } from '../../api/jobs/jobs.js';
 
 /** Renders the Page for job search results. */
