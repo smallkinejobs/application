@@ -5,6 +5,17 @@ import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class EmployerJobCard extends React.Component {
+  componentWillMount() {
+    const { skills, job } = this.props;
+    job.skillNames = [];
+    job.skills.forEach((skill) => {
+      const foundSkill = _.find(skills, { key: skill });
+      if (foundSkill) {
+        job.skillNames.push(foundSkill.text);
+      }
+    });
+  }
+
   render() {
     const { job, openHireModal, skills } = this.props;
     job.skillNames = [];
