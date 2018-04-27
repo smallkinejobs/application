@@ -36,9 +36,9 @@ class JobCard extends React.Component {
       cardColor = 'green';
       disabled = false;
     }
-    const feedBackButton = <Button disabled={ disabled } color='blue'>
-      <Icon name='announcement'/> Submit Feedback
-    </Button>;
+    const feedBackButton = <Button disabled={ disabled } color='blue' onClick={() => this.props.feedBackModal(job)}>
+      Submit Feedback <Icon name='announcement'/>
+    </Button>; //eslint-disable-line
 
     const hireButton = <div>
       <div onClick={openHireModal} color='green'
@@ -97,6 +97,7 @@ JobCard.propTypes = {
   job: PropTypes.object.isRequired,
   skills: PropTypes.array,
   openModal: PropTypes.func,
+  feedBackModal: PropTypes.func,
   openHireModal: PropTypes.func,
 };
 

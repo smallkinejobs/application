@@ -5,6 +5,8 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import { _ } from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
+import JobCard from './JobCard';
+import FeedbackModal from './FeedbackModal';
 import EmployeeJobCard from './EmployerJobCard';
 import EmployeeCard from './EmployeeCard';
 import NewJobModal from './NewJobModal';
@@ -12,6 +14,7 @@ import HireHelperModal from './HireHelperModal';
 import { Jobs } from '../../api/jobs/jobs';
 import { Skills } from '../../api/skills/skills';
 import { Categories } from '../../api/categories/categories';
+import { Ratings } from '../../api/ratings/ratings';
 
 
 const pastHelpers = [
@@ -54,6 +57,10 @@ class EmployerLanding extends React.Component {
         categoryId: null,
         skills: [],
       },
+      feedbackModalOpen: false,
+      selectedJob: {},
+      userToRate: '',
+      ratingValue: -1,
     };
     this.openJobModal = this.openJobModal.bind(this);
     this.closeJobModal = this.closeJobModal.bind(this);
@@ -63,6 +70,10 @@ class EmployerLanding extends React.Component {
     this.handleFormChanges = this.handleFormChanges.bind(this);
     this.validateJob = this.validateJob.bind(this);
     this.submitJob = this.submitJob.bind(this);
+    this.openFeedbackModal = this.openFeedbackModal.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
+    this.submitRating = this.submitRating.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
     this.handleSuccessEmployeeHire = this.handleSuccessEmployeeHire.bind(this);
   }
 
@@ -181,10 +192,58 @@ class EmployerLanding extends React.Component {
     });
   }
 
+  openFeedbackModal(job) {
+    const uname = Meteor.user().username;
+    if (uname === job.employerId || uname === job.employeeId) {
+      this.setState({
+        feedbackModalOpen: true,
+        selectedJob: job,
+        userToRate: uname === job.employerId ? job.employeeId : job.employerId,
+      });
+    }
+  }
+
+  closeFeedbackModal() {
+    this.setState({
+      feedbackModalOpen: false,
+      selectedJob: {},
+      userToRate: '',
+      ratingValue: -1,
+    });
+  }
+
+  handleRatingChange(e, { value }) {
+    this.setState({
+      ratingValue: value,
+    });
+  }
+
+  submitRating() {
+    const { userToRate, ratingValue } = this.state;
+    Ratings.insert({
+      rating: ratingValue,
+      user: userToRate,
+    }, (err, result) => {
+        if (result !== null && err === null) {
+          console.log('Success!');
+          this.closeFeedbackModal();
+          Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
+        }
+        else {
+          console.log(err);
+          Bert.alert('Failed to submit review', 'danger', 'growl-top-right');
+          this.closeFeedbackModal();
+        }
+    } );
+
+  }
+
   renderPage() {
     const { skills, categories } = this.props;
-    const { jobs, jobModalOpen, newJob, skillSearchQuery,
-      formError, categorySearchQuery, hireModalOpen, openedJob } = this.state;
+
+    const {
+      jobs, jobModalOpen, newJob, skillSearchQuery,
+      formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue, hireModalOpen, openedJob } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -201,8 +260,8 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job}
-                                                     openModal={() => this.openHireModal(job)}/>)
+                  jobs.map((job) => <JobCard key={job._id} job={job} openModal={() => this.openHireModal(job)}
+                                             feedBackModal={this.openFeedbackModal}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -220,6 +279,9 @@ class EmployerLanding extends React.Component {
             </Grid.Row>
           </Grid>
         </Container>
+        <FeedbackModal closeCallback={this.closeFeedbackModal} isOpen={feedbackModalOpen}
+                       ratedUser={userToRate} ratingChangeCallback={this.handleRatingChange}
+                       submitCallback={this.submitRating} ratingValue={ratingValue}/>
         <NewJobModal newJob={newJob} formError={formError}
                               skillSearchQuery={skillSearchQuery}
                               skills={skills} categorySearchQuery={categorySearchQuery}
