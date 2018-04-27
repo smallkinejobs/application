@@ -99,10 +99,10 @@ class Landing extends React.Component {
             {
               (Meteor.user() != null) &&
               <div>
-                <div style={((employeeToggle === false) && (isEmployer)) ? {} : { display: 'none' }}>
+                <div style={((employeeToggle === false) && (isEmployer)) || (isEmployer) ? {} : { display: 'none' }}>
                   <EmployerLanding/>
                 </div>
-                <div style={((employeeToggle === true) && (isEmployee)) ? {} : { display: 'none' }}>
+                <div style={((employeeToggle === true) && (isEmployee)) || (isEmployee) ? {} : { display: 'none' }}>
                   <EmployeeLanding />
                 </div>
               </div>

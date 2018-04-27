@@ -12,6 +12,7 @@ import NewJobModal from './NewJobModal';
 import HireHelperModal from './HireHelperModal';
 import { Jobs } from '../../api/jobs/jobs';
 import { Skills } from '../../api/skills/skills';
+import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
 import { Categories } from '../../api/categories/categories';
 import { Ratings } from '../../api/ratings/ratings';
 
@@ -141,20 +142,35 @@ class EmployerLanding extends React.Component {
       newJob.postDate = new Date();
       newJob.open = 1;
       newJob.employerId = Meteor.userId();
-      Jobs.insert(this.state.newJob);
-      this.setState({
-        formSuccess: true,
-        newJob: {
-          title: '',
-          description: '',
-          location: '',
-          pay: '',
-          categoryId: null,
-          skills: [],
-        },
-        jobModalOpen: false,
+      Jobs.insert(this.state.newJob, (jobErr, id) => {
+        if (jobErr) {
+          this.setState({
+            formError: true,
+          });
+        } else {
+          JobApplicants.insert({ jobId: id }, (JobApplicantErr) => {
+            if (JobApplicantErr) {
+              this.setState({
+                formError: true,
+              });
+            } else {
+              this.setState({
+                formSuccess: true,
+                newJob: {
+                  title: '',
+                  description: '',
+                  location: '',
+                  pay: '',
+                  categoryId: null,
+                  skills: [],
+                },
+                jobModalOpen: false,
+              });
+              Bert.alert('Successfully Posted Job', 'success', 'growl-top-right');
+            }
+          });
+        }
       });
-      Bert.alert('Successfully Posted Job', 'success', 'growl-top-right');
     } else {
       this.setState({
         formError: true,
@@ -306,14 +322,17 @@ EmployerLanding.propTypes = {
   skills: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
+  jobApplicants: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
   const jobSubscription = Meteor.subscribe('UserJobs');
   const skillSubscription = Meteor.subscribe('SkillsString');
   const categorySubscription = Meteor.subscribe('CategoriesString');
+  const jobApplicantsSubscription = Meteor.subscribe('JobApplicants');
   return {
-    ready: jobSubscription.ready() && skillSubscription.ready() && categorySubscription.ready(),
+    ready: jobSubscription.ready() && skillSubscription.ready() &&
+          categorySubscription.ready() && jobApplicantsSubscription.ready(),
     jobs: Jobs.find({}).fetch(),
     skills: Skills.find({}).map((skill) => ({
       key: skill._id,
@@ -325,5 +344,6 @@ export default withTracker(() => {
       text: cat.title,
       value: cat._id,
     })),
+    jobApplicants: JobApplicants.find({}).fetch(),
   };
 })(EmployerLanding);

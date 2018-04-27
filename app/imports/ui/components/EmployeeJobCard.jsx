@@ -25,7 +25,7 @@ class EmployeeJobCard extends React.Component {
 
     if (job.open === 1) {
       status = <p style={{ color: 'blue' }}>OPEN</p>;
-      cardColor = 'green';
+      cardColor = 'blue';
     }
     if (job.open === 0) {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
