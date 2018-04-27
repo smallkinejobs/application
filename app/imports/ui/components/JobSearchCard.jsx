@@ -17,7 +17,7 @@ class JobSearchCard extends React.Component {
     });
     let applied = false;
     const foundJob = _.find(jobApplicants, { jobId: job._id });
-    if (_.includes(foundJob.applicantIds, Meteor.userId())) {
+    if ((_.has(foundJob, 'applicantIds')) && (_.includes(foundJob.applicantIds, Meteor.userId()))) {
       applied = true;
     }
 

@@ -148,7 +148,7 @@ class EmployerLanding extends React.Component {
             formError: true,
           });
         } else {
-          JobApplicants.insert({ jobId: id }, (JobApplicantErr) => {
+          JobApplicants.insert({ jobId: id, applicantIds: [] }, (JobApplicantErr) => {
             if (JobApplicantErr) {
               this.setState({
                 formError: true,
