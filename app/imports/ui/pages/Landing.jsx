@@ -49,7 +49,7 @@ class Landing extends React.Component {
     const isEmployee = Roles.userIsInRole(Meteor.userId(), 'employee');
     const { visible, employeeToggle } = this.state;
     const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
-    const userRating = ratingValues.reduce(function(acc, rating) { return acc + rating; }, 0) / ratingValues.length;
+    const userRating = ratingValues.reduce(function (acc, rating) { return acc + rating; }, 0) / ratingValues.length;
     const userImage = this.props.currentUserImage === ''
         ? '/images/landingPage/student1.jpg' : this.props.currentUserImage; // eslint-disable-line
     return (
@@ -80,7 +80,7 @@ class Landing extends React.Component {
           <Sidebar.Pusher>
             {
               Meteor.user() &&
-              <div style={{ padding: '1rem', backgroundColor: '#4caf50b8' }}>
+              <div style={{ padding: '1rem', backgroundColor: '#4caf50' }}>
                 <Button icon onClick={this.handleSideBarToggle}>
                   <Icon name='bars' />
                 </Button>
