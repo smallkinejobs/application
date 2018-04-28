@@ -19,6 +19,8 @@ const JobSchema = new SimpleSchema({
     employeeId: { type: String, optional: true, uniforms: { type: 'hidden' } },
     categoryId: String,
     ratingId: { type: String, optional: true, uniforms: { type: 'hidden' } },
+    employerSubmitRating: { type: Boolean, defaultValue: false },
+    employeeSubmitRating: { type: Boolean, defaultValue: false },
   'skills.$': String,
 }, { tracker: Tracker });
 

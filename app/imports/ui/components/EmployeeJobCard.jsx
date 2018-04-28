@@ -17,15 +17,14 @@ class EmployeeJobCard extends React.Component {
   }
 
   render() {
-    const { job, openModal, openHireModal } = this.props;
+    const { job, feedBackModal } = this.props;
 
-    let status = <p style={{ color: 'red' }}>CLOSED</p>;
-    let cardColor = 'red';
-    let disabled = true;
+    let status = <p style={{ color: 'blue' }}>OPEN</p>;
+    let cardColor = 'blue';
 
-    if (job.open === 1) {
-      status = <p style={{ color: 'blue' }}>OPEN</p>;
-      cardColor = 'blue';
+    if (job.open === -1 && job.employeeSubmitRating) {
+      status = <p style={{ color: 'red' }}>CLOSED</p>;
+      cardColor = 'red';
     }
     if (job.open === 0) {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
@@ -34,21 +33,13 @@ class EmployeeJobCard extends React.Component {
     if (job.open === 2) {
       status = <p style={{ color: 'green' }}>COMPLETED<Icon name='checkmark'/></p>;
       cardColor = 'green';
-      disabled = false;
     }
-    const feedBackButton = <Button disabled={ disabled } color='blue'>
+    const feedBackButton = <Button onClick={feedBackModal} color='blue'>
       <Icon name='announcement'/> Submit Feedback
     </Button>;
 
-    const hireButton = <div>
-      <div onClick={openHireModal} color='green'
-           className="ui button" data-tooltip="5 Applied" data-position="right center">
-        Hire Helper
-      </div>
-    </div>;
-
     return (
-        <Card onClick={() => openModal(job._id)} color={cardColor}>
+        <Card color={cardColor}>
           <Card.Content>
             <Label content={status} ribbon />
             <Image src='/images/uh_logo.png' size='mini' floated='right'/>
@@ -80,12 +71,9 @@ class EmployeeJobCard extends React.Component {
           </Card.Content>
           <Card.Content extra>
             {
-              job.open === -1 &&
+              (job.open === 2 ||
+              (job.open === -1 && !job.employeeSubmitRating)) &&
               feedBackButton
-            }
-            {
-              job.open === 1 &&
-              hireButton
             }
           </Card.Content>
         </Card>
@@ -96,8 +84,7 @@ class EmployeeJobCard extends React.Component {
 EmployeeJobCard.propTypes = {
   job: PropTypes.object.isRequired,
   skills: PropTypes.array,
-  openModal: PropTypes.func,
-  openHireModal: PropTypes.func,
+  feedBackModal: PropTypes.func,
 };
 
 export default EmployeeJobCard;
