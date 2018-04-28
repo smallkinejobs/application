@@ -8,7 +8,7 @@ const JobApplicants = new Mongo.Collection('JobApplicants');
 /** Create a schema to constrain the structure of documents associated with this collection. */
 const JobApplicantSchema = new SimpleSchema({
     jobId: String,
-    applicantIds: Array,
+    applicantIds: { type: Array, optional: true },
   'applicantIds.$': String,
 }, { tracker: Tracker });
 

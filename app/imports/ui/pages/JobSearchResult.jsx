@@ -1,12 +1,15 @@
 import React from 'react';
-import { distanceInWordsToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
-import { Grid, Header, Card, Modal, Image, Button, Label, Input, Loader } from 'semantic-ui-react';
+import { _ } from 'lodash';
+import { Grid, Header, Card, Input, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
-import JobCard from '../components/JobSearchCard';
+import JobSearchCard from '../components/JobSearchCard';
 import { Jobs } from '../../api/jobs/jobs.js';
+import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
+import { Skills } from '../../api/skills/skills.js';
+import JobDetailModal from '../components/JobDetailModal';
 
 /** Renders the Page for job search results. */
 class JobSearchResult extends React.Component {
@@ -97,39 +100,15 @@ class JobSearchResult extends React.Component {
         </Grid>
         <Grid container>
           <Grid.Column>
-          <Modal
-            open={modalOpen}
-            onClose={this.clearSelectedJob}>
-            <Modal.Header>
-              Apply to this job : <i>Posted {distanceInWordsToNow(selectedJob.postDate)} ago</i>
-            </Modal.Header>
-            <Modal.Content image>
-              <Image wrapped size='medium' src='/images/uh_logo.png' />
-              <Modal.Description>
-                <Header>{ selectedJob.title }</Header>
-                <p>{ selectedJob.description }</p>
-                <p>Contact For More Info At { 'some contact info here' }</p>
-                <strong>Locaton:</strong> { selectedJob.location } <br/>
-                <strong>Pay:</strong> ${ selectedJob.pay } <br/>
-                <strong>Skills:</strong> {
-                  selectedJob.skills.map((skill, index) =>
-                    <Label size='tiny' key={index} color='green'>{skill.name}</Label>)
-                }
-              </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button primary>
-                Apply
-              </Button>
-              <Button color='red' onClick={this.closeModal}>
-                Close
-              </Button>
-            </Modal.Actions>
-          </Modal>
-            <Header as="h2">{jobs.length} jobs found</Header>
+          <JobDetailModal selectedJob={selectedJob} modalOpen={modalOpen} jobApplicants={this.props.jobApplicants}
+                          skills={this.props.skills} closeModal={this.closeModal}
+                          clearSelectedJob={this.clearSelectedJob} />
             <Loader active={loading} content='Retrieving Jobs...' />
             <Card.Group itemsPerRow={4}>
-              {jobs.map((job) => <JobCard key={job._id} job={job} openModal={this.openModal}/>)}
+              {
+                jobs.map((job) => <JobSearchCard key={job._id} jobApplicants={this.props.jobApplicants}
+                                                skills={this.props.skills} job={job} openModal={this.openModal}/>)
+              }
             </Card.Group>
           </Grid.Column>
         </Grid>
@@ -141,13 +120,19 @@ class JobSearchResult extends React.Component {
 JobSearchResult.propTypes = {
   location: PropTypes.any,
   jobs: PropTypes.array.isRequired,
+  skills: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
+  jobApplicants: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('SearchedJobs');
+  const SearchedSubscription = Meteor.subscribe('SearchedJobs');
+  const skillSubscription = Meteor.subscribe('SkillsString');
+  const ApplicantsSubscription = Meteor.subscribe('JobApplicants');
   return {
-    ready: subscription.ready(),
+    ready: SearchedSubscription.ready() && skillSubscription.ready() && ApplicantsSubscription.ready(),
     jobs: Jobs.find({}).fetch(),
+    skills: Skills.find({}).fetch(),
+    jobApplicants: JobApplicants.find({}).fetch(),
   };
 })(JobSearchResult);
