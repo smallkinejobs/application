@@ -1,7 +1,7 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import { Card, Icon, Label, Image } from 'semantic-ui-react';
 import { _ } from 'lodash';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
