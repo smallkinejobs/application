@@ -3,8 +3,10 @@ import { Container, Grid, Divider, Card, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import JobCard from './JobCard';
+import JobSearchCard from './JobSearchCard';
 import { Jobs } from '../../api/jobs/jobs';
+import EmployeeJobCard from './EmployeeJobCard';
+import { Skills } from '../../api/skills/skills';
 
 
 class EmployeeLanding extends React.Component {
@@ -32,6 +34,7 @@ class EmployeeLanding extends React.Component {
 
   renderPage() {
     const { jobs } = this.state;
+    const { skills } = this.props;
     return (
       <div style={{ backgroundColor: '#009688' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -41,7 +44,7 @@ class EmployeeLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobCard key={job._id} job={job}/>)
+                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job} skills={skills} />)
                 }
               </Card.Group>
             </Grid.Row>
@@ -53,7 +56,7 @@ class EmployeeLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobCard key={job._id} job={job}/>)
+                  jobs.map((job) => <JobSearchCard key={job._id} job={job} skills={skills} />)
                 }
               </Card.Group>
             </Grid.Row>
@@ -71,12 +74,19 @@ class EmployeeLanding extends React.Component {
 EmployeeLanding.propTypes = {
   jobs: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
-}
+  skills: PropTypes.array,
+};
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('UserJobs');
+  const userJobSubscription = Meteor.subscribe('UserJobs');
+  const skillSubscription = Meteor.subscribe('SkillsString');
   return {
-    ready: subscription.ready(),
+    ready: userJobSubscription.ready() && skillSubscription.ready(),
+    skills: Skills.find({}).map((skill) => ({
+      key: skill._id,
+      text: skill.name,
+      value: skill._id,
+    })),
     jobs: Jobs.find({}).fetch(),
   };
 })(EmployeeLanding);

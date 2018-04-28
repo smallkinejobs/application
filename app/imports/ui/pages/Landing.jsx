@@ -3,16 +3,13 @@ import { Sidebar, Image, Icon, Button, Label, Container, Divider, Radio, Loader 
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import StarRating from '../components/StarRating';
 import BaseLanding from '../components/BaseLanding';
 import EmployerLanding from '../components/EmployerLanding';
 import EmployeeLanding from '../components/EmployeeLanding';
 import { Ratings } from '../../api/ratings/ratings.js';
-
-const testUser = {
-  roles: ['employer', 'employee'],
-};
 
 /** A simple static component to render some text for the landing page. */
 class Landing extends React.Component {
@@ -50,7 +47,6 @@ class Landing extends React.Component {
   renderPage() {
     const isEmployer = Roles.userIsInRole(Meteor.userId(), 'employer');
     const isEmployee = Roles.userIsInRole(Meteor.userId(), 'employee');
-    console.log(isEmployer, isEmployee);
     const { visible, employeeToggle } = this.state;
     const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
     const userRating = ratingValues.reduce(function(acc, rating) { return acc + rating; }, 0) / ratingValues.length;

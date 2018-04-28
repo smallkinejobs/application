@@ -1,11 +1,30 @@
 import React from 'react';
 import { Card, Icon, Label, Image, Button } from 'semantic-ui-react';
+import { _ } from 'lodash';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class EmployerJobCard extends React.Component {
+  componentWillMount() {
+    const { skills, job } = this.props;
+    job.skillNames = [];
+    job.skills.forEach((skill) => {
+      const foundSkill = _.find(skills, { key: skill });
+      if (foundSkill) {
+        job.skillNames.push(foundSkill.text);
+      }
+    });
+  }
+
   render() {
-    const { job, openModal } = this.props;
+    const { job, openHireModal, skills } = this.props;
+    job.skillNames = [];
+    job.skills.forEach((skill) => {
+      const foundSkill = _.find(skills, { key: skill });
+      if (foundSkill) {
+        job.skillNames.push(foundSkill.text);
+      }
+    });
 
     let status = <p style={{ color: 'red' }}>CLOSED</p>;
     let cardColor = 'red';
@@ -28,15 +47,12 @@ class EmployerJobCard extends React.Component {
       <Icon name='announcement'/> Submit Feedback
     </Button>;
 
-    const hireButton = <div>
-      <div onClick={openModal} color='green'
-           className="ui button" data-tooltip="5 Applied" data-position="right center">
-        Hire Helper
-      </div>
-    </div>;
+    const hireButton = <Button onClick={openHireModal} color='blue'>
+      <Icon name='users'/> Hire Helper
+    </Button>;
 
     return (
-        <Card onClick={() => openModal(job._id)} color={cardColor}>
+        <Card color={cardColor}>
           <Card.Content>
             <Label content={status} ribbon />
             <Image src='/images/uh_logo.png' size='mini' floated='right'/>
@@ -62,8 +78,8 @@ class EmployerJobCard extends React.Component {
           />
           <Card.Content extra>
             Skills: {
-            job.skills.map((skill, index) =>
-                <Label tag size='tiny' key={index} color='blue'>{skill.name}</Label>)
+            job.skillNames.map((skill, index) =>
+                <Label color='blue' content={skill} key={index}/>)
           }
           </Card.Content>
           <Card.Content extra>
@@ -83,7 +99,8 @@ class EmployerJobCard extends React.Component {
 
 EmployerJobCard.propTypes = {
   job: PropTypes.object.isRequired,
-  openModal: PropTypes.func,
+  skills: PropTypes.array,
+  openHireModal: PropTypes.func,
 };
 
 export default EmployerJobCard;

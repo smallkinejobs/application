@@ -1,13 +1,12 @@
 import React from 'react';
-import { Container, Grid, Divider, Button, Card, Loader, Modal, } from 'semantic-ui-react';
+import { Container, Grid, Divider, Button, Card, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { _ } from 'lodash';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import JobCard from './JobCard';
 import FeedbackModal from './FeedbackModal';
-import EmployeeJobCard from './EmployerJobCard';
+import EmployerJobCard from './EmployerJobCard';
 import EmployeeCard from './EmployeeCard';
 import NewJobModal from './NewJobModal';
 import HireHelperModal from './HireHelperModal';
@@ -114,7 +113,7 @@ class EmployerLanding extends React.Component {
       openedJob: job,
       hireModalOpen: true,
     });
-  }
+  };
 
   closeHireModal() {
     this.setState({
@@ -228,13 +227,12 @@ class EmployerLanding extends React.Component {
           console.log('Success!');
           this.closeFeedbackModal();
           Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
-        }
-        else {
+        } else {
           console.log(err);
           Bert.alert('Failed to submit review', 'danger', 'growl-top-right');
           this.closeFeedbackModal();
         }
-    } );
+    });
 
   }
 
@@ -243,7 +241,8 @@ class EmployerLanding extends React.Component {
 
     const {
       jobs, jobModalOpen, newJob, skillSearchQuery,
-      formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue, hireModalOpen, openedJob } = this.state;
+      formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue,
+      hireModalOpen, openedJob } = this.state;
     return (
       <div style={{ backgroundColor: '#71b1e0' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -260,8 +259,10 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobCard key={job._id} job={job} openModal={() => this.openHireModal(job)}
-                                             feedBackModal={this.openFeedbackModal}/>)
+                  jobs.map((job) => <EmployerJobCard key={job._id} job={job}
+                      skills={skills}
+                      openHireModal={() => this.openHireModal(job)}
+                      feedBackModal={this.openFeedbackModal}/>)
                 }
               </Card.Group>
             </Grid.Row>

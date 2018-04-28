@@ -4,7 +4,7 @@ import { _ } from 'lodash';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
-class JobCard extends React.Component {
+class JobSearchCard extends React.Component {
   componentWillMount() {
     const { skills, job } = this.props;
     job.skillNames = [];
@@ -93,7 +93,7 @@ class JobCard extends React.Component {
   }
 }
 
-JobCard.propTypes = {
+JobSearchCard.propTypes = {
   job: PropTypes.object.isRequired,
   skills: PropTypes.array,
   openModal: PropTypes.func,
@@ -101,4 +101,4 @@ JobCard.propTypes = {
   openHireModal: PropTypes.func,
 };
 
-export default JobCard;
+export default JobSearchCard;
