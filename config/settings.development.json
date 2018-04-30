@@ -84,7 +84,7 @@
       "pay": 12.44,
       "postDate": "2018-04-10",
       "employerId": "sarah@foo.com",
-      "employeeId": "john@foo.com",
+      "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
       "skills": [

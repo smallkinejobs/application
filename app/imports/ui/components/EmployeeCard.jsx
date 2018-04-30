@@ -17,7 +17,7 @@ export default class EmployeeCard extends React.Component {
         _id: job._id,
       },
       {
-        $set: { employeeId: employee._id, open: 0 },
+        $set: { employeeId: employee.username, open: 0 },
       },
       (err) => {
         if (err) {
