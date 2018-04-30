@@ -140,7 +140,7 @@
       "categoryId": 1,
       "ratingId": null,
       "employerSubmitRating": true,
-      "employeeSubmitRating": true
+      "employeeSubmitRating": true,
       "skills": [
         "defaultskl03"
       ]
