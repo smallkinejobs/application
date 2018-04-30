@@ -29,12 +29,14 @@ class JobSearchResult extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.clearSelectedJob = this.clearSelectedJob.bind(this);
+    this.filterJobResults = this.filterJobResults.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
       const jobs = nextProps.jobs;
-      const filteredJobs = jobs.filter((job) => job.title.includes(this.state.jobSearchText));
+      const filteredJobs = jobs.filter((job) =>
+          job.title.toLowerCase().includes(this.state.jobSearchText.toLowerCase()));
       this.setState({
         jobs: filteredJobs,
       });
@@ -45,9 +47,8 @@ class JobSearchResult extends React.Component {
     const { location } = this.props;
     const queryParams = qs.parse(location.search);
     this.setState({
-      jobSearchText: queryParams.title,
+      jobSearchText: queryParams.title.toLowerCase(),
     });
-    this.filterJobResults = this.filterJobResults.bind(this);
   }
 
   openModal(id) {
@@ -75,14 +76,12 @@ class JobSearchResult extends React.Component {
     this.setState({
       loading: true,
     });
-    const jobs = this.props.jobs.filter((job) => job.title.includes(data.value));
-    setTimeout(() => {
-      this.setState({
-        jobSearchText: data.value,
-        jobs,
-        loading: false,
-      });
-    }, 100);
+    const jobs = this.props.jobs.filter((job) => job.title.toLowerCase().includes(data.value.toLowerCase()));
+    this.setState({
+      jobSearchText: data.value.toLowerCase(),
+      jobs,
+      loading: false,
+    });
   }
 
   render() {
@@ -106,8 +105,13 @@ class JobSearchResult extends React.Component {
             <Loader active={loading} content='Retrieving Jobs...' />
             <Card.Group itemsPerRow={4}>
               {
+                jobs.length > 0 &&
                 jobs.map((job) => <JobSearchCard key={job._id} jobApplicants={this.props.jobApplicants}
                                                 skills={this.props.skills} job={job} openModal={this.openModal}/>)
+              }
+              {
+                jobs.length === 0 &&
+                <h2>No Jobs Found</h2>
               }
             </Card.Group>
           </Grid.Column>
