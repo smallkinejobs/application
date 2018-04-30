@@ -17,7 +17,7 @@ class EmployerJobCard extends React.Component {
   }
 
   render() {
-    const { job, openHireModal, skills } = this.props;
+    const { job, openHireModal, feedBackModal, skills } = this.props;
     job.skillNames = [];
     job.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
@@ -26,13 +26,12 @@ class EmployerJobCard extends React.Component {
       }
     });
 
-    let status = <p style={{ color: 'red' }}>CLOSED</p>;
-    let cardColor = 'red';
-    let disabled = true;
+    let status = <p style={{ color: 'blue' }}>OPEN</p>;
+    let cardColor = 'blue';
 
-    if (job.open === 1) {
-      status = <p style={{ color: 'blue' }}>OPEN</p>;
-      cardColor = 'blue';
+    if (job.open === -1 && job.employerSubmitRating) {
+      status = <p style={{ color: 'red' }}>CLOSED</p>;
+      cardColor = 'red';
     }
     if (job.open === 0) {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
@@ -41,9 +40,8 @@ class EmployerJobCard extends React.Component {
     if (job.open === 2) {
       status = <p style={{ color: 'green' }}>COMPLETED<Icon name='checkmark'/></p>;
       cardColor = 'green';
-      disabled = false;
     }
-    const feedBackButton = <Button disabled={ disabled } color='blue'>
+    const feedBackButton = <Button onClick={feedBackModal} color='blue'>
       <Icon name='announcement'/> Submit Feedback
     </Button>;
 
@@ -84,7 +82,8 @@ class EmployerJobCard extends React.Component {
           </Card.Content>
           <Card.Content extra>
             {
-              job.open === -1 &&
+              (job.open === 2 ||
+              (job.open === -1 && !job.employerSubmitRating)) &&
               feedBackButton
             }
             {
@@ -101,6 +100,7 @@ EmployerJobCard.propTypes = {
   job: PropTypes.object.isRequired,
   skills: PropTypes.array,
   openHireModal: PropTypes.func,
+  feedBackModal: PropTypes.func,
 };
 
 export default EmployerJobCard;

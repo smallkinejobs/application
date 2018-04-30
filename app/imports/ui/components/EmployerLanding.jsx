@@ -234,22 +234,35 @@ class EmployerLanding extends React.Component {
   }
 
   submitRating() {
-    const { userToRate, ratingValue } = this.state;
+    const { userToRate, ratingValue, selectedJob } = this.state;
     Ratings.insert({
       rating: ratingValue,
       user: userToRate,
     }, (err, result) => {
         if (result !== null && err === null) {
-          console.log('Success!');
-          this.closeFeedbackModal();
-          Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
+          Jobs.update(
+              {
+                _id: selectedJob._id,
+              },
+              {
+                $set: { open: -1, employerSubmitRating: true },
+              },
+              (jobUpdateErr) => {
+                if (err) {
+                  console.log(jobUpdateErr);
+                } else {
+                  console.log('Success!');
+                  this.closeFeedbackModal();
+                  Bert.alert(`Successfully Submitted review for  ${userToRate}`, 'success', 'growl-top-right');
+                }
+              },
+          );
         } else {
           console.log(err);
           Bert.alert('Failed to submit review', 'danger', 'growl-top-right');
           this.closeFeedbackModal();
         }
     });
-
   }
 
   renderPage() {
@@ -260,7 +273,7 @@ class EmployerLanding extends React.Component {
       formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue,
       hireModalOpen, openedJob } = this.state;
     return (
-      <div style={{ backgroundColor: '#71b1e0' }}>
+      <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
           <Grid columns={2}>
             <Grid.Column>
@@ -278,7 +291,7 @@ class EmployerLanding extends React.Component {
                   jobs.map((job) => <EmployerJobCard key={job._id} job={job}
                       skills={skills}
                       openHireModal={() => this.openHireModal(job)}
-                      feedBackModal={this.openFeedbackModal}/>)
+                      feedBackModal={() => this.openFeedbackModal(job)}/>)
                 }
               </Card.Group>
             </Grid.Row>
