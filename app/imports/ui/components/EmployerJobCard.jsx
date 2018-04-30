@@ -1,13 +1,15 @@
 import React from 'react';
-import { Card, Icon, Label, Image, Button } from 'semantic-ui-react';
+import { Card, Icon, Label, Image, Button, Popup } from 'semantic-ui-react';
 import { _ } from 'lodash';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
+import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
 
 class EmployerJobCard extends React.Component {
   render() {
     const { job, openHireModal, feedBackModal, skills } = this.props;
     job.skillNames = [];
+    let applicantCount = 0;
     job.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
       if (foundSkill) {
@@ -21,7 +23,9 @@ class EmployerJobCard extends React.Component {
         job.skillNames.push(foundSkill.text);
       }
     });
-
+    const jobApplicant = JobApplicants.findOne({ jobId: job._id });
+    applicantCount = jobApplicant.applicantIds.length;
+    const hireButtonText = (applicantCount === 0) ? 'No Applicants Yet' : 'Hire Helper';
     let status = <p style={{ color: 'blue' }}>OPEN</p>;
     let cardColor = 'blue';
 
@@ -41,9 +45,10 @@ class EmployerJobCard extends React.Component {
       <Icon name='announcement'/> Submit Feedback
     </Button>;
 
-    const hireButton = <Button onClick={openHireModal} color='blue'>
-      <Icon name='users'/> Hire Helper
-    </Button>;
+    const hireButton = <Popup
+        trigger={<Button disabled={applicantCount === 0} onClick={openHireModal} color='blue'
+          icon='users' content={hireButtonText} />}
+        content={`${applicantCount} applied`} position='right center'/>;
 
     return (
         <Card color={cardColor}>

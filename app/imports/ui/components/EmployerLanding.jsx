@@ -340,7 +340,6 @@ EmployerLanding.propTypes = {
   skills: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
-  // jobApplicants: PropTypes.array.isRequired,
   ratings: PropTypes.array.isRequired,
 };
 
@@ -366,7 +365,6 @@ export default withTracker(() => {
       text: cat.title,
       value: cat._id,
     })),
-    // jobApplicants: JobApplicants.find({}).fetch(),
     ratings: Ratings.find({}).fetch(),
   };
 })(EmployerLanding);
