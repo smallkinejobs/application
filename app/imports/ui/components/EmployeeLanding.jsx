@@ -12,6 +12,7 @@ import FeedbackModal from './FeedbackModal';
 import JobDetailModal from './JobDetailModal';
 import { Ratings } from '../../api/ratings/ratings';
 import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
+import { _ } from 'lodash';
 
 class EmployeeLanding extends React.Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class EmployeeLanding extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.completeJob = this.completeJob.bind(this);
+    this.handleApply = this.handleApply.bind(this);
   }
 
   openFeedbackModal(job) {
@@ -48,16 +50,16 @@ class EmployeeLanding extends React.Component {
   closeFeedbackModal() {
     this.setState({
       feedbackModalOpen: false,
-      selectedJob: {},
+      selectedJob: { skills: [] },
       userToRate: '',
       ratingValue: -1,
     });
   }
 
-  openModal(id) {
+  openModal(job) {
     this.setState({
       modalOpen: true,
-      selectedJob: this.state.jobs.find((job) => job._id === id),
+      selectedJob: job,
     });
   }
 
@@ -120,13 +122,36 @@ class EmployeeLanding extends React.Component {
         {
           if (jobCompleteErr) {
             console.log(jobCompleteErr);
-          }
-          else {
+          } else {
             Bert.alert(`Successfully completed job ${job.title}`, 'success', 'growl-top-right');
           }
         },
         );
 
+  }
+
+  handleApply() {
+    const { selectedJob } = this.state;
+    const jobApplicantDataObject = JobApplicants.findOne({ jobId: selectedJob._id });
+    JobApplicants.update(
+        {
+          _id: jobApplicantDataObject._id,
+        },
+        {
+          $push: { applicantIds: Meteor.user().username },
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            this.setState({
+              selectedJob: { skills: [] },
+            });
+            this.closeModal();
+            Bert.alert(`Successfully Applied to ${selectedJob.title}`, 'success', 'growl-top-right');
+          }
+        },
+    );
   }
 
   renderPage() {
@@ -166,9 +191,10 @@ class EmployeeLanding extends React.Component {
         <FeedbackModal closeCallback={this.closeFeedbackModal} isOpen={feedbackModalOpen}
                        ratedUser={userToRate} ratingChangeCallback={this.handleRatingChange}
                        submitCallback={this.submitRating} ratingValue={ratingValue}/>
-        <JobDetailModal selectedJob={selectedJob} modalOpen={modalOpen} jobApplicants={this.props.jobApplicants}
+        <JobDetailModal selectedJob={selectedJob} modalOpen={modalOpen}
+                        jobApplicants={this.props.jobApplicants}
                         skills={this.props.skills} closeModal={this.closeModal}
-                        clearSelectedJob={this.clearSelectedJob} />
+                        clearSelectedJob={this.clearSelectedJob} handleApply={this.handleApply} />
       </div>
     );
   }

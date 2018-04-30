@@ -1,45 +1,17 @@
 import React from 'react';
 import { Modal, Button, Label, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Meteor } from 'meteor/meteor';
-import { Bert } from 'meteor/themeteorchef:bert';
 import { distanceInWordsToNow } from 'date-fns';
 import { _ } from 'lodash';
-import { JobApplicants } from '../../api/jobApplicants/jobApplicants.js';
 
 export default class JobDetailModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleApply = this.handleApply.bind(this);
-  }
-
-  handleApply() {
-    const job = _.find(this.props.jobApplicants, { jobId: this.props.selectedJob._id });
-    JobApplicants.update(
-        {
-          _id: job._id,
-        },
-        {
-          $push: { applicantIds: Meteor.userId() },
-        },
-        (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            this.props.closeModal();
-            Bert.alert(`Successfully Applied to ${this.props.selectedJob.title}`, 'success', 'growl-top-right');
-          }
-        },
-    );
-  }
-
   render() {
-    const { modalOpen, selectedJob, clearSelectedJob, closeModal, skills } = this.props;
+    const { modalOpen, selectedJob, clearSelectedJob, closeModal, handleApply, skills } = this.props;
     selectedJob.skillNames = [];
     selectedJob.skills.forEach((skill) => {
-      const foundSkill = _.find(skills, { _id: skill });
+      const foundSkill = _.find(skills, { key: skill });
       if (foundSkill) {
-        selectedJob.skillNames.push(foundSkill.name);
+        selectedJob.skillNames.push(foundSkill.text);
       }
     });
     return (
@@ -65,7 +37,7 @@ export default class JobDetailModal extends React.Component {
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary onClick={this.handleApply}>
+          <Button primary onClick={handleApply}>
             Apply
           </Button>
           <Button color='red' onClick={closeModal}>
@@ -84,4 +56,5 @@ JobDetailModal.propTypes = {
   closeModal: PropTypes.func,
   skills: PropTypes.array.isRequired,
   jobApplicants: PropTypes.array,
+  handleApply: PropTypes.func,
 };

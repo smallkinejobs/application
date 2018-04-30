@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class EmployerJobCard extends React.Component {
-  componentWillMount() {
-    const { skills, job } = this.props;
+  render() {
+    const { job, openHireModal, feedBackModal, skills } = this.props;
     job.skillNames = [];
     job.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
@@ -14,10 +14,6 @@ class EmployerJobCard extends React.Component {
         job.skillNames.push(foundSkill.text);
       }
     });
-  }
-
-  render() {
-    const { job, openHireModal, feedBackModal, skills } = this.props;
     job.skillNames = [];
     job.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
@@ -37,7 +33,7 @@ class EmployerJobCard extends React.Component {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
       cardColor = 'orange';
     }
-    if (job.open === 2) {
+    if ((job.open === 2) || (job.open === -1 && !job.employerSubmitRating)) {
       status = <p style={{ color: 'green' }}>COMPLETED<Icon name='checkmark'/></p>;
       cardColor = 'green';
     }
