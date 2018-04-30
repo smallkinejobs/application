@@ -39,7 +39,7 @@ class JobSearchCard extends React.Component {
 
     return (
       !applied &&
-      <Card onClick={() => openModal(job._id)} color={cardColor}>
+      <Card onClick={() => openModal(job)} color={cardColor}>
         <Card.Content>
           <Label content={status} ribbon />
           <Image src='/images/uh_logo.png' size='mini' floated='right'/>
