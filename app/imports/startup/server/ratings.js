@@ -23,3 +23,8 @@ Meteor.publish('UserRatings', function publish() {
   }
   return this.ready();
 });
+
+/** This publication publishes all of the ratings in the Ratings collection */
+Meteor.publish('AllRatings', function publish() {
+  return Ratings.find({});
+});

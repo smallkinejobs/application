@@ -16,7 +16,7 @@ import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
 import { Categories } from '../../api/categories/categories';
 import { Ratings } from '../../api/ratings/ratings';
 
-
+/*
 const pastHelpers = [
   {
     _id: 1,
@@ -35,7 +35,7 @@ const pastHelpers = [
     profileImg: '/images/landingPage/student3.jpeg',
   },
 ];
-
+*/
 class EmployerLanding extends React.Component {
   constructor(props) {
     super(props);
@@ -272,6 +272,8 @@ class EmployerLanding extends React.Component {
       jobs, jobModalOpen, newJob, skillSearchQuery,
       formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue,
       hireModalOpen, openedJob } = this.state;
+    const pastHelperNames = jobs.filter((job) => job.open === 2).map((job) => job.employeeId);
+    const pastHelpers = pastHelperNames.map((name) => Meteor.users.findOne({ username: name }));
     return (
       <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -303,7 +305,10 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  pastHelpers.map((helper, index) => <EmployeeCard key={index} employee={helper} cardType='feedback'/>)
+                  pastHelpers.map((helper, index) =>
+                      <EmployeeCard key={index} employee={helper}
+                                    ratings={this.props.ratings.filter((rating) => rating.user === helper.username)}
+                                    skills={skills} cardType='feedback'/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -336,6 +341,7 @@ EmployerLanding.propTypes = {
   categories: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
   jobApplicants: PropTypes.array.isRequired,
+  ratings: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
@@ -343,9 +349,12 @@ export default withTracker(() => {
   const skillSubscription = Meteor.subscribe('SkillsString');
   const categorySubscription = Meteor.subscribe('CategoriesString');
   const jobApplicantsSubscription = Meteor.subscribe('JobApplicants');
+  const userProfileSubscription = Meteor.subscribe('UserProfiles');
+  const ratingsSubscription = Meteor.subscribe('AllRatings');
   return {
     ready: jobSubscription.ready() && skillSubscription.ready() &&
-          categorySubscription.ready() && jobApplicantsSubscription.ready(),
+          categorySubscription.ready() && jobApplicantsSubscription.ready() &&
+    userProfileSubscription.ready() && ratingsSubscription.ready(),
     jobs: Jobs.find({}).fetch(),
     skills: Skills.find({}).map((skill) => ({
       key: skill._id,
@@ -358,5 +367,6 @@ export default withTracker(() => {
       value: cat._id,
     })),
     jobApplicants: JobApplicants.find({}).fetch(),
+    ratings: Ratings.find({}).fetch(),
   };
 })(EmployerLanding);

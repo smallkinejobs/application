@@ -30,23 +30,28 @@ export default class EmployeeCard extends React.Component {
   }
 
   render() {
-    const { employee, cardType } = this.props;
+    const { employee, cardType, skills, ratings } = this.props;
+    const skillObjects = employee.profile.skills.map((skillId) => skills.find((skill) => skill.key === skillId));
+    const skillNames = skillObjects.map((skill) => skill.text);
+    const ratingValues = ratings.map((rating) => rating.rating);
+    const ratingSum = ratingValues.reduce((acc, value) => acc + value, 0);
+    const aveRating = ratingSum / ratings.length;
     return (
       <Card>
         <Card.Content>
-          <Image floated='right' size='mini' src={employee.profileImg} />
+          <Image floated='right' size='mini' src={employee.profile.imageURL} />
           <Card.Header>
-            {employee.firstName} {employee.lastName}
+            {employee.profile.firstName} {employee.profile.lastName}
           </Card.Header>
           <Card.Meta>
             <div>
               Ave. Rating:
-              <StarRating rating={employee.aveRating}/>
+              <StarRating rating={aveRating}/>
             </div>
           </Card.Meta>
           <Card.Description>
             Skills:
-            {employee.skills.map((skill, index) => <Label size='mini' tag color='green' key={index} content={skill}/>)}
+            {skillNames.map((skill, index) => <Label size='mini' tag color='green' key={index} content={skill}/>)}
           </Card.Description>
         </Card.Content>
         <Card.Content extra>
@@ -73,4 +78,6 @@ EmployeeCard.propTypes = {
   cardType: PropTypes.string,
   job: PropTypes.object,
   handleSuccessHire: PropTypes.func,
+  skills: PropTypes.array,
+  ratings: PropTypes.array,
 };

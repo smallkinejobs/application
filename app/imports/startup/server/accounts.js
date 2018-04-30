@@ -30,3 +30,7 @@ if (Meteor.users.find().count() === 0) {
     console.log('Cannot initialize the database!  Please invoke meteor with a settings file.');
   }
 }
+
+Meteor.publish('UserProfiles', function publish() {
+  return Meteor.users.find({}, { fields: { username: 1, profile: 1 } });
+});

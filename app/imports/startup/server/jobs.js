@@ -1,5 +1,7 @@
+import { Roles } from 'meteor/alanning:roles';
 import { Meteor } from 'meteor/meteor';
 import { Jobs } from '../../api/jobs/jobs.js';
+
 
 /** Initialize the database with a default job document. */
 function addJob(job) {
@@ -22,6 +24,16 @@ Meteor.publish('SearchedJobs', function publish() {
 });
 
 Meteor.publish('UserJobs', function publish() {
-  // NEED TO CHANGE THIS TO FILTER BY USERID
-  return Jobs.find();
-})
+  if (this.userId) {
+    const username = Meteor.users.findOne(this.userId).username;
+
+    if (Roles.userIsInRole(this.userId, 'employer')) {
+      return Jobs.find({ employerId: username });
+    }
+    if (Roles.userIsInRole(this.userId, 'employee')) {
+      return Jobs.find({ employeeId: username });
+    }
+
+  }
+  return this.ready();
+});
