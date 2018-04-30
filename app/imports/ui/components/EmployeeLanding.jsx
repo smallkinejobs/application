@@ -17,7 +17,6 @@ class EmployeeLanding extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      jobs: [],
       userToRate: '',
       ratingValue: -1,
       feedbackModalOpen: false,
@@ -32,21 +31,7 @@ class EmployeeLanding extends React.Component {
     this.handleRatingChange = this.handleRatingChange.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
-      const jobs = nextProps.jobs;
-      this.setState({
-        jobs,
-      });
-    }
-  }
-
-  componentWillMount() {
-    this.setState({
-      jobs: this.props.jobs,
-    });
+    this.completeJob = this.completeJob.bind(this);
   }
 
   openFeedbackModal(job) {
@@ -103,7 +88,7 @@ class EmployeeLanding extends React.Component {
               $set: { open: -1, employeeSubmitRating: true },
             },
             (jobUpdateErr) => {
-              if (err) {
+              if (jobUpdateErr) {
                 console.log(jobUpdateErr);
               } else {
                 console.log('Success!');
@@ -120,9 +105,34 @@ class EmployeeLanding extends React.Component {
     });
   }
 
+  completeJob(job) {
+    this.setState({
+      selectedJob: job,
+    });
+    Jobs.update(
+        {
+          _id: job._id,
+        },
+        {
+          $set: { open: 2 },
+        },
+        (jobCompleteErr) =>
+        {
+          if (jobCompleteErr) {
+            console.log(jobCompleteErr);
+          }
+          else {
+            Bert.alert(`Successfully completed job ${job.title}`, 'success', 'growl-top-right');
+          }
+        },
+        );
+
+  }
+
   renderPage() {
-    const { jobs, userToRate, ratingValue, feedbackModalOpen, selectedJob, modalOpen } = this.state;
+    const { userToRate, ratingValue, feedbackModalOpen, selectedJob, modalOpen } = this.state;
     const { skills, jobApplicants } = this.props;
+    const jobs = Jobs.find({}).fetch();
     return (
       <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -133,7 +143,8 @@ class EmployeeLanding extends React.Component {
               <Card.Group>
                 {
                   jobs.map((job) => <EmployeeJobCard key={job._id} job={job} skills={skills}
-                                                     feedBackModal={() => this.openFeedbackModal(job)} />)
+                                                     feedBackModal={() => this.openFeedbackModal(job)}
+                                                     completeJobCallback={() => this.completeJob(job)}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -168,7 +179,6 @@ class EmployeeLanding extends React.Component {
 }
 
 EmployeeLanding.propTypes = {
-  jobs: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
   skills: PropTypes.array,
   jobApplicants: PropTypes.array.isRequired,
@@ -186,7 +196,6 @@ export default withTracker(() => {
       text: skill.name,
       value: skill._id,
     })),
-    jobs: Jobs.find({}).fetch(),
     jobApplicants: JobApplicants.find({}).fetch(),
   };
 })(EmployeeLanding);

@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 
 class EmployeeJobCard extends React.Component {
-  componentWillMount() {
-    const { skills, job } = this.props;
+
+  render() {
+    const { job, feedBackModal, completeJobCallback, skills } = this.props;
     job.skillNames = [];
     job.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
@@ -14,10 +15,6 @@ class EmployeeJobCard extends React.Component {
         job.skillNames.push(foundSkill.text);
       }
     });
-  }
-
-  render() {
-    const { job, feedBackModal } = this.props;
 
     let status = <p style={{ color: 'blue' }}>OPEN</p>;
     let cardColor = 'blue';
@@ -37,6 +34,9 @@ class EmployeeJobCard extends React.Component {
     const feedBackButton = <Button onClick={feedBackModal} color='blue'>
       <Icon name='announcement'/> Submit Feedback
     </Button>;
+      const completeJobButton = <Button onClick={completeJobCallback} color='orange'>
+        <Icon name='checkmark' /> Mark as Completed
+      </Button>
 
     return (
         <Card color={cardColor}>
@@ -71,9 +71,10 @@ class EmployeeJobCard extends React.Component {
           </Card.Content>
           <Card.Content extra>
             {
-              (job.open === 2 ||
+              (job.open === 0 && completeJobButton) ||
+              ((job.open === 2 ||
               (job.open === -1 && !job.employeeSubmitRating)) &&
-              feedBackButton
+              feedBackButton)
             }
           </Card.Content>
         </Card>
@@ -85,6 +86,7 @@ EmployeeJobCard.propTypes = {
   job: PropTypes.object.isRequired,
   skills: PropTypes.array,
   feedBackModal: PropTypes.func,
+  completeJobCallback: PropTypes.func,
 };
 
 export default EmployeeJobCard;
