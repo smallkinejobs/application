@@ -79,7 +79,7 @@ class EmployerJobCard extends React.Component {
           <Card.Content extra>
             Skills: {
             job.skillNames.map((skill, index) =>
-                <Label color='blue' content={skill} key={index}/>)
+                <Label tag size='mini' color='blue' content={skill} key={index}/>)
           }
           </Card.Content>
           <Card.Content extra>
