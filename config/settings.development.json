@@ -22,22 +22,11 @@
         "phone": "555-5555",
         "address": "999 Sunnyville Lane, Anywhere USA",
         "imageURL": "/images/john.png",
-        "skills": [{
-          "name": "C/C++",
-          "_id": 1
-        },
-        {
-          "name": "IT",
-          "_id": 2
-        },
-        {
-          "name": "Data Analytics",
-          "_id": 3
-        },
-        {
-          "name": "Web Development",
-          "_id": 4
-        }
+        "skills": [
+          "defaultskl01",
+          "defaultskl02",
+          "defaultskl03",
+          "defaultskl04"
         ]
       },
       "roles": ["employee"]
@@ -52,18 +41,9 @@
         "address": "500 Meteorpark Drive, Meteorville USA",
         "imageURL": "/images/jim.png",
         "skills": [
-          {
-            "name": "Landscaping",
-            "_id": 1
-          },
-          {
-            "name": "Carpentry",
-            "_id": 2
-          },
-          {
-            "name": "Clerical Assistance",
-            "_id": 3
-          }
+          "defaultskl01",
+          "defaultskl02",
+          "defaultskl03"
         ]
       },
       "roles": ["employee","employer"]
@@ -78,6 +58,7 @@
   ],
   "defaultJobs": [
     {
+      "_id": "defaultjob01",
       "title": "Job 1",
       "description": "Leverage agile frameworks to provide a robust synopsis for high level overviews.",
       "open": 2,
@@ -88,9 +69,14 @@
       "employeeId": "john@foo.com",
       "categoryId": 1,
       "ratingId": null,
-      "skills": [1,2,3]
+      "skills": [
+        "defaultskl01",
+        "defaultskl02",
+        "defaultskl03"
+      ]
     },
     {
+      "_id": "defaultjob02",
       "title": "Job 11",
       "description": "Bring to the table win-win survival strategies to ensure proactive domination.",
       "open": 1,
@@ -101,9 +87,14 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [1,2,3]
+      "skills": [
+        "defaultskl01",
+        "defaultskl02",
+        "defaultskl03"
+      ]
     },
     {
+      "_id": "defaultjob03",
       "title": "Job 123",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
       "open": 1,
@@ -114,9 +105,13 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [1,2]
+      "skills": [
+        "defaultskl01",
+        "defaultskl02"
+      ]
     },
     {
+      "_id": "defaultjob04",
       "title": "Job 12",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
       "open": 0,
@@ -127,9 +122,13 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [2,3]
+      "skills": [
+        "defaultskl02",
+        "defaultskl03"
+      ]
     },
     {
+      "_id": "defaultjob05",
       "title": "Job 135",
       "description": "Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.",
       "open": -1,
@@ -140,103 +139,130 @@
       "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
-      "skills": [3],
       "employerSubmitRating": true,
       "employeeSubmitRating": true
+      "skills": [
+        "defaultskl03"
+      ]
     }
   ],
   "defaultCategories": [
     {
+      "_id": "defaultcat01",
       "title": "Landscaping"
     },
     {
+      "_id": "defaultcat02",
       "title": "Clerical/Office Work"
     },
     {
+      "_id": "defaultcat03",
       "title": "Maintenance"
     },
     {
+      "_id": "defaultcat04",
       "title": "Food Service"
     },
     {
+      "_id": "defaultcat05",
       "title": "Cleaning"
     },
     {
+      "_id": "defaultcat06",
       "title": "Lifting/Moving"
     },
     {
+      "_id": "defaultcat07",
       "title": "Programming/Software Development"
     }
   ],
   "defaultSkills": [
     {
+      "_id": "defaultskl01",
       "name": "Project Management"
     },
     {
+      "_id": "defaultskl02",
       "name": "IT"
     },
     {
+      "_id": "defaultskl03",
       "name": "Landscaping"
     },
     {
+      "_id": "defaultskl04",
       "name": "Clerical"
     },
     {
+      "_id": "defaultskl05",
       "name": "Unix"
     },
     {
+      "_id": "defaultskl06",
       "name": "Maintenance"
     },
     {
+      "_id": "defaultskl07",
       "name": "Technology"
     },
     {
+      "_id": "defaultskl08",
       "name": "Programming"
     },
     {
+      "_id": "defaultskl09",
       "name": "Customer Service"
     },
     {
+      "_id": "defaultskl10",
       "name": "Typing"
     },
     {
+      "_id": "defaultskl11",
       "name": "Word Processing"
     },
     {
+      "_id": "defaultskl12",
       "name": "Cashiering"
     },
     {
+      "_id": "defaultskl13",
       "name": "Heavy Lifting"
     },
     {
+      "_id": "defaultskl14",
       "name": "AWS"
     },
     {
+      "_id": "defaultskl15",
       "name": "MS Word"
     },
     {
+      "_id": "defaultskl16",
       "name": "React"
     },
     {
+      "_id": "defaultskl17",
       "name": "UI Design"
     },
     {
+      "_id": "defaultskl18",
       "name": "Tutoring"
     }
   ],
 
   "defaultJobApplicants": [
     {
-      "jobId": "1",
-      "applicantIds": ["1","2","3"]
+      "jobId": "defaultjob01",
+      "applicantIds": ["john@foo.com","jim@foo.com"]
     },
     {
-      "jobId": "3",
-      "applicantIds": ["1","2"]
+      "jobId": "defaultjob02",
+      "applicantIds": ["john@foo.com","jim@foo.com"]
     },
     {
-      "jobId": "4",
-      "applicantIds": ["1"]
+      "jobId": "defaultjob03",
+      "applicantIds": ["john@foo.com"]
     }
   ],
   "defaultRatings": [
