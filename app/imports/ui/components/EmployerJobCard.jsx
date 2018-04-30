@@ -33,7 +33,7 @@ class EmployerJobCard extends React.Component {
       status = <p style={{ color: 'orange' }}>IN PROGRESS</p>;
       cardColor = 'orange';
     }
-    if (job.open === 2) {
+    if ((job.open === 2) || (job.open === -1 && !job.employerSubmitRating)) {
       status = <p style={{ color: 'green' }}>COMPLETED<Icon name='checkmark'/></p>;
       cardColor = 'green';
     }
