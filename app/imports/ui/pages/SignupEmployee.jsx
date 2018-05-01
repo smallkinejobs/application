@@ -51,14 +51,13 @@ class SignupEmployee extends React.Component {
       firstName,
       lastName,
       phone,
-      imageURL,
       streetAddress,
       unit,
       zipcode,
       city,
     } = this.state;
     const address = `${streetAddress} + ${unit} + ","+  ${city}+ "," + ${zipcode}`;
-    const profile = { skills: skills, firstName, lastName, phone, address, imageURL };
+    const profile = { skills: skills, firstName, lastName, phone, address };
     Accounts.createUser({
       email,
       username: email,

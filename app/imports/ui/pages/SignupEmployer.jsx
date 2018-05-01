@@ -44,14 +44,13 @@ export default class SignupEmployer extends React.Component {
       firstName,
       lastName,
       phone,
-      imageURL,
       streetAddress,
       unit,
       zipcode,
       city,
     } = this.state;
     const address = `${streetAddress} + ${unit} + ${zipcode} + ${city}`;
-    const profile = { firstName, lastName, phone, address, imageURL };
+    const profile = { firstName, lastName, phone, address, };
     Accounts.createUser({
       email,
       username: email,
