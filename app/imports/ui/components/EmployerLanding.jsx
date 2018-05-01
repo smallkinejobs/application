@@ -274,6 +274,7 @@ class EmployerLanding extends React.Component {
       hireModalOpen, openedJob } = this.state;
     const pastHelperNames = jobs.filter((job) => job.open === 2).map((job) => job.employeeId);
     const pastHelpers = pastHelperNames.map((name) => Meteor.users.findOne({ username: name }));
+    const filteredHelpers = _.uniqWith(pastHelpers, _.isEqual);
     return (
       <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -305,7 +306,7 @@ class EmployerLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  pastHelpers.map((helper, index) =>
+                  filteredHelpers.map((helper, index) =>
                       <EmployeeCard key={index} employee={helper}
                                     ratings={this.props.ratings.filter((rating) => rating.user === helper.username)}
                                     skills={skills} cardType='feedback'/>)
