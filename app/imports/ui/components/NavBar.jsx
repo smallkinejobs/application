@@ -57,7 +57,7 @@ class NavBar extends React.Component {
         ) : ''}
         <Menu.Item position="right">
           {
-            this.props.currentUser !== '' && showSearchBar &&
+            this.props.currentUser !== '' && showSearchBar && Roles.userIsInRole(Meteor.userId(), 'employee') &&
             <NavJobSearch handleSearch={this.handleSearch} handleSearchText={this.handleSearchText}/>
           }
         </Menu.Item>

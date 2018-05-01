@@ -79,12 +79,12 @@
       "_id": "defaultjob011",
       "title": "Job 11",
       "description": "Leverage agile frameworks to provide a robust synopsis for high level overviews.",
-      "open": 2,
+      "open": 1,
       "location": "Campus Center",
       "pay": 12.44,
       "postDate": "2018-04-10",
       "employerId": "sarah@foo.com",
-      "employeeId": "john@foo.com",
+      "employeeId": null,
       "categoryId": 1,
       "ratingId": null,
       "skills": [
@@ -97,12 +97,12 @@
       "_id": "defaultjob0111",
       "title": "Job 111",
       "description": "Leverage agile frameworks to provide a robust synopsis for high level overviews.",
-      "open": 2,
+      "open": 1,
       "location": "Campus Center",
       "pay": 12.44,
       "postDate": "2018-04-10",
       "employerId": "sarah@foo.com",
-      "employeeId": "john@foo.com",
+      "employeeId": "",
       "categoryId": 1,
       "ratingId": null,
       "skills": [
@@ -299,6 +299,14 @@
     {
       "jobId": "defaultjob03",
       "applicantIds": ["john@foo.com"]
+    },
+    {
+      "jobId": "defaultjob011",
+      "applicantIds": ["john@foo.com","jim@foo.com"]
+    },
+    {
+      "jobId": "defaultjob0111",
+      "applicantIds": []
     }
   ],
   "defaultRatings": [

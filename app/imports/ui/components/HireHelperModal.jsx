@@ -1,45 +1,18 @@
 import React from 'react';
 import { Modal, Button, Grid, Card } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
+import { Meteor } from "meteor/meteor";
 import EmployeeCard from './EmployeeCard';
 
-const appliedHelpers = [
-  {
-    _id: 1,
-    firstName: 'Steve',
-    lastName: 'Sanders',
-    aveRating: 3,
-    skills: ['Handy Man', 'Landscaping'],
-    profileImg: '/images/landingPage/student1.jpg',
-  },
-  {
-    _id: 2,
-    firstName: 'Julie',
-    lastName: 'Sanders',
-    aveRating: 4,
-    skills: ['Transporting'],
-    profileImg: '/images/landingPage/student3.jpeg',
-  },
-  {
-    _id: 3,
-    firstName: 'Julie',
-    lastName: 'Sanders',
-    aveRating: 4,
-    skills: ['Transporting'],
-    profileImg: '/images/landingPage/student3.jpeg',
-  },
-  {
-    _id: 4,
-    firstName: 'Julie',
-    lastName: 'Sanders',
-    aveRating: 4,
-    skills: ['Transporting'],
-    profileImg: '/images/landingPage/student3.jpeg',
-  },
-];
 export default class HireHelperModal extends React.Component {
   render() {
-    const { hireModalOpen, closeHireModal } = this.props;
+    let jobApplicants = [];
+    const { hireModalOpen, closeHireModal, skills, job, ratings } = this.props;
+    if (job != null) {
+      const jobApplicantsNames = JobApplicants.findOne({ jobId: job._id });
+      jobApplicants = jobApplicantsNames.applicantIds.map((name) => Meteor.users.findOne({ username: name }));
+    }
     return (
       <Modal
           open={hireModalOpen}>
@@ -51,9 +24,10 @@ export default class HireHelperModal extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  appliedHelpers.map((helper, index) =>
-                      <EmployeeCard key={index} employee={helper} job={this.props.job}
-                                    handleSuccessHire={this.props.handleSuccessHire} cardType='hire'/>)
+                  jobApplicants.map((helper, index) =>
+                      <EmployeeCard key={index} employee={helper} job={job} skills={skills}
+                                    handleSuccessHire={this.props.handleSuccessHire} cardType='hire'
+                                    ratings={ratings.filter((rating) => rating.user === helper.username)}/>)
                 }
               </Card.Group>
             </Grid.Row>
@@ -74,4 +48,6 @@ HireHelperModal.propTypes = {
   closeHireModal: PropTypes.func,
   job: PropTypes.object,
   handleSuccessHire: PropTypes.func,
+  skills: PropTypes.array,
+  ratings: PropTypes.array,
 };

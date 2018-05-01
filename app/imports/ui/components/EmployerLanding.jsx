@@ -323,9 +323,9 @@ class EmployerLanding extends React.Component {
                               categories={categories} jobModalOpen={jobModalOpen}
                               closeJobModal={this.closeJobModal} submitJob={this.submitJob}
                               clearNewJob={this.clearNewJob} handleFormChanges={this.handleFormChanges}/>
-        <HireHelperModal closeHireModal={this.closeHireModal}
-                         job={openedJob} hireModalOpen={hireModalOpen}
-                          handleSuccessHire={this.handleSuccessEmployeeHire}/>
+        <HireHelperModal closeHireModal={this.closeHireModal} skills={skills}
+                         job={openedJob} hireModalOpen={hireModalOpen} ratings={this.props.ratings}
+                         handleSuccessHire={this.handleSuccessEmployeeHire}/>
       </div>
     );
   }
@@ -340,7 +340,6 @@ EmployerLanding.propTypes = {
   skills: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
-  jobApplicants: PropTypes.array.isRequired,
   ratings: PropTypes.array.isRequired,
 };
 
@@ -366,7 +365,6 @@ export default withTracker(() => {
       text: cat.title,
       value: cat._id,
     })),
-    jobApplicants: JobApplicants.find({}).fetch(),
     ratings: Ratings.find({}).fetch(),
   };
 })(EmployerLanding);
