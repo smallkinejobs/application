@@ -9,6 +9,7 @@ import StarRating from '../components/StarRating';
 import BaseLanding from '../components/BaseLanding';
 import EmployerLanding from '../components/EmployerLanding';
 import EmployeeLanding from '../components/EmployeeLanding';
+import { Jobs } from '../../api/jobs/jobs';
 import { Ratings } from '../../api/ratings/ratings.js';
 
 /** A simple static component to render some text for the landing page. */
@@ -48,6 +49,10 @@ class Landing extends React.Component {
     const isEmployer = Roles.userIsInRole(Meteor.userId(), 'employer');
     const isEmployee = Roles.userIsInRole(Meteor.userId(), 'employee');
     const { visible, employeeToggle } = this.state;
+    const moneyEarned = _.reduce(Jobs.find({ open: -1 }).fetch(), (sum, job) => {
+      return sum + job.pay;
+    }, 0);
+    const jobsCompleted = Jobs.find({ open: -1 }).fetch().length;
     const ratingValues = this.props.ratings.map((ratingDocument) => ratingDocument.rating);
     const userRating = ratingValues.reduce(function (acc, rating) { return acc + rating; }, 0) / ratingValues.length;
     const userImage = this.props.currentUserImage === ''
@@ -68,12 +73,17 @@ class Landing extends React.Component {
                 <Label color='blue'>Helper</Label>
                 <Divider/>
                 <h2><Icon name='checkmark box' /> Average Rating: </h2> <StarRating rating={userRating}/>
-                <Divider/>
-                <h2>Total Amount Earned</h2>
-                <h3><Icon name='money'/> $30.00</h3>
+                {
+                  isEmployee &&
+                  <div>
+                    <Divider/>
+                    <h2>Total Amount Earned</h2>
+                    <h3><Icon name='money'/> ${moneyEarned}</h3>
+                  </div>
+                }
                 <Divider/>
                 <h2>Total Jobs Completed</h2>
-                <h3><Icon name='suitcase'/> 4</h3>
+                <h3><Icon name='suitcase'/> {jobsCompleted}</h3>
               </Container>
             </Sidebar>
           }
@@ -123,10 +133,11 @@ Landing.propTypes = {
 
 export default withTracker(() => {
   const ratingsSubscription = Meteor.subscribe('UserRatings');
+  const userJobsSubscription = Meteor.subscribe('UserJobs');
   return {
     currentUserName: Meteor.user() ? Meteor.user().username : '',
     currentUserImage: '/images/defaultprofilepic.jpg',
-    ready: ratingsSubscription.ready(),
+    ready: ratingsSubscription.ready() && userJobsSubscription.ready(),
     ratings: Ratings.find({}).fetch(),
   };
 })(Landing);
