@@ -16,26 +16,6 @@ import { JobApplicants } from '../../api/jobApplicants/jobApplicants';
 import { Categories } from '../../api/categories/categories';
 import { Ratings } from '../../api/ratings/ratings';
 
-/*
-const pastHelpers = [
-  {
-    _id: 1,
-    firstName: 'Steve',
-    lastName: 'Sanders',
-    aveRating: 3,
-    skills: ['Handy Man', 'Landscaping'],
-    profileImg: '/images/landingPage/student1.jpg',
-  },
-  {
-    _id: 1,
-    firstName: 'Julie',
-    lastName: 'Sanders',
-    aveRating: 4,
-    skills: ['Transporting'],
-    profileImg: '/images/landingPage/student3.jpeg',
-  },
-];
-*/
 class EmployerLanding extends React.Component {
   constructor(props) {
     super(props);
@@ -75,6 +55,7 @@ class EmployerLanding extends React.Component {
     this.submitRating = this.submitRating.bind(this);
     this.handleRatingChange = this.handleRatingChange.bind(this);
     this.handleSuccessEmployeeHire = this.handleSuccessEmployeeHire.bind(this);
+    this.handleInviteHelper = this.handleInviteHelper.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -265,6 +246,30 @@ class EmployerLanding extends React.Component {
     });
   }
 
+  handleInviteHelper(jobID, helper) {
+    // updates on the client side need the _id of the document to be updated
+    // jobId is not sufficient and results in an untrusted 403 error
+    const applicantDoc = JobApplicants.findOne({ jobId: jobID });
+
+    JobApplicants.update(
+        {
+          _id: applicantDoc._id,
+        },
+        {
+          $addToSet: { applicantIds: helper.username },
+        },
+        (err, success) => {
+          if (err === null && success !== null) {
+            Bert.alert(`Successfully invited helper ${helper.username}`, 'success', 'growl-top-right');
+          }
+          else {
+            Bert.alert('Failed to invite helper', 'danger', 'growl-top-right');
+          }
+        },
+    );
+    this.setState(this.state); // forces a re-render of the page to show the updated job card state
+  }
+
   renderPage() {
     const { skills, categories } = this.props;
 
@@ -309,7 +314,8 @@ class EmployerLanding extends React.Component {
                   filteredHelpers.map((helper, index) =>
                       <EmployeeCard key={index} employee={helper}
                                     ratings={this.props.ratings.filter((rating) => rating.user === helper.username)}
-                                    skills={skills} cardType='feedback'/>)
+                                    skills={skills} jobs={jobs}
+                                    inviteHelperCallback={this.handleInviteHelper} cardType='feedback'/>)
                 }
               </Card.Group>
             </Grid.Row>
