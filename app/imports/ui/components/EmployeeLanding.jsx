@@ -118,8 +118,7 @@ class EmployeeLanding extends React.Component {
         {
           $set: { open: 2 },
         },
-        (jobCompleteErr) =>
-        {
+        (jobCompleteErr) => {
           if (jobCompleteErr) {
             console.log(jobCompleteErr);
           } else {
@@ -158,6 +157,8 @@ class EmployeeLanding extends React.Component {
     const { userToRate, ratingValue, feedbackModalOpen, selectedJob, modalOpen } = this.state;
     const { skills, jobApplicants } = this.props;
     const jobs = Jobs.find({}).fetch();
+    const jobsApplied = _.filter(jobs, (job) => job.open !== 1);
+    const jobsOpen = _.filter(jobs, (job) => job.open === 1);
     return (
       <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
@@ -167,7 +168,7 @@ class EmployeeLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <EmployeeJobCard key={job._id} job={job} skills={skills}
+                  jobsApplied.map((job) => <EmployeeJobCard key={job._id} job={job} skills={skills}
                                                      feedBackModal={() => this.openFeedbackModal(job)}
                                                      completeJobCallback={() => this.completeJob(job)}/>)
                 }
@@ -181,7 +182,7 @@ class EmployeeLanding extends React.Component {
             <Grid.Row>
               <Card.Group>
                 {
-                  jobs.map((job) => <JobSearchCard key={job._id} job={job} skills={skills}
+                  jobsOpen.map((job) => <JobSearchCard key={job._id} job={job} skills={skills}
                                                    jobApplicants={jobApplicants} openModal={this.openModal}/>)
                 }
               </Card.Group>
@@ -212,10 +213,11 @@ EmployeeLanding.propTypes = {
 
 export default withTracker(() => {
   const userJobSubscription = Meteor.subscribe('UserJobs');
+  const openJobSubscription = Meteor.subscribe('SearchedJobs');
   const skillSubscription = Meteor.subscribe('SkillsString');
   const ApplicantsSubscription = Meteor.subscribe('JobApplicants');
   return {
-    ready: userJobSubscription.ready() && skillSubscription.ready() &&
+    ready: userJobSubscription.ready() && skillSubscription.ready() && openJobSubscription.ready() &&
     ApplicantsSubscription.ready(),
     skills: Skills.find({}).map((skill) => ({
       key: skill._id,
