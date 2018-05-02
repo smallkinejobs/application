@@ -67,7 +67,6 @@ class Landing extends React.Component {
                      width='wide' visible={visible} icon='labeled' vertical='true' inverted='true'>
               <Container style={{ padding: '2rem' }}>
                 <Image centered size='small' circular src={userImage} />
-                <Link to='profile'>Edit Profile</Link>
                 <h2><Icon name='user circle outline' /> {this.props.currentUserName}</h2>
                 <Label color='blue'>Employer</Label>
                 <Label color='blue'>Helper</Label>
