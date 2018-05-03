@@ -77,14 +77,14 @@
     },
     {
       "_id": "defaultjob011",
-      "title": "Job 11",
+      "title": "Job 011",
       "description": "Leverage agile frameworks to provide a robust synopsis for high level overviews.",
       "open": -1,
       "location": "Campus Center",
       "pay": 12.44,
       "postDate": "2018-04-10",
       "employerId": "sarah@foo.com",
-      "employeeId": "john@foo.com",
+      "employeeId": "",
       "categoryId": 1,
       "ratingId": null,
       "skills": [
@@ -113,7 +113,7 @@
     },
     {
       "_id": "defaultjob02",
-      "title": "Job 11",
+      "title": "Job 02",
       "description": "Bring to the table win-win survival strategies to ensure proactive domination.",
       "open": 1,
       "location": "Food Court",
@@ -294,7 +294,7 @@
     },
     {
       "jobId": "defaultjob02",
-      "applicantIds": ["john@foo.com","jim@foo.com"]
+      "applicantIds": ["jim@foo.com"]
     },
     {
       "jobId": "defaultjob03",
@@ -302,7 +302,7 @@
     },
     {
       "jobId": "defaultjob011",
-      "applicantIds": ["john@foo.com","jim@foo.com"]
+      "applicantIds": ["jim@foo.com"]
     },
     {
       "jobId": "defaultjob0111",

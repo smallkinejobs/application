@@ -193,7 +193,9 @@ class EmployeeLanding extends React.Component {
                        ratedUser={userToRate} ratingChangeCallback={this.handleRatingChange}
                        submitCallback={this.submitRating} ratingValue={ratingValue}/>
         <JobDetailModal selectedJob={selectedJob} modalOpen={modalOpen}
-                        jobApplicants={this.props.jobApplicants}
+                        jobApplicants={_.find(jobApplicants, (ja) => {
+                          return ja.jobId === selectedJob._id;
+                        })}
                         skills={this.props.skills} closeModal={this.closeModal}
                         clearSelectedJob={this.clearSelectedJob} handleApply={this.handleApply} />
       </div>
