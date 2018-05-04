@@ -157,8 +157,18 @@ class EmployeeLanding extends React.Component {
     const { userToRate, ratingValue, feedbackModalOpen, selectedJob, modalOpen } = this.state;
     const { skills, jobApplicants } = this.props;
     const jobs = Jobs.find({}).fetch();
-    const jobsApplied = _.filter(jobs, (job) => job.open !== 1);
-    const jobsOpen = _.filter(jobs, (job) => job.open === 1);
+    const jobsApplied = _.filter(jobs, (job) => {
+      const jobIdsWithUser = _.map(_.filter(jobApplicants, (ja) => {
+        return _.includes(ja.applicantIds, Meteor.user().username);
+      }), 'jobId');
+      return _.includes(jobIdsWithUser, job._id);
+    });
+    const jobsOpen = _.filter(jobs, (job) => {
+      const jobIdsWithOutUser = _.map(_.filter(jobApplicants, (ja) => {
+        return !_.includes(ja.applicantIds, Meteor.user().username);
+      }), 'jobId');
+      return _.includes(jobIdsWithOutUser, job._id) && job.open === 1;
+    });
     return (
       <div style={{ backgroundColor: 'ghostwhite' }}>
         <Container style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
