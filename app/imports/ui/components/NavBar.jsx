@@ -21,6 +21,7 @@ class NavBar extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchText = this.handleSearchText.bind(this);
     this.handleLoginButton = this.handleLoginButton.bind(this);
+    this.handleTestimonial = this.handleTestimonial.bind(this);
   }
 
   handleSearch() {
@@ -41,6 +42,11 @@ class NavBar extends React.Component {
     const { history } = this.props;
     history.push('signin');
   }
+  handleTestimonial() {
+    const { history } = this.props;
+    history.push('testimonial');
+  }
+
 
   render() {
     let showSearchBar = true;
@@ -59,6 +65,9 @@ class NavBar extends React.Component {
             <Menu.Item as={NavLink} activeClassName="active" exact to="/admin" key='admin'>Admin</Menu.Item>
         ) : ''}
         <Menu.Item position="right">
+          <Button color='blue' onClick={this.handleTestimonial}>Rate small kine jobs!</Button>
+        </Menu.Item>
+        <Menu.Item>
           {
             this.props.currentUser !== '' && showSearchBar &&
             <NavJobSearch handleSearch={this.handleSearch} handleSearchText={this.handleSearchText}/>

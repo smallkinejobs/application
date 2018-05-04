@@ -14,6 +14,7 @@ import SignupEmployee from '../pages/SignupEmployee'
 import Signout from '../pages/Signout';
 import JobSearchResult from '../pages/JobSearchResult';
 import DisplayProfile from '../pages/DisplayProfile';
+import TestimonialPage from '../pages/TestimonialPage';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -27,6 +28,7 @@ class App extends React.Component {
               <Route path="/signin" component={Signin}/>
               <Route path="/signupemployer" component={SignupEmployer}/>
               <Route path="/signupemployee" component={SignupEmployee}/>
+              <Route path="/testimonial" component={TestimonialPage}/>
               <Route path="/job-search-results" component={JobSearchResult} />
               <ProtectedRoute path="/profile" component={DisplayProfile}/>
               <ProtectedRoute path="/signout" component={Signout}/>

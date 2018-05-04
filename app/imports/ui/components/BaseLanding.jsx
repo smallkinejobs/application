@@ -1,13 +1,17 @@
 import React from 'react';
-import { Grid, Segment, Image, Container, Icon, Divider, Button } from 'semantic-ui-react';
+import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
+import { Grid, Segment, Image, Container, Icon, Divider, Button } from 'semantic-ui-react';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Testimonials } from '../../api/testimonials/testimonials';
+import TestimonialRow from '../components/TestimonialRow';
 
 const firstRowStyle = {
   backgroundColor: '#F9FAFB',
 }
 
 const secondRowStyle = {
-  backgroundColor: '#2185d0',
+  backgroundColor: '#dc7b42',
 }
 
 const headingStyle = {
@@ -19,7 +23,7 @@ const instructionStyle = {
   padding: '7rem',
 }
 
-export default class BaseLanding extends React.Component {
+class BaseLanding extends React.Component {
   constructor(props) {
     super(props);
     this.employeeSignUpButton = this.employeeSignUpButton.bind(this);
@@ -36,7 +40,8 @@ export default class BaseLanding extends React.Component {
     history.push('signupemployer');
   }
 
-  render() {
+  renderPage() {
+    console.log(this.props.testimonials);
     return (
         <div>
           <div style={firstRowStyle}>
@@ -138,65 +143,12 @@ export default class BaseLanding extends React.Component {
                     ‘A‘ohe hana nui ke alu ‘ia. - <i>"No task is too big when done together by all."</i>
                   </h2>
                 </Grid.Row>
-                <Grid.Row columns={4}>
-                  <Grid.Column>
-                    <Image floated='right' circular size='small' src='/images/landingPage/student1.jpg'/>
-                  </Grid.Column>
-                  <Grid.Column floated='left'>
-                    <h3>
-                      <i>
-                        "I found my job through Small Kine Jobs and was able to gain better skills as a programmer!"
-                      </i>
-                    </h3>
-                    <h4>
-                      Joe Smith <br/>
-                      Web Developer at Food Court
-                    </h4>
-                  </Grid.Column>
-                  <Grid.Column>
-                    <Image floated='right' circular size='small' src='/images/landingPage/student2.jpg'/>
-                  </Grid.Column>
-                  <Grid.Column floated='left'>
-                    <h3>
-                      <i>
-                        "Thanks to Small Kine Jobs I gained valuable experience for my career."
-                      </i>
-                    </h3>
-                    <h4>
-                      Sally Pickle <br/>
-                      Admin Assistant at Warrior Rec Center
-                    </h4>
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row columns={4}>
-                  <Grid.Column>
-                    <Image floated='right' circular size='small' src='/images/landingPage/student3.jpeg'/>
-                  </Grid.Column>
-                  <Grid.Column floated='left'>
-                    <h3>
-                      <i>
-                        "I was broke eating ramen all day, now thanks to SKJ I'm eating real food!"
-                      </i>
-                    </h3>
-                    <h4>
-                      Sara Brown <br/>
-                      Librarian at Sinclair Library
-                    </h4>
-                  </Grid.Column>
-                  <Grid.Column>
-                    <Image floated='right' circular size='small' src='/images/landingPage/student4.jpg'/>
-                  </Grid.Column>
-                  <Grid.Column floated='left'>
-                    <h3>
-                      <i>
-                        "I only had imaginary friends before, but now at my job I have real ones! Thanks SKJ!"
-                      </i>
-                    </h3>
-                    <h4>
-                      Bruce Wayne <br/>
-                      Graphic Designer at Lava Labs
-                    </h4>
-                  </Grid.Column>
+                <Grid.Row>
+                {
+                  this.props.testimonials.map((testimonial) => (
+                    <TestimonialRow key={testimonial._id} testimonial={testimonial}/>
+                  ))
+                }
                 </Grid.Row>
               </Grid>
             </Container>
@@ -204,8 +156,22 @@ export default class BaseLanding extends React.Component {
         </div>
     );
   }
+
+  render() {
+    return (this.props.ready) ? this.renderPage() : <h1>Loading Page</h1>;
+  }
 }
 
 BaseLanding.propTypes = {
   history: PropTypes.any,
+  testimonials: PropTypes.array,
+  ready: PropTypes.bool.isRequired,
 };
+
+export default withTracker(() => {
+  const testimonialSubscription = Meteor.subscribe('AllTestimonials');
+  return {
+    ready: testimonialSubscription.ready(),
+    testimonials: Testimonials.find({}).fetch(),
+  };
+})(BaseLanding);
