@@ -122,7 +122,7 @@ class EmployerLanding extends React.Component {
     if (valid) {
       newJob.postDate = new Date();
       newJob.open = 1;
-      newJob.employerId = Meteor.userId();
+      newJob.employerId = Meteor.user().username;
       Jobs.insert(this.state.newJob, (jobErr, id) => {
         if (jobErr) {
           this.setState({
