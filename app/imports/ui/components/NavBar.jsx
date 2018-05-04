@@ -21,6 +21,8 @@ class NavBar extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchText = this.handleSearchText.bind(this);
     this.handleLoginButton = this.handleLoginButton.bind(this);
+    this.handleTestimonial = this.handleTestimonial.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   handleSearch() {
@@ -41,6 +43,16 @@ class NavBar extends React.Component {
     const { history } = this.props;
     history.push('signin');
   }
+  handleTestimonial() {
+    const { history } = this.props;
+    history.push('testimonial');
+  }
+  handleLogout() {
+    const { history } = this.props;
+    Meteor.logout();
+    history.push('/');
+  }
+
 
   render() {
     let showSearchBar = true;
@@ -52,10 +64,16 @@ class NavBar extends React.Component {
         <Menu.Item as={NavLink} activeClassName="" exact to="/">
           <Header style={titleStyle} inverted as='h1'>Small Kine Jobs</Header>
         </Menu.Item>
+        <Menu.Item>
+
+        </Menu.Item>
         {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <Menu.Item as={NavLink} activeClassName="active" exact to="/admin" key='admin'>Admin</Menu.Item>
         ) : ''}
         <Menu.Item position="right">
+          <Button color='blue' onClick={this.handleTestimonial}>Rate small kine jobs!</Button>
+        </Menu.Item>
+        <Menu.Item>
           {
             this.props.currentUser !== '' && showSearchBar && Roles.userIsInRole(Meteor.userId(), 'employee') &&
             <NavJobSearch handleSearch={this.handleSearch} handleSearchText={this.handleSearchText}/>
@@ -69,7 +87,7 @@ class NavBar extends React.Component {
           ) : (
               <Dropdown text={this.props.currentUser} pointing="top right" icon={'user'}>
                 <Dropdown.Menu>
-                  <Dropdown.Item icon="sign out" text="Sign Out" as={NavLink} exact to="/signout"/>
+                  <Dropdown.Item icon="sign out" text="Sign Out" onClick={this.handleLogout}/>
                 </Dropdown.Menu>
               </Dropdown>
           )}

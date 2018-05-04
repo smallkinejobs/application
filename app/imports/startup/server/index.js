@@ -5,3 +5,4 @@ import './categories.js';
 import './skills.js';
 import './jobApplicants.js';
 import './ratings.js';
+import './testimonials.js';
