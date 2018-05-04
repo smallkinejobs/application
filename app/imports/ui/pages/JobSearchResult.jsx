@@ -36,7 +36,7 @@ class JobSearchResult extends React.Component {
     if (nextProps.jobs.length !== 0 && this.props.jobs.length === 0) {
       const jobs = nextProps.jobs;
       const filteredJobs = jobs.filter((job) =>
-          job.title.toLowerCase().includes(this.state.jobSearchText.toLowerCase()));
+          job.title.toLowerCase().includes(this.state.jobSearchText.toLowerCase()) && job.open === 1);
       this.setState({
         jobs: filteredJobs,
       });
@@ -44,9 +44,12 @@ class JobSearchResult extends React.Component {
   }
 
   componentDidMount() {
-    const { location } = this.props;
+    const { location, jobs } = this.props;
     const queryParams = qs.parse(location.search);
+    const filteredJobs = jobs.filter((job) =>
+        job.title.toLowerCase().includes(queryParams.title.toLowerCase()) && job.open === 1);
     this.setState({
+      jobs: filteredJobs,
       jobSearchText: queryParams.title.toLowerCase(),
     });
   }
