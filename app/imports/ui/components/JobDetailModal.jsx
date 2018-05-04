@@ -1,12 +1,14 @@
 import React from 'react';
 import { Modal, Button, Label, Header, Image } from 'semantic-ui-react';
+import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { distanceInWordsToNow } from 'date-fns';
 import { _ } from 'lodash';
 
 export default class JobDetailModal extends React.Component {
   render() {
-    const { modalOpen, selectedJob, clearSelectedJob, closeModal, handleApply, skills } = this.props;
+    let applied = false;
+    const { modalOpen, selectedJob, clearSelectedJob, closeModal, handleApply, jobApplicants, skills } = this.props;
     selectedJob.skillNames = [];
     selectedJob.skills.forEach((skill) => {
       const foundSkill = _.find(skills, { key: skill });
@@ -14,6 +16,10 @@ export default class JobDetailModal extends React.Component {
         selectedJob.skillNames.push(foundSkill.text);
       }
     });
+    if (selectedJob._id) {
+      console.log(jobApplicants.applicantIds, Meteor.user().username);
+      applied = _.includes(jobApplicants.applicantIds, Meteor.user().username);
+    }
     return (
       <Modal
           open={modalOpen}
@@ -37,8 +43,10 @@ export default class JobDetailModal extends React.Component {
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary onClick={handleApply}>
-            Apply
+          <Button primary disabled={applied} onClick={handleApply}>
+            {
+              applied ? 'Applied' : 'Apply'
+            }
           </Button>
           <Button color='red' onClick={closeModal}>
             Close
@@ -55,6 +63,6 @@ JobDetailModal.propTypes = {
   clearSelectedJob: PropTypes.func,
   closeModal: PropTypes.func,
   skills: PropTypes.array.isRequired,
-  jobApplicants: PropTypes.array,
+  jobApplicants: PropTypes.object,
   handleApply: PropTypes.func,
 };
