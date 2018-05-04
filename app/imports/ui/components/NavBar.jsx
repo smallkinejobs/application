@@ -22,6 +22,7 @@ class NavBar extends React.Component {
     this.handleSearchText = this.handleSearchText.bind(this);
     this.handleLoginButton = this.handleLoginButton.bind(this);
     this.handleTestimonial = this.handleTestimonial.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   handleSearch() {
@@ -45,6 +46,11 @@ class NavBar extends React.Component {
   handleTestimonial() {
     const { history } = this.props;
     history.push('testimonial');
+  }
+  handleLogout() {
+    const { history } = this.props;
+    Meteor.logout();
+    history.push('/');
   }
 
 
@@ -81,7 +87,7 @@ class NavBar extends React.Component {
           ) : (
               <Dropdown text={this.props.currentUser} pointing="top right" icon={'user'}>
                 <Dropdown.Menu>
-                  <Dropdown.Item icon="sign out" text="Sign Out" as={NavLink} exact to="/"/>
+                  <Dropdown.Item icon="sign out" text="Sign Out" onClick={this.handleLogout}/>
                 </Dropdown.Menu>
               </Dropdown>
           )}
