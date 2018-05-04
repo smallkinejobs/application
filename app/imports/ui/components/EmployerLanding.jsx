@@ -271,10 +271,10 @@ class EmployerLanding extends React.Component {
   }
 
   renderPage() {
-    const { skills, categories } = this.props;
+    const { skills, categories, jobs } = this.props;
 
     const {
-      jobs, jobModalOpen, newJob, skillSearchQuery,
+      jobModalOpen, newJob, skillSearchQuery,
       formError, categorySearchQuery, feedbackModalOpen, userToRate, ratingValue,
       hireModalOpen, openedJob } = this.state;
     const pastHelperNames = jobs.filter((job) => job.open === 2).map((job) => job.employeeId);

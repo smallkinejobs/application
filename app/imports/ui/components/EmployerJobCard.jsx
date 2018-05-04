@@ -24,7 +24,9 @@ class EmployerJobCard extends React.Component {
       }
     });
     const jobApplicant = JobApplicants.findOne({ jobId: job._id });
-    applicantCount = jobApplicant.applicantIds.length;
+    if (jobApplicant !== undefined) {
+      applicantCount = jobApplicant.applicantIds.length;
+    }
     const hireButtonText = (applicantCount === 0) ? 'No Applicants Yet' : 'Hire Helper';
     let status = <p style={{ color: 'blue' }}>OPEN</p>;
     let cardColor = 'blue';
