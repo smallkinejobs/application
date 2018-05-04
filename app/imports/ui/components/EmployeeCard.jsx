@@ -77,7 +77,7 @@ export default class EmployeeCard extends React.Component {
             cardType === 'feedback' &&
             <Grid container rows={2}>
               <Grid.Row>
-              <Dropdown placeholder='Invite to a Job' selection
+              <Dropdown placeholder='Invite to a Job' selection upward
                         options={jobInviteSelections}
                         onChange={this.handleChange}></Dropdown>
               </Grid.Row>
