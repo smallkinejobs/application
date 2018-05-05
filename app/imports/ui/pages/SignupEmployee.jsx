@@ -65,10 +65,15 @@ class SignupEmployee extends React.Component {
       profile,
     }, (err) => {
       if (err) {
-        this.setState({ error: err.reason });
+        console.log(err);
       } else {
-        Roles.addUsersToRoles(Meteor.userId(), 'employee');
-        this.setState({ error: '', redirectToReferer: true });
+        Meteor.call('addToRole', Meteor.userId(), 'employee', (methodErr, res) => {
+          if (methodErr) {
+            console.log(methodErr);
+          } else {
+            this.setState({ error: '', redirectToReferer: true });
+          }
+        });
       }
     });
   }

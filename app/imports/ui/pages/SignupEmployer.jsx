@@ -4,7 +4,7 @@ import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-rea
 import { Accounts } from 'meteor/accounts-base';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
+// import { Roles } from 'meteor/alanning:roles';
 
 /**
  * Signup component is similar to signin component, but we attempt to create a new user instead.
@@ -50,7 +50,7 @@ export default class SignupEmployer extends React.Component {
       city,
     } = this.state;
     const address = `${streetAddress} + ${unit} + ${zipcode} + ${city}`;
-    const profile = { firstName, lastName, phone, address, };
+    const profile = { firstName, lastName, phone, address };
     Accounts.createUser({
       email,
       username: email,
@@ -58,10 +58,15 @@ export default class SignupEmployer extends React.Component {
       profile,
     }, (err) => {
       if (err) {
-        this.setState({ error: err.reason });
+        console.log(err);
       } else {
-        Roles.addUsersToRoles(Meteor.userId(), 'employer');
-        this.setState({ error: '', redirectToReferer: true });
+        Meteor.call('addToRole', Meteor.userId(), 'employer', (methodErr, res) => {
+          if (methodErr) {
+            console.log(methodErr);
+          } else {
+            this.setState({ error: '', redirectToReferer: true });
+          }
+        });
       }
     });
   }

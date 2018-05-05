@@ -26,14 +26,12 @@ Meteor.publish('SearchedJobs', function publish() {
 Meteor.publish('UserJobs', function publish() {
   if (this.userId) {
     const username = Meteor.users.findOne(this.userId).username;
-
     if (Roles.userIsInRole(this.userId, 'employer')) {
       return Jobs.find({ employerId: username });
     }
     if (Roles.userIsInRole(this.userId, 'employee')) {
       return Jobs.find({ employeeId: username });
     }
-
   }
   return this.ready();
 });
